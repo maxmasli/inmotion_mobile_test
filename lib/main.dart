@@ -3,7 +3,7 @@ import 'package:inmotion_mobile_test/app.dart';
 import 'package:inmotion_mobile_test/di.dart' as di;
 
 void main() {
-  di.init();
+  di.setup();
 
   runApp(SafeArea(
     child: App(),

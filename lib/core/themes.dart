@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 ThemeData createLightTheme() {
-  return ThemeData();
+  return ThemeData(
+    textTheme: _baseTextTheme(false)
+  );
 }
 
 TextTheme _baseTextTheme(bool isDark) {
