@@ -10,12 +10,15 @@ class AppLogsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: controller, child: Consumer<AppLogsController>(
-      builder: (context, controller, _) {
-        return Column(
-          children: controller.logs.map((log) => Text(log)).toList(),
-        );
-      },
-    ),);
+      value: controller,
+      child: Consumer<AppLogsController>(
+        builder: (context, controller, _) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: controller.logs.map((log) => Text(log)).toList(),
+          );
+        },
+      ),
+    );
   }
 }

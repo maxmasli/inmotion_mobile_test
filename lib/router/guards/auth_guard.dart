@@ -6,7 +6,7 @@ import 'package:inmotion_mobile_test/router/app_route.gr.dart';
 class AuthGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    const authenticated = true;
+    const authenticated = false;
     log("Check auth");
     if (authenticated) {
       resolver.next(true);
