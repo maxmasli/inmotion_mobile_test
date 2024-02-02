@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:developer' as d;
 
 class AppLogsController extends ChangeNotifier {
 
@@ -8,6 +9,12 @@ class AppLogsController extends ChangeNotifier {
 
   void log(String message, [String tag = 'log']) {
     _logs.add('[$tag] $message');
+    d.log(message, name: tag);
+    notifyListeners();
+  }
+
+  void deleteLogs() {
+    _logs.clear();
     notifyListeners();
   }
 }

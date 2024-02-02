@@ -3,26 +3,31 @@ import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart'
 import 'package:inmotion_mobile_test/di.dart';
 
 class MainModel extends ChangeNotifier {
+  var _systemStatus = SystemStatus.ready;
 
-  var systemStatus = SystemStatus.ready;
   final l = getIt<AppLogsController>();
 
-  void init() {
+  SystemStatus get systemStatus => _systemStatus;
 
-  }
+  void init() {}
 
   void startRecording() {
-    systemStatus = SystemStatus.rec;
+    _systemStatus = SystemStatus.rec;
+    notifyListeners();
     l.log("Start recording", "MODEL");
   }
 
   void stopRecording() {
-    systemStatus = SystemStatus.ready;
+    _systemStatus = SystemStatus.ready;
+    notifyListeners();
     l.log("Stop recording", "MODEL");
   }
 
+  void pauseRecording() {
+    _systemStatus = SystemStatus.ready;
+    notifyListeners();
+    l.log("Pause recording", "MODEL");
+  }
 }
 
-enum SystemStatus {
-  off, ready, rec, error
-}
+enum SystemStatus { off, ready, rec, error }

@@ -3,38 +3,35 @@ import 'package:inmotion_mobile_test/core/colors.dart';
 
 ThemeData createLightTheme() {
   return ThemeData(
-    textTheme: _baseTextTheme(false),
-    scaffoldBackgroundColor: AppColors.gray239,
-    colorScheme: ThemeData().colorScheme.copyWith(
-          primaryContainer: Colors.white,
-          secondaryContainer: AppColors.lightGreen,
-          tertiaryContainer: AppColors.green,
+      textTheme: _baseTextTheme(false),
+      scaffoldBackgroundColor: AppColors.gray239,
+      colorScheme: ThemeData().colorScheme.copyWith(
+            primaryContainer: Colors.white,
+            secondaryContainer: AppColors.lightGreen,
+            tertiaryContainer: AppColors.green,
+          ),
+      inputDecorationTheme: const InputDecorationTheme(
+        hintStyle: TextStyle(
+          color: AppColors.lightGreen2,
+          fontFamily: 'Roboto',
+          fontSize: 17,
         ),
-    inputDecorationTheme: const InputDecorationTheme(
-      hintStyle: TextStyle(
-        color: AppColors.lightGreen2,
-        fontFamily: 'Roboto',
-        fontSize: 17,
+        enabledBorder: InputBorder.none,
+        disabledBorder: OutlineInputBorder(),
+        errorBorder: OutlineInputBorder(),
+        focusedErrorBorder: OutlineInputBorder(),
+        focusedBorder: InputBorder.none,
       ),
-      enabledBorder: InputBorder.none,
-      disabledBorder: OutlineInputBorder(),
-      errorBorder: OutlineInputBorder(),
-      focusedErrorBorder: OutlineInputBorder(),
-      focusedBorder: InputBorder.none,
-    ),
-
-    textSelectionTheme: TextSelectionThemeData(
-        cursorColor: AppColors.green,
-        selectionHandleColor: AppColors.green,
-        selectionColor: AppColors.green.withOpacity(0.4)
-    ),
-
-    dividerTheme: const DividerThemeData(
-      color: AppColors.lightGreen,
-      thickness: 0.8,
-      space: 1,
-    )
-  );
+      textSelectionTheme: TextSelectionThemeData(
+          cursorColor: AppColors.green,
+          selectionHandleColor: AppColors.green,
+          selectionColor: AppColors.green.withOpacity(0.4)),
+      dividerTheme: const DividerThemeData(
+        color: AppColors.lightGreen,
+        thickness: 0.8,
+        space: 1,
+      ),
+      appBarTheme: const AppBarTheme(backgroundColor: AppColors.lightGreen));
 }
 
 TextTheme _baseTextTheme(bool isDark) {
@@ -52,10 +49,22 @@ TextTheme _baseTextTheme(bool isDark) {
         fontSize: 28,
         color: AppColors.green,
       ),
+      //------------------------
+      displaySmall: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 12,
+        color: AppColors.gray134,
+      ),
       displayLarge: TextStyle(
         fontFamily: 'Roboto',
         fontSize: 17,
         color: AppColors.gray186,
+      ),
+      //------------------------
+      labelSmall: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 14,
+        color: Colors.white,
       ),
       labelMedium: TextStyle(
         fontFamily: 'Roboto',
@@ -66,6 +75,12 @@ TextTheme _baseTextTheme(bool isDark) {
         fontFamily: 'RobotoMedium',
         fontSize: 20,
         color: Colors.white,
+      ),
+      //------------------------
+      headlineLarge: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 28,
+        color: AppColors.gray73,
       ),
     );
   }

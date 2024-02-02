@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
+import 'package:inmotion_mobile_test/di.dart';
 
 class AppTimerController extends ChangeNotifier {
   var _state = TimerState.stopped;
   var _time = 0;
   Timer? _timer;
   Function(int)? _onTick;
+
+  final l = getIt<AppLogsController>();
 
   TimerState get state => _state;
 
@@ -18,7 +22,6 @@ class AppTimerController extends ChangeNotifier {
 
   void startTimer() {
     assert(state != TimerState.running, "Timer is running already");
-    _time = 0;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _time += 1;
       toggleTick();
@@ -26,8 +29,9 @@ class AppTimerController extends ChangeNotifier {
     });
     _state = TimerState.running;
 
-    toggleTick(); // 0
+    toggleTick();
     notifyListeners();
+    l.log('Start timer', 'TIMER');
   }
 
   void stopTimer() {
@@ -35,7 +39,18 @@ class AppTimerController extends ChangeNotifier {
     _timer?.cancel();
     _timer = null;
     _state = TimerState.stopped;
+    _time = 0;
     notifyListeners();
+    l.log('Stop timer', 'TIMER');
+  }
+
+  void pauseTimer() {
+    assert(state != TimerState.paused, "Timer is paused already");
+    _timer?.cancel();
+    _timer = null;
+    _state = TimerState.paused;
+    notifyListeners();
+    l.log('Pause timer', 'TIMER');
   }
 
   void toggleTick() {
@@ -50,7 +65,7 @@ class AppTimerController extends ChangeNotifier {
   }
 }
 
-enum TimerState { stopped, running }
+enum TimerState { stopped, running, paused }
 
 extension _Format on int {
   String hhmmss() {
