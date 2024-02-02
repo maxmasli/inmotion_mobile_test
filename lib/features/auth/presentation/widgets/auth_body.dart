@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_button.dart';
@@ -14,15 +16,18 @@ class AuthBody extends StatefulWidget {
 }
 
 class _AuthBodyState extends State<AuthBody> {
-  var showBottomContainer = true;
+  var _showBottomContainer = true;
 
-  final loginController = TextEditingController();
-  final passwordController = TextEditingController();
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   void _checkAuth() {
-    final login = loginController.text.trim();
-    final password = loginController.text.trim();
-    widget.onResult(login == 'log' && password == 'pas');
+    final login = _loginController.text.trim();
+    final password = _passwordController.text.trim();
+    final isAuth = login == 'log' && password == 'pas';
+    if (isAuth) {
+      widget.onResult(true);
+    }
   }
 
   @override
@@ -55,7 +60,8 @@ class _AuthBodyState extends State<AuthBody> {
                           "Логин",
                           style: theme.textTheme.titleMedium,
                         ),
-                        controller: loginController,
+                        hintText: 'Введите логин',
+                        controller: _loginController,
                       ),
                       const Divider(),
                       AppTextField(
@@ -63,8 +69,9 @@ class _AuthBodyState extends State<AuthBody> {
                           "Пароль",
                           style: theme.textTheme.titleMedium,
                         ),
+                        hintText: 'Введите пароль',
                         obscureText: true,
-                        controller: passwordController,
+                        controller: _passwordController,
                       )
                     ],
                   ),
@@ -90,7 +97,7 @@ class _AuthBodyState extends State<AuthBody> {
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              bottom: showBottomContainer ? 0 : -containerHeight,
+              bottom: _showBottomContainer ? 0 : -containerHeight,
               child: Container(
                 height: containerHeight,
                 width: MediaQuery.of(context).size.width - 16 * 2,
@@ -118,7 +125,7 @@ class _AuthBodyState extends State<AuthBody> {
                       const SizedBox(height: 45),
                       AppButton(
                         onTap: () {
-                          showBottomContainer = false;
+                          _showBottomContainer = false;
                           setState(() {});
                         },
                         width: double.infinity,

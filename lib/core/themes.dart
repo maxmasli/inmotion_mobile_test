@@ -32,7 +32,7 @@ ThemeData createLightTheme() {
     dividerTheme: const DividerThemeData(
       color: AppColors.lightGreen,
       thickness: 0.8,
-      space: 1
+      space: 1,
     )
   );
 }
