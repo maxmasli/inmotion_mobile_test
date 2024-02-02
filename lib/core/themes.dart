@@ -73,10 +73,21 @@ TextTheme _baseTextTheme(bool isDark) {
       ),
       labelLarge: TextStyle(
         fontFamily: 'RobotoMedium',
-        fontSize: 20,
+        fontSize: 22,
         color: Colors.white,
       ),
       //------------------------
+      headlineSmall: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 12,
+        color: Colors.black,
+      ),
+      headlineMedium: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Colors.black,
+      ),
       headlineLarge: TextStyle(
         fontFamily: 'Roboto',
         fontSize: 28,

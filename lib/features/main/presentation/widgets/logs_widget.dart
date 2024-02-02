@@ -19,14 +19,22 @@ class _LogsWidgetState extends State<LogsWidget> {
 
   @override
   void initState() {
-    context.read<MainModel>().addListener(() {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 100),
-        curve: Curves.easeInOut,
-      );
-    });
+    context.read<MainModel>().addListener(_scrollDown);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    context.read<MainModel>().removeListener(_scrollDown);
+    super.dispose();
+  }
+
+  void _scrollDown() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -73,7 +81,7 @@ class _LogsWidgetState extends State<LogsWidget> {
                   height: _isOpen ? 220 : 60,
                   child: ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.only(bottom: 30),
+                    padding: const EdgeInsets.only(bottom: 40),
                     itemCount: widget.controller.logs.length,
                     itemBuilder: (context, i) {
                       return Text(

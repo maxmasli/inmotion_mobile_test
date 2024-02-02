@@ -41,8 +41,8 @@ class _LegendItem extends StatelessWidget {
     final theme = Theme.of(context);
     return ConstrainedBox(
       constraints: const BoxConstraints(
-        maxWidth: 110,
-        minWidth: 110,
+        maxWidth: 100,
+        minWidth: 100,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,6 +61,8 @@ class _LegendItem extends StatelessWidget {
             child: Text(
               text,
               style: theme.textTheme.displaySmall,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           )
         ],

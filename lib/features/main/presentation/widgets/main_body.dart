@@ -8,6 +8,7 @@ import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/main/presentation/provider/main_provider.dart';
 import 'package:inmotion_mobile_test/features/main/presentation/widgets/legend_widget.dart';
+import 'package:inmotion_mobile_test/features/main/presentation/widgets/player_tile.dart';
 import 'package:inmotion_mobile_test/features/main/presentation/widgets/status_widget.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
@@ -57,13 +58,17 @@ class _MainBodyState extends State<MainBody> {
           const LegendWidget(),
           const SizedBox(height: 16),
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
+            child: ListView.separated(
+              itemCount: 6,
               itemBuilder: (context, i) {
-                return Text("asdasd");
+                return const PlayerTile();
+              },
+              separatorBuilder: (context, i) {
+                return const SizedBox(height: 8);
               },
             ),
           ),
+          const SizedBox(height: 16),
           LogsWidget(controller: l),
         ],
       ),

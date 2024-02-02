@@ -6,6 +6,7 @@ import 'package:inmotion_mobile_test/resources/resources.dart';
 void main() {
   test('app_icons assets test', () {
     expect(File(AppIcons.error).existsSync(), isTrue);
+    expect(File(AppIcons.heart).existsSync(), isTrue);
     expect(File(AppIcons.logo).existsSync(), isTrue);
     expect(File(AppIcons.off).existsSync(), isTrue);
     expect(File(AppIcons.pause).existsSync(), isTrue);
