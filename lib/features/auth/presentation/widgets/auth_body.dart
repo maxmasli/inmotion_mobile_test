@@ -24,7 +24,7 @@ class _AuthBodyState extends State<AuthBody> {
   void _checkAuth() {
     final login = _loginController.text.trim();
     final password = _passwordController.text.trim();
-    final isAuth = login == 'log' && password == 'pas';
+    final isAuth = login == 'Sporttech' && password == 'Demo2024';
     if (isAuth) {
       widget.onResult(true);
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
+import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/main/presentation/provider/main_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,13 +20,13 @@ class _LogsWidgetState extends State<LogsWidget> {
 
   @override
   void initState() {
-    context.read<MainModel>().addListener(_scrollDown);
+    getIt<AppLogsController>().addListener(_scrollDown);
     super.initState();
   }
 
   @override
   void dispose() {
-    context.read<MainModel>().removeListener(_scrollDown);
+    getIt<AppLogsController>().removeListener(_scrollDown);
     super.dispose();
   }
 

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/di.dart';
@@ -12,12 +10,12 @@ class AuthGuard extends AutoRouteGuard {
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
     const authenticated = true;
-    l.log("Check auth", 'AUTH');
+    l.log("Check auth", 'Auth');
     if (authenticated) {
       resolver.next(true);
-      l.log("Authenticated!", 'AUTH');
+      l.log("Authenticated!", 'Auth');
     } else {
-      l.log("Go to Auth screen");
+      l.log("Go to Auth screen", 'Auth');
       resolver.redirect(AuthRoute(onResult: (success) {
         resolver.next(success);
       }));

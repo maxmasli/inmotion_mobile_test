@@ -59,9 +59,9 @@ class _MainBodyState extends State<MainBody> {
           const SizedBox(height: 16),
           Expanded(
             child: ListView.separated(
-              itemCount: 6,
+              itemCount: model.players.length,
               itemBuilder: (context, i) {
-                return const PlayerTile();
+                return PlayerTile(player: model.players[i]);
               },
               separatorBuilder: (context, i) {
                 return const SizedBox(height: 8);
