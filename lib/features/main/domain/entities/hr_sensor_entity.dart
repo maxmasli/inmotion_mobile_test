@@ -4,6 +4,11 @@ import 'dart:math';
 import 'package:inmotion_mobile_test/features/main/domain/entities/hr_measure_entity.dart';
 
 class HrSensorEntity {
+  // For generate random pulse
+  var lastHr = 130;
+  final minHr = 64;
+  final maxHr = 186;
+
   Timer? _timer;
   final _controller = StreamController<HrMeasureEntity>.broadcast();
 
@@ -31,8 +36,12 @@ class HrSensorEntity {
   }
 
   HrMeasureEntity _createRandomMeasure() {
+    int newHr = lastHr - 3 +  Random().nextInt(7);
+    if (newHr < minHr) newHr = minHr;
+    if (newHr > maxHr) newHr = maxHr;
+    lastHr = newHr;
     return HrMeasureEntity(
-      hr: Random().nextInt(100),
+      hr: newHr,
       date: DateTime.now(),
     );
   }

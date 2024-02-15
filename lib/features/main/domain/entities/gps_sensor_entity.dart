@@ -1,8 +1,13 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:inmotion_mobile_test/core/utils/cords_generator.dart';
 import 'package:inmotion_mobile_test/features/main/domain/entities/gps_measure_entity.dart';
 
 class GpsSensorEntity {
+  // For demo cords generation
+  final cordsGenerator = CordsGenerator();
+
   Timer? _timer;
   final _controller = StreamController<GpsMeasureEntity>.broadcast();
 
@@ -12,7 +17,7 @@ class GpsSensorEntity {
 
   void init() {
     _timer = Timer.periodic(
-      const Duration(milliseconds: 3000),
+      const Duration(milliseconds: 800),
       (timer) {
         final meas = _createRandomMeasure();
         _controller.add(meas);
@@ -30,11 +35,12 @@ class GpsSensorEntity {
   }
 
   GpsMeasureEntity _createRandomMeasure() {
+    final c = cordsGenerator.getNextCords();
     return GpsMeasureEntity(
-      x: 50,
-      y: 30,
-      speed: 3,
-      distance: 2,
+      x: c.$1,
+      y: c.$2,
+      speed: c.$3,
+      distance: Random().nextInt(5),
       date: DateTime.now(),
     );
   }

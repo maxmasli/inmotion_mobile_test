@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:expansion_widget/expansion_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
+import 'package:inmotion_mobile_test/core/utils/stats_calculator.dart';
+import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/main/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/main/presentation/widgets/legend_widget.dart';
 import 'package:inmotion_mobile_test/features/main/presentation/widgets/player_line_chart.dart';
 import 'package:inmotion_mobile_test/features/main/presentation/widgets/ranges_widget.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
@@ -22,7 +25,6 @@ class PlayerTile extends StatelessWidget {
       value: player,
       child: Consumer<PlayerEntity>(
         builder: (context, player, child) {
-          log("rebuild tile $player");
           return PhysicalModel(
             color: theme.colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(16),
@@ -43,8 +45,7 @@ class PlayerTile extends StatelessWidget {
                         children: [
                           Container(
                             width: 90,
-                            // TODO в зависимочти от player.speed
-                            color: AppColors.green,
+                            color: getColorByPulse(player.pulse),
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 12),
@@ -67,8 +68,8 @@ class PlayerTile extends StatelessWidget {
                                     ],
                                   ),
                                   Text(
-                                    // TODO в зависимочти от player.speed
-                                    "Трусцой",
+                                    getRunBySpeed(player.speed, context),
+                                    overflow: TextOverflow.ellipsis,
                                     style: theme.textTheme.labelSmall,
                                   )
                                 ],
@@ -93,10 +94,11 @@ class PlayerTile extends StatelessWidget {
                                             Text('${player.number}',
                                                 style: theme
                                                     .textTheme.headlineMedium),
-                                            // TODO прикрутить номер датчика
-                                            Text('Датчик 01',
-                                                style: theme
-                                                    .textTheme.headlineSmall)
+                                            Text(
+                                              'Датчик 01',
+                                              style:
+                                                  theme.textTheme.headlineSmall,
+                                            )
                                           ],
                                         ),
                                       ),
@@ -143,14 +145,9 @@ class PlayerTile extends StatelessWidget {
                                     return RangesWidget(
                                       width: constraints.maxWidth,
                                       height: 30,
-                                      // TODO доделать эти данные
-                                      values: const [
-                                        0.12,
-                                        0.15,
-                                        0.28,
-                                        0.36,
-                                        0.09,
-                                      ],
+                                      values: StatsCalculator.getHrStats(
+                                        player.hrMeasures,
+                                      ),
                                       builder: (value, i) {
                                         return Center(
                                           child: Text(
@@ -176,14 +173,66 @@ class PlayerTile extends StatelessWidget {
                 );
               },
               content: Container(
-                height: 200,
+                margin: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer,
                   borderRadius: const BorderRadius.vertical(
                     bottom: Radius.circular(16),
                   ),
                 ),
-                child: PlayerLineChart(),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      child: PlayerLineChart(data: player.coordinates),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      height: 12,
+                      decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                            AppColors.blue,
+                            AppColors.green,
+                            AppColors.orange,
+                            AppColors.red,
+                          ])),
+                    ),
+                    const SizedBox(height: 8),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // TODO переделать с intl
+                      children: [
+                        LegendItem(
+                          text: "Ходьба",
+                          color: AppColors.blue,
+                          maxWidth: 80,
+                          minWidth: 50,
+                        ),
+                        LegendItem(
+                          color: AppColors.green,
+                          text: "Легкий бег",
+                          maxWidth: 80,
+                          minWidth: 50,
+                        ),
+                        LegendItem(
+                          color: AppColors.orange,
+                          text: "Средний темп",
+                          maxWidth: 80,
+                          minWidth: 50,
+                        ),
+                        LegendItem(
+                          color: AppColors.red,
+                          text: "Макс. скорость",
+                          maxWidth: 80,
+                          minWidth: 50,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           );

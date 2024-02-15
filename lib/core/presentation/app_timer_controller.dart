@@ -31,7 +31,7 @@ class AppTimerController extends ChangeNotifier {
 
     toggleTick();
     notifyListeners();
-    l.log('Start timer', 'TIMER');
+    l.log('Start timer', 'Timer');
   }
 
   void stopTimer() {
@@ -41,7 +41,7 @@ class AppTimerController extends ChangeNotifier {
     _state = TimerState.stopped;
     _time = 0;
     notifyListeners();
-    l.log('Stop timer', 'TIMER');
+    l.log('Stop timer', 'Timer');
   }
 
   void pauseTimer() {
@@ -50,7 +50,7 @@ class AppTimerController extends ChangeNotifier {
     _timer = null;
     _state = TimerState.paused;
     notifyListeners();
-    l.log('Pause timer', 'TIMER');
+    l.log('Pause timer', 'Timer');
   }
 
   void toggleTick() {

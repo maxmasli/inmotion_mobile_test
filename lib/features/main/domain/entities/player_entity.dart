@@ -34,6 +34,8 @@ class PlayerEntity extends ChangeNotifier {
   List<(int x, int y, int speed)> get coordinates =>
       _gpsMeasures.map((m) => (m.x, m.y, m.speed)).toList();
 
+  List<HrMeasureEntity> get hrMeasures => _hrMeasures;
+
   int get speed => _gpsMeasures.lastOrNull?.speed ?? 0;
 
   set hrSensor(HrSensorEntity sensor) {

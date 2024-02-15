@@ -16,33 +16,38 @@ class LegendWidget extends StatelessWidget {
         alignment: WrapAlignment.center,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          _LegendItem(color: AppColors.red, text: 'Максимальная интенсивность'),
-          _LegendItem(color: AppColors.orange, text: 'Анаэробный режим'),
-          _LegendItem(color: AppColors.green, text: 'Аэробный режим'),
-          _LegendItem(color: AppColors.blue, text: 'Легкая нагрузка'),
-          _LegendItem(color: AppColors.gray186, text: 'Умеренная активность'),
+          LegendItem(color: AppColors.red, text: 'Максимальная интенсивность'),
+          LegendItem(color: AppColors.orange, text: 'Анаэробный режим'),
+          LegendItem(color: AppColors.green, text: 'Аэробный режим'),
+          LegendItem(color: AppColors.blue, text: 'Легкая нагрузка'),
+          LegendItem(color: AppColors.gray186, text: 'Умеренная активность'),
         ],
       ),
     );
   }
 }
 
-class _LegendItem extends StatelessWidget {
-  const _LegendItem({
+class LegendItem extends StatelessWidget {
+  const LegendItem({
+    super.key,
     required this.color,
     required this.text,
+    this.maxWidth = 100,
+    this.minWidth = 100,
   });
 
   final Color color;
   final String text;
+  final double maxWidth;
+  final double minWidth;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: 100,
-        minWidth: 100,
+      constraints: BoxConstraints(
+        maxWidth: maxWidth,
+        minWidth: minWidth,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,7 +61,7 @@ class _LegendItem extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 6),
           Flexible(
             child: Text(
               text,
