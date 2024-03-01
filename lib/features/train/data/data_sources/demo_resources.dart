@@ -1,4 +1,4 @@
-import 'package:inmotion_mobile_test/features/main/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 
 final demoPlayersList = [
   PlayerEntity(name: "name 1", number: 10),

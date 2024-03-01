@@ -1,5 +1,5 @@
 import 'package:inmotion_mobile_test/core/utils/settings.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/hr_measure_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/hr_measure_entity.dart';
 
 abstract class StatsCalculator {
   static List<double> getHrStats(List<HrMeasureEntity> meas) {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/di.dart';
-import 'package:inmotion_mobile_test/features/main/data/data_sources/demo_resources.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/main/domain/repositories/gps_sensor_repository.dart';
-import 'package:inmotion_mobile_test/features/main/domain/repositories/hr_sensor_repository.dart';
+import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resources.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/repositories/gps_sensor_repository.dart';
+import 'package:inmotion_mobile_test/features/train/domain/repositories/hr_sensor_repository.dart';
 
-class MainModel extends ChangeNotifier {
+class TrainModel extends ChangeNotifier {
   var _systemStatus = SystemStatus.ready;
 
   final l = getIt<AppLogsController>();

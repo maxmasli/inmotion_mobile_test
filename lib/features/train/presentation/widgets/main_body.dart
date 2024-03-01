@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/widgets/logs_widget.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/di.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/provider/main_provider.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/widgets/legend_widget.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/widgets/player_tile.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/widgets/status_widget.dart';
-import 'package:inmotion_mobile_test/resources/resources.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/provider/train_provider.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/legend_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/logs_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/player_tile.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
 import 'package:provider/provider.dart';
 
 class MainBody extends StatefulWidget {
@@ -26,7 +23,7 @@ class _MainBodyState extends State<MainBody> {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<MainModel>();
+    final model = context.watch<TrainModel>();
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
       child: Column(

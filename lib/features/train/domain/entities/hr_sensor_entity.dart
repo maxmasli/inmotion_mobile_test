@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:inmotion_mobile_test/features/main/domain/entities/hr_measure_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/hr_measure_entity.dart';
 
 class HrSensorEntity {
   // For generate random pulse

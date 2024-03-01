@@ -12,7 +12,7 @@ import 'package:auto_route/auto_route.dart' as _i3;
 import 'package:flutter/material.dart' as _i4;
 import 'package:inmotion_mobile_test/features/auth/presentation/pages/auth_screen.dart'
     as _i1;
-import 'package:inmotion_mobile_test/features/main/presentation/pages/main_screen.dart'
+import 'package:inmotion_mobile_test/features/train/presentation/pages/train_screen.dart'
     as _i2;
 
 abstract class $AppRouter extends _i3.RootStackRouter {
@@ -33,7 +33,7 @@ abstract class $AppRouter extends _i3.RootStackRouter {
     MainRoute.name: (routeData) {
       return _i3.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i2.MainScreen(),
+        child: const _i2.TrainScreen(),
       );
     },
   };
@@ -78,7 +78,7 @@ class AuthRouteArgs {
 }
 
 /// generated route for
-/// [_i2.MainScreen]
+/// [_i2.TrainScreen]
 class MainRoute extends _i3.PageRouteInfo<void> {
   const MainRoute({List<_i3.PageRouteInfo>? children})
       : super(

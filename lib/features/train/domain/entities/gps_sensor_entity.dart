@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:inmotion_mobile_test/core/utils/cords_generator.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/gps_measure_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/gps_measure_entity.dart';
 
 class GpsSensorEntity {
   // For demo cords generation

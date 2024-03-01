@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/gps_measure_entity.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/gps_sensor_entity.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/hr_measure_entity.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/hr_sensor_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/gps_measure_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/gps_sensor_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/hr_measure_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/hr_sensor_entity.dart';
 
 // One step == 75cm or 0.75m
 const step = 0.75;

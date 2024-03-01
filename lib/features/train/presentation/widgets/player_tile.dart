@@ -1,15 +1,13 @@
-import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:expansion_widget/expansion_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/stats_calculator.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
-import 'package:inmotion_mobile_test/features/main/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/widgets/legend_widget.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/widgets/player_line_chart.dart';
-import 'package:inmotion_mobile_test/features/main/presentation/widgets/ranges_widget.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/legend_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/player_line_chart.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/ranges_widget.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 
