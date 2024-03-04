@@ -3,6 +3,7 @@ part of 'resources.dart';
 class AppIcons {
   AppIcons._();
 
+  static const String arrowUp = 'assets/icons/arrow_up.svg';
   static const String error = 'assets/icons/error.svg';
   static const String heart = 'assets/icons/heart.svg';
   static const String logo = 'assets/icons/logo.svg';

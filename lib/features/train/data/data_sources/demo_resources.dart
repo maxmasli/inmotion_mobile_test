@@ -5,4 +5,5 @@ final demoPlayersList = [
   PlayerEntity(name: "name 2", number: 10),
   PlayerEntity(name: "name 3", number: 10),
   PlayerEntity(name: "name 4", number: 10),
+  PlayerEntity(name: "name 5", number: 10),
 ];

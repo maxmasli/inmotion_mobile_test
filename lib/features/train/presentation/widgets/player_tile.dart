@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:expansion_widget/expansion_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_icon_button.dart';
 import 'package:inmotion_mobile_test/core/utils/stats_calculator.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
@@ -11,16 +14,30 @@ import 'package:inmotion_mobile_test/features/train/presentation/widgets/ranges_
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 
-class PlayerTile extends StatelessWidget {
-  const PlayerTile({super.key, required this.player});
+class PlayerTile extends StatefulWidget {
+  const PlayerTile({
+    super.key,
+    required this.player,
+    required this.maxHeight,
+    this.onExpansionWillChange,
+  });
 
   final PlayerEntity player;
+  final double maxHeight;
+  final Function(PlayerEntity, bool)? onExpansionWillChange;
+
+  @override
+  State<PlayerTile> createState() => _PlayerTileState();
+}
+
+class _PlayerTileState extends State<PlayerTile> {
+  final titleHeight = 84.0;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ChangeNotifierProvider.value(
-      value: player,
+      value: widget.player,
       child: Consumer<PlayerEntity>(
         builder: (context, player, child) {
           return PhysicalModel(
@@ -28,17 +45,24 @@ class PlayerTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             elevation: 2,
             child: ExpansionWidget(
+              duration: Duration.zero,
+              onExpansionWillChange: (isExpanded) {
+                if (widget.onExpansionWillChange != null) {
+                  widget.onExpansionWillChange!(player, isExpanded);
+                }
+                return true;
+              },
               titleBuilder:
                   (animationValue, easeInValue, isExpanded, toggleFunction) {
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: GestureDetector(
                     onTap: () {
-                      toggleFunction(animated: true);
+                      toggleFunction();
                     },
                     child: Container(
                       color: theme.colorScheme.primaryContainer,
-                      height: 84,
+                      height: titleHeight,
                       child: Row(
                         children: [
                           Container(
@@ -181,8 +205,49 @@ class PlayerTile extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: 200,
-                      child: PlayerLineChart(data: player.coordinates),
+                      height: widget.maxHeight - titleHeight - 95,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: PlayerLineChart(data: player.coordinates),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: AppColors.darkBlue),
+                                      ),
+                                      child: Text(
+                                        "${player.speed}",
+                                        style: theme.textTheme.labelMedium
+                                            ?.copyWith(
+                                                color: AppColors.darkBlue),
+                                      ),
+                                    ),
+                                    // TODO переделать с intl
+                                    Text(
+                                      "км/ч",
+                                      style: theme.textTheme.displaySmall,
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Container(

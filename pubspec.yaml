@@ -21,6 +21,7 @@ dependencies:
   expansion_widget: ^0.0.3
   syncfusion_flutter_charts: ^24.2.3+1
   collection: ^1.18.0
+  scrollable_positioned_list: ^0.3.8
 
 dev_dependencies:
   flutter_test:

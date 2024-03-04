@@ -25,6 +25,13 @@ class PlayerLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     print('build');
     return SfCartesianChart(
+      zoomPanBehavior: ZoomPanBehavior(
+        enablePinching: true,
+        enablePanning: true,
+        zoomMode: ZoomMode.xy,
+        maximumZoomLevel: 0.5,
+        enableDoubleTapZooming: true,
+      ),
       margin: EdgeInsets.zero,
       primaryYAxis: const NumericAxis(
         interval: 10,
@@ -32,13 +39,17 @@ class PlayerLineChart extends StatelessWidget {
         minimum: -60,
         maximum: 60,
         labelStyle: TextStyle(color: Colors.transparent),
+        axisLine: AxisLine(color: Colors.transparent),
+        majorTickLines: MajorTickLines(color: Colors.transparent),
       ),
       primaryXAxis: const NumericAxis(
         interval: 10,
         crossesAt: 0,
-        minimum: -80,
-        maximum: 80,
+        minimum: -90,
+        maximum: 90,
         labelStyle: TextStyle(color: Colors.transparent),
+        axisLine: AxisLine(color: Colors.transparent),
+        majorTickLines: MajorTickLines(color: Colors.transparent),
       ),
       series: [
         ScatterSeries(

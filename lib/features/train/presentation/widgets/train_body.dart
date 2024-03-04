@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
@@ -9,17 +11,29 @@ import 'package:inmotion_mobile_test/features/train/presentation/widgets/logs_wi
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/player_tile.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class MainBody extends StatefulWidget {
-  const MainBody({super.key});
+class TrainBody extends StatefulWidget {
+  const TrainBody({super.key});
 
   @override
-  State<MainBody> createState() => _MainBodyState();
+  State<TrainBody> createState() => _TrainBodyState();
 }
 
-class _MainBodyState extends State<MainBody> {
+class _TrainBodyState extends State<TrainBody> {
   final appTimerController = AppTimerController();
   final l = getIt<AppLogsController>();
+  final itemController = ItemScrollController();
+  var isExpanded = false;
+
+  void scrollToIndex(int index) {
+    itemController.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 200),
+      alignment: 0,
+      curve: Curves.easeInOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +69,31 @@ class _MainBodyState extends State<MainBody> {
           const LegendWidget(),
           const SizedBox(height: 16),
           Expanded(
-            child: ListView.separated(
-              itemCount: model.players.length,
-              itemBuilder: (context, i) {
-                return PlayerTile(player: model.players[i]);
-              },
-              separatorBuilder: (context, i) {
-                return const SizedBox(height: 8);
-              },
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return ScrollablePositionedList.separated(
+                  physics: isExpanded ? const NeverScrollableScrollPhysics() : null,
+                  itemCount: model.players.length,
+                  itemScrollController: itemController,
+                  itemBuilder: (context, i) {
+                    return PlayerTile(
+                      maxHeight: constraints.maxHeight,
+                      player: model.players[i],
+                      onExpansionWillChange: (_, isExpanded) {
+                        if (isExpanded) {
+                          scrollToIndex(i);
+                        }
+                        setState(() {
+                          this.isExpanded = !this.isExpanded;
+                        });
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, i) {
+                    return const SizedBox(height: 8);
+                  },
+                );
+              }
             ),
           ),
           const SizedBox(height: 16),
