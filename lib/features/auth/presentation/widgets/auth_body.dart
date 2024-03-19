@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_button.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_text_field.dart';
+import 'package:inmotion_mobile_test/core/presentation/link_text.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AuthBody extends StatefulWidget {
   const AuthBody({super.key, required this.onResult});
@@ -41,7 +43,7 @@ class _AuthBodyState extends State<AuthBody> {
         child: Stack(
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 80),
                 Padding(
@@ -91,6 +93,22 @@ class _AuthBodyState extends State<AuthBody> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
+                LinkText(
+                  "https://sporttech-pro.ru/inmotion/inmotion/policy",
+                  onTap: () async {
+                    await launchUrlString(
+                        "https://sporttech-pro.ru/inmotion/inmotion/policy");
+                  },
+                ),
+                const SizedBox(height: 6),
+                LinkText(
+                  "https://sporttech-pro.ru/inmotion/inmotion/terms",
+                  onTap: () async {
+                    await launchUrlString(
+                        "https://sporttech-pro.ru/inmotion/inmotion/terms");
+                  },
+                ),
                 const Spacer()
               ],
             ),
@@ -137,7 +155,7 @@ class _AuthBodyState extends State<AuthBody> {
                             style: theme.textTheme.labelLarge,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

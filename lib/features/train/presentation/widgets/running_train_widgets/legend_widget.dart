@@ -65,7 +65,7 @@ class LegendItem extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: theme.textTheme.displaySmall,
+              style: theme.textTheme.displaySmall?.copyWith(fontSize: 10),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

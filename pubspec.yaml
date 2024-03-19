@@ -22,6 +22,10 @@ dependencies:
   syncfusion_flutter_charts: ^24.2.3+1
   collection: ^1.18.0
   scrollable_positioned_list: ^0.3.8
+  url_launcher: ^6.2.5
+
+  flutter_blue_plus: ^1.31.15
+  flutter_blue: ^0.8.0
 
 dev_dependencies:
   flutter_test:
@@ -29,6 +33,12 @@ dev_dependencies:
   auto_route_generator: ^7.3.2
   build_runner:
   flutter_lints: ^3.0.1
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_icon.webp"
 
 flutter:
   uses-material-design: true

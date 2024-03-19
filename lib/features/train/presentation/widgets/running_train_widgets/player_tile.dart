@@ -1,16 +1,13 @@
-import 'dart:developer';
-
 import 'package:expansion_widget/expansion_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
-import 'package:inmotion_mobile_test/core/presentation/app_icon_button.dart';
 import 'package:inmotion_mobile_test/core/utils/stats_calculator.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/legend_widget.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/player_line_chart.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/ranges_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/legend_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/player_line_chart.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/ranges_widget.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +16,12 @@ class PlayerTile extends StatefulWidget {
     super.key,
     required this.player,
     required this.maxHeight,
-    this.onExpansionWillChange,
+    this.onExpansion,
   });
 
   final PlayerEntity player;
   final double maxHeight;
-  final Function(PlayerEntity, bool)? onExpansionWillChange;
+  final Function(PlayerEntity, bool)? onExpansion;
 
   @override
   State<PlayerTile> createState() => _PlayerTileState();
@@ -47,8 +44,8 @@ class _PlayerTileState extends State<PlayerTile> {
             child: ExpansionWidget(
               duration: Duration.zero,
               onExpansionWillChange: (isExpanded) {
-                if (widget.onExpansionWillChange != null) {
-                  widget.onExpansionWillChange!(player, isExpanded);
+                if (widget.onExpansion != null) {
+                  widget.onExpansion!(player, isExpanded);
                 }
                 return true;
               },
@@ -195,6 +192,7 @@ class _PlayerTileState extends State<PlayerTile> {
                 );
               },
               content: Container(
+                height: widget.maxHeight - titleHeight + 8,
                 margin: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primaryContainer,
@@ -205,7 +203,8 @@ class _PlayerTileState extends State<PlayerTile> {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: widget.maxHeight - titleHeight - 95,
+                      height: widget.maxHeight - titleHeight - 70,
+                      //height: 210,
                       child: Row(
                         children: [
                           Expanded(
