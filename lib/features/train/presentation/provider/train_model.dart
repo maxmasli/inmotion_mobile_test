@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:collection';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data_decoder.dart';
 import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resources.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
@@ -11,14 +14,13 @@ import 'package:inmotion_mobile_test/features/train/domain/repositories/hr_senso
 import 'package:permission_handler/permission_handler.dart';
 
 class TrainModel extends ChangeNotifier {
+  final decoder = InmotionTagDataDecoder();
+
   // Status
   var _systemStatus = SystemStatus.off;
   var _trainStage = TrainStage.prepare;
 
   // Repositories
-  final l = getIt<AppLogsController>();
-  final _hrSensorRepository = getIt<HrSensorRepository>();
-  final _gpsSensorRepository = getIt<GpsSensorRepository>();
 
   // Permissions
   var _hasAllPermissions = true;
@@ -29,16 +31,26 @@ class TrainModel extends ChangeNotifier {
   StreamSubscription<BluetoothAdapterState>? _bleStatusStream;
   StreamSubscription<List<ScanResult>>? _scanResultStream;
   BluetoothAdapterState? _bluetoothState;
-  final List<BluetoothDevice> _devices = [];
+
+  //TODO список игроков будет вместо девайсов
+  final List<BluetoothDevice> _foundedDevices = [];
 
   bool get isBLEOn => _bluetoothState == BluetoothAdapterState.on;
 
-  List<BluetoothDevice> get devices => _devices;
+  List<BluetoothDevice> get foundedDevices => _foundedDevices;
 
   // Model
-  final List<PlayerEntity> _players = demoPlayersList;
+  // TODO переделать/убрать
+  final List<PlayerEntity> _players2 = demoPlayersList;
+
+  // TODO переделать/убрать
+  List<PlayerEntity> get players2 => _players2;
 
   List<PlayerEntity> get players => _players;
+
+  final _players = <PlayerEntity>[];
+
+  final _selectedPlayers = <PlayerEntity>[];
 
   SystemStatus get systemStatus => _systemStatus;
 
@@ -46,31 +58,44 @@ class TrainModel extends ChangeNotifier {
 
   void _startScanning() async {
     await _checkPermissions();
-    if (!_hasAllPermissions) return;
+    if (!_hasAllPermissions || !isBLEOn) return;
 
-    // TODO надо будет както различать датчики
-    const guid = "243a0000-1234-2374-5673-a8a1593ef645";
+    // Для идентификации датчиков
+    final guid = Guid("243a0000-1234-2374-5673-a8a1593ef645");
+
+    // Метод работает всегда для прослушки имерений из adv пакетов
     _scanResultStream = FlutterBluePlus.onScanResults.listen(
       (results) {
-        _devices.clear();
-        print("--------------------");
+        _foundedDevices.clear();
         for (final scanResult in results) {
-          if (scanResult.advertisementData.serviceUuids.contains(Guid(guid))) {
-            print(scanResult.advertisementData.advName);
-            // TODO вызывать метод createPlayerFromDevice
-            // TODO каждый найденый девайс преобразовывается в типа игрока с сенсором
-            _devices.add(scanResult.device);
+          if (scanResult.advertisementData.serviceUuids.contains(guid)) {
+            /// Девайс нашелся, но не добавлен
+            if (!_players
+                .map((p) => p.sensor?.device)
+                .contains(scanResult.device)) {
+              _foundedDevices.add(scanResult.device);
+            } else if (_systemStatus == SystemStatus.rec) {
+              /// Девайс добавлен, обновляем данные player если идет запись
+              final player = _players
+                  .where((p) => p.sensor?.device == scanResult.device)
+                  .first;
+              final serviceGuid = scanResult.advertisementData.serviceUuids[0];
+              final frame =
+                  scanResult.advertisementData.serviceData[serviceGuid];
+              final (meta, payload) = decoder.decodeFrame(frame!);
+              player.addMeasure(payload);
+            }
             notifyListeners();
           }
         }
       },
-      onError: (e) => print(e),
+      onError: (e) => log(e),
     );
-
     await FlutterBluePlus.startScan();
   }
 
   void init() {
+    _startScanning();
     _bleStatusStream = FlutterBluePlus.adapterState.listen(
       (BluetoothAdapterState state) {
         _bluetoothState = state;
@@ -80,53 +105,29 @@ class TrainModel extends ChangeNotifier {
         }
       },
     );
-
-    // for (final player in _players) {
-    //   final hrSensor = _hrSensorRepository.createSensor();
-    //   final gpsSensor = _gpsSensorRepository.createSensor();
-    //
-    //   hrSensor.onMeasureReceive = (meas) {
-    //     l.log(
-    //       "HrMeasure received on ${player.name}, hr: ${meas.hr}",
-    //       'HrSensor',
-    //     );
-    //   };
-    //
-    //   gpsSensor.onMeasureReceive = (meas) {
-    //     l.log(
-    //       "GpsMeasure received on ${player.name}, x: ${meas.x}, y: ${meas.y}",
-    //       'GpsSensor',
-    //     );
-    //   };
-    //
-    //   player.hrSensor = hrSensor;
-    //   player.gpsSensor = gpsSensor;
-    //   l.log('HrSensor connected to player ${player.name}', 'MainModel');
-    //   l.log('GpsSensor connected to player ${player.name}', 'MainModel');
-    // }
   }
 
-  // TODO сделать метод
-  void createPlayerFromDevice() {
-
+  void saveDevice(BluetoothDevice device) {
+    final player = PlayerEntity.fromDevice(device);
+    _foundedDevices.remove(device);
+    _players.add(player);
+    notifyListeners();
   }
 
   void startRecording() {
     _systemStatus = SystemStatus.rec;
     notifyListeners();
-    l.log("Start recording", "MainModel");
   }
 
   void stopRecording() {
     _systemStatus = SystemStatus.off;
     notifyListeners();
-    l.log("Stop recording", "MainModel");
   }
 
+  // TODO убрать паузу
   void pauseRecording() {
     _systemStatus = SystemStatus.rec;
     notifyListeners();
-    l.log("Pause recording", "MainModel");
   }
 
   Future<void> _checkPermissions() async {
@@ -149,6 +150,7 @@ class TrainModel extends ChangeNotifier {
       print("location no!!!");
       return;
     }
+    notifyListeners();
   }
 
   @override

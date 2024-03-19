@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/provider/train_provider.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 

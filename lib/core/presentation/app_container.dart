@@ -24,15 +24,15 @@ class AppContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return RepaintBoundary(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: borderRadius,
-          onTap: onTap,
-          child: PhysicalModel(
-            color: color ?? theme.colorScheme.primaryContainer,
+      child: PhysicalModel(
+        color: color ?? theme.colorScheme.primaryContainer,
+        borderRadius: borderRadius,
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
             borderRadius: borderRadius,
-            elevation: 2,
+            onTap: onTap,
             child: Ink(
               padding: padding,
               width: width,

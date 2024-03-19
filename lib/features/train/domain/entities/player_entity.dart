@@ -1,9 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/gps_measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/gps_sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/hr_measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/hr_sensor_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 
 // One step == 75cm or 0.75m
 const step = 0.75;
@@ -12,53 +15,56 @@ class PlayerEntity extends ChangeNotifier {
   final String name;
   final int number;
 
-  final _hrMeasures = <HrMeasureEntity>[];
-  final _gpsMeasures = <GpsMeasureEntity>[];
+  RunningType _runningType;
+  SensorEntity? _sensor;
 
-  RunningType runningType;
-  GpsSensorEntity? _gpsSensor;
-  HrSensorEntity? _hrSensor;
+  final List<MeasureEntity> _measures = [];
 
   PlayerEntity({
     required this.name,
     required this.number,
-    this.runningType = RunningType.onFoot,
-  });
+    required SensorEntity sensor,
+  })  : _runningType = RunningType.onFoot,
+        _sensor = sensor;
 
-  int get distance => _gpsMeasures.map((m) => m.distance).sum;
+  PlayerEntity.fromDevice(BluetoothDevice device)
+      : this(name: "Name", number: 01, sensor: SensorEntity(device: device));
+
+  RunningType get runningType => _runningType;
+
+  SensorEntity? get sensor => _sensor;
+
+  //TODO переделать как в расчетах
+
+  int get distance => 10;
 
   int get steps => (distance * step).round();
 
-  int get pulse => _hrMeasures.lastOrNull?.hr ?? 0;
+  int get pulse => 10;
 
-  List<(int x, int y, int speed)> get coordinates =>
-      _gpsMeasures.map((m) => (m.x, m.y, m.speed)).toList();
+  List<(int x, int y, int speed)> get coordinates => [(1, 2, 3)];
 
-  List<HrMeasureEntity> get hrMeasures => _hrMeasures;
+  List<HrMeasureEntity> get hrMeasures => [];
 
-  int get speed => _gpsMeasures.lastOrNull?.speed ?? 0;
+  int get speed => 0;
 
-  set hrSensor(HrSensorEntity sensor) {
-    _hrSensor = sensor;
-    sensor.stream.listen((meas) {
-      _hrMeasures.add(meas);
-      notifyListeners();
-    });
-  }
+  // TODO расчеты
 
-  set gpsSensor(GpsSensorEntity sensor) {
-    _gpsSensor = sensor;
-    sensor.stream.listen((meas) {
-      _gpsMeasures.add(meas);
-      notifyListeners();
-    });
-  }
+  // int get distance => _gpsMeasures.map((m) => m.distance).sum;
+  //
+  // int get steps => (distance * step).round();
+  //
+  // int get pulse => _hrMeasures.lastOrNull?.hr ?? 0;
+  //
+  // List<(int x, int y, int speed)> get coordinates =>
+  //     _gpsMeasures.map((m) => (m.x, m.y, m.speed)).toList();
+  //
+  // List<HrMeasureEntity> get hrMeasures => _hrMeasures;
+  //
+  // int get speed => _gpsMeasures.lastOrNull?.speed ?? 0;
 
-  @override
-  void dispose() {
-    super.dispose();
-    _gpsSensor?.dispose();
-    _hrSensor?.dispose();
+  void addMeasure(MeasureEntity payload) {
+    _measures.add(payload);
   }
 }
 

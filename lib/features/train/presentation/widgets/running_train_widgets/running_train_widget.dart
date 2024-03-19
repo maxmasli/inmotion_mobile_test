@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/provider/train_provider.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/legend_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/player_tile.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_body.dart';
@@ -42,7 +42,7 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
                 return ScrollablePositionedList.separated(
                   physics:
                   isExpanded ? const NeverScrollableScrollPhysics() : null,
-                  itemCount: model.players.length,
+                  itemCount: model.players2.length,
                   itemScrollController: itemController,
                   padding: EdgeInsets.only(
                     bottom: height * bottomSheetMinHeight - 20,
@@ -52,7 +52,7 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
                       maxHeight: constraints.maxHeight -
                           height * bottomSheetMinHeight +
                           4,
-                      player: model.players[i],
+                      player: model.players2[i],
                       onExpansion: (_, isExpanded) {
                         if (isExpanded) {
                           scrollToIndex(i);

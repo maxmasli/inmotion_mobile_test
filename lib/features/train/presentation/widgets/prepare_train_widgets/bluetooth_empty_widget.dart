@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 
-class BluetoothOffWidget extends StatelessWidget {
-  const BluetoothOffWidget({super.key});
+class BluetoothEmptyWidget extends StatelessWidget {
+  const BluetoothEmptyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

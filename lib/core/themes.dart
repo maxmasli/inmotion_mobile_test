@@ -4,6 +4,7 @@ import 'package:inmotion_mobile_test/core/colors.dart';
 ThemeData createLightTheme() {
   return ThemeData(
     textTheme: _baseTextTheme(false),
+    primaryColor: AppColors.lightGreen,
     scaffoldBackgroundColor: AppColors.gray239,
     colorScheme: ThemeData().colorScheme.copyWith(
           primaryContainer: Colors.white,
@@ -36,6 +37,13 @@ ThemeData createLightTheme() {
     indicatorColor: AppColors.lightGreen,
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.green
+    ),
+
+    switchTheme: const SwitchThemeData(
+      overlayColor: MaterialStatePropertyAll(AppColors.green),
+      thumbColor: MaterialStatePropertyAll(Colors.white),
+      trackColor: MaterialStatePropertyAll(AppColors.green),
+      trackOutlineColor: MaterialStatePropertyAll(AppColors.green)
     )
   );
 }

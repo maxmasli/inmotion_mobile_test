@@ -3,7 +3,7 @@ import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart'
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/di.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/provider/train_provider.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/prepare_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/running_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
