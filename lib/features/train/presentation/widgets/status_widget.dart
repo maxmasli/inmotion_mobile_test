@@ -19,7 +19,6 @@ class StatusWidget extends StatelessWidget {
       child: SvgPicture.asset(
         switch (model.systemStatus) {
           SystemStatus.off => AppIcons.off,
-          SystemStatus.ready => AppIcons.ready,
           SystemStatus.rec => AppIcons.rec,
           SystemStatus.error => AppIcons.error,
         },

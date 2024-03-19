@@ -23,6 +23,7 @@ dependencies:
   collection: ^1.18.0
   scrollable_positioned_list: ^0.3.8
   url_launcher: ^6.2.5
+  permission_handler: ^11.3.0
 
   flutter_blue_plus: ^1.31.15
   flutter_blue: ^0.8.0

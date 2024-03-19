@@ -32,6 +32,11 @@ ThemeData createLightTheme() {
       space: 1,
     ),
     appBarTheme: const AppBarTheme(backgroundColor: AppColors.lightGreen),
+
+    indicatorColor: AppColors.lightGreen,
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      color: AppColors.green
+    )
   );
 }
 
@@ -94,6 +99,13 @@ TextTheme _baseTextTheme(bool isDark) {
         fontSize: 28,
         color: AppColors.gray73,
       ),
+      //-------------------------
+      bodyMedium: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 17,
+        color: AppColors.gray134,
+        fontWeight: FontWeight.w600,
+      )
     );
   }
 }
