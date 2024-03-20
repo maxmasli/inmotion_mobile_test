@@ -6,13 +6,13 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data_decoder.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resources.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TrainModel extends ChangeNotifier {
   final decoder = InmotionTagDataDecoder();
 
   // Status
-  var _systemStatus = SystemStatus.off;
   var _trainStage = TrainStage.prepare;
 
   // Repositories
@@ -41,13 +41,31 @@ class TrainModel extends ChangeNotifier {
   // TODO переделать/убрать
   List<PlayerEntity> get players2 => _players2;
 
-  List<PlayerEntity> get players => _players;
+  bool _isTrainStart = false;
 
   final _players = <PlayerEntity>[];
 
   final _selectedPlayers = <PlayerEntity>[];
 
-  SystemStatus get systemStatus => _systemStatus;
+  List<PlayerEntity> get players => _players;
+
+  List<PlayerEntity> get selectedPlayers => _selectedPlayers;
+
+  SystemStatus get systemStatus {
+    /// Если в _selectedPlayers есть неподключенные, то SystemStatus.error
+    if (_selectedPlayers
+        .where((p) => p.sensor.status != SensorStatus.connected)
+        .isNotEmpty) return SystemStatus.error;
+
+    /// Если выбранных игроков нет и тренировка не идет то SystemStatus.off
+    if (selectedPlayers.isEmpty && !_isTrainStart) return SystemStatus.off;
+
+    if (selectedPlayers.isNotEmpty && !_isTrainStart) return SystemStatus.ready;
+
+    if (_isTrainStart) return SystemStatus.rec;
+
+    throw Exception("Unexcepted behavior of systemStatus");
+  }
 
   TrainStage get trainStage => _trainStage;
 
@@ -69,7 +87,6 @@ class TrainModel extends ChangeNotifier {
             if (!_players
                 .map((p) => p.sensor.device)
                 .contains(scanResult.device)) {
-              log("device found");
               _foundedDevices.add(scanResult.device);
               notifyListeners();
               return;
@@ -82,11 +99,10 @@ class TrainModel extends ChangeNotifier {
             final frame = scanResult.advertisementData.serviceData[serviceGuid];
             final (meta, payload) = decoder.decodeFrame(frame!);
 
-            if (_systemStatus != SystemStatus.rec) {
+            if (!_isTrainStart) {
               /// Если не идет запись
-              /// Девайс добавлен, обновляем данные player если идет запись
               player.notifySensor(meta);
-            } else if (_systemStatus != SystemStatus.rec) {
+            } else {
               /// Если идет запись
               player.addMeasure(payload, meta);
             }
@@ -112,26 +128,45 @@ class TrainModel extends ChangeNotifier {
     );
   }
 
+  void toggleSelectedPlayers(PlayerEntity player) {
+    if (_selectedPlayers.contains(player)) {
+      log("remove player from selected players");
+      _selectedPlayers.remove(player);
+    } else {
+      log("add player to selected players");
+      _selectedPlayers.add(player);
+    }
+    notifyListeners();
+  }
+
   void saveDevice(BluetoothDevice device) {
-    final player = PlayerEntity.fromDevice(device);
+    final player = PlayerEntity.fromDevice(
+        device: device,
+        onSensorStatusUpdate: () {
+          /// Если статус датчика изменился, олключился или подключился, надо
+          /// вызвать notifyListeners для пересчета полей модели
+          notifyListeners();
+        });
+
     _foundedDevices.remove(device);
     _players.add(player);
+    _selectedPlayers.add(player);
     notifyListeners();
   }
 
   void startRecording() {
-    _systemStatus = SystemStatus.rec;
+    _isTrainStart = true;
+    assert(_trainStage == TrainStage.prepare,
+        "TrainStage is not prepare. Can not start train");
+    _trainStage = TrainStage.running;
     notifyListeners();
   }
 
   void stopRecording() {
-    _systemStatus = SystemStatus.off;
-    notifyListeners();
-  }
-
-  // TODO убрать паузу
-  void pauseRecording() {
-    _systemStatus = SystemStatus.rec;
+    _isTrainStart = false;
+    assert(_trainStage == TrainStage.running,
+        "TrainStage is not running. Can not start train");
+    _trainStage = TrainStage.end;
     notifyListeners();
   }
 
@@ -166,7 +201,7 @@ class TrainModel extends ChangeNotifier {
   }
 }
 
-enum SystemStatus { off, rec, error }
+enum SystemStatus { off, ready, rec, error }
 
 /// Для правильного показа этапа
 enum TrainStage { prepare, running, end }

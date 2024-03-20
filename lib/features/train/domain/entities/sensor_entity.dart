@@ -14,9 +14,9 @@ class SensorEntity extends ChangeNotifier {
   final BluetoothDevice device;
   final int number;
   bool _isHrOk = false;
-  SensorStatus _sensorStatus = SensorStatus.disconnected;
+  SensorStatus _status = SensorStatus.disconnected;
 
-  SensorStatus get sensorStatus => _sensorStatus;
+  SensorStatus get status => _status;
 
   bool get isHrOk => _isHrOk;
 
@@ -30,7 +30,6 @@ class SensorEntity extends ChangeNotifier {
   void _startTimeoutTimer() {
     _timeoutTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _timeoutCounter += 1;
-      log(_timeoutCounter.toString());
       _updateStatus();
     });
   }
@@ -51,19 +50,19 @@ class SensorEntity extends ChangeNotifier {
   }
 
   void _updateStatus() {
-    if (_timeoutCounter >= 30 && _sensorStatus != SensorStatus.disconnected) {
-      _sensorStatus = SensorStatus.disconnected;
+    if (_timeoutCounter >= 10 && _status != SensorStatus.disconnected) {
+      _status = SensorStatus.disconnected;
       log("Sensor status disconnected");
       notifyListeners();
-    } else if (_timeoutCounter >= 15 &&
-        _timeoutCounter < 30 &&
-        _sensorStatus != SensorStatus.timeout) {
-      _sensorStatus = SensorStatus.timeout;
+    } else if (_timeoutCounter >= 5 &&
+        _timeoutCounter < 10 &&
+        _status != SensorStatus.timeout) {
+      _status = SensorStatus.timeout;
       log("Sensor status timeout");
       notifyListeners();
-    } else if (_timeoutCounter < 15 &&
-        _sensorStatus != SensorStatus.connected) {
-      _sensorStatus = SensorStatus.connected;
+    } else if (_timeoutCounter < 5 &&
+        _status != SensorStatus.connected) {
+      _status = SensorStatus.connected;
       log("Sensor status connected");
       notifyListeners();
     }

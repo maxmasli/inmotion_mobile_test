@@ -44,15 +44,6 @@ class AppTimerController extends ChangeNotifier {
     l.log('Stop timer', 'Timer');
   }
 
-  void pauseTimer() {
-    assert(state != TimerState.paused, "Timer is paused already");
-    _timer?.cancel();
-    _timer = null;
-    _state = TimerState.paused;
-    notifyListeners();
-    l.log('Pause timer', 'Timer');
-  }
-
   void toggleTick() {
     if (_onTick != null) {
       _onTick!(_time);
@@ -65,7 +56,7 @@ class AppTimerController extends ChangeNotifier {
   }
 }
 
-enum TimerState { stopped, running, paused }
+enum TimerState { stopped, running }
 
 extension _Format on int {
   String hhmmss() {

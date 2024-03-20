@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/di.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/prepare_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/running_train_widget.dart';
@@ -24,7 +28,10 @@ class _TrainBodyState extends State<TrainBody> {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<TrainModel>();
+    final model = context.read<TrainModel>();
+    final trainStage = context.select<TrainModel, TrainStage>(
+      (model) => model.trainStage,
+    );
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
       child: Stack(
@@ -34,19 +41,23 @@ class _TrainBodyState extends State<TrainBody> {
               Row(
                 children: [
                   Expanded(
-                    child: AppTimerWidget(
-                      controller: appTimerController,
-                      onStartPressed: () {
-                        appTimerController.startTimer();
-                        model.startRecording();
-                      },
-                      onStopPressed: () {
-                        appTimerController.stopTimer();
-                        model.stopRecording();
-                      },
-                      onPausePressed: () {
-                        appTimerController.pauseTimer();
-                        model.pauseRecording();
+                    child: Selector<TrainModel, SystemStatus>(
+                      selector: (context, model) => model.systemStatus,
+                      shouldRebuild: (prev, next) => prev != next,
+                      builder: (context, systemStatus, child) {
+                        return AppTimerWidget(
+                          isEnabled: systemStatus == SystemStatus.ready ||
+                              systemStatus == SystemStatus.rec,
+                          controller: appTimerController,
+                          onStartPressed: () {
+                            appTimerController.startTimer();
+                            model.startRecording();
+                          },
+                          onStopPressed: () {
+                            appTimerController.stopTimer();
+                            model.stopRecording();
+                          },
+                        );
                       },
                     ),
                   ),
@@ -55,15 +66,19 @@ class _TrainBodyState extends State<TrainBody> {
                 ],
               ),
               const SizedBox(height: 16),
-
-              switch (model.trainStage) {
-                TrainStage.prepare => const PrepareTrainWidget(),
-                TrainStage.running => const RunningTrainWidget(),
-                TrainStage.end => throw UnimplementedError(),
-              }
+              Selector<TrainModel, TrainStage>(
+                selector: (context, model) => model.trainStage,
+                shouldRebuild: (prev, next) => prev != next,
+                builder: (context, trainStage, child) {
+                  return switch (trainStage) {
+                    TrainStage.prepare => const PrepareTrainWidget(),
+                    TrainStage.running => const RunningTrainWidget(),
+                    TrainStage.end => Text("end"),
+                  };
+                },
+              ),
             ],
           ),
-
           DraggableScrollableSheet(
             initialChildSize: bottomSheetMinHeight,
             minChildSize: bottomSheetMinHeight,

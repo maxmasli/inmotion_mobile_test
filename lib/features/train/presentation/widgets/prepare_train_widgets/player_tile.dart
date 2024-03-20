@@ -5,6 +5,7 @@ import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_icon_button.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 
@@ -16,12 +17,20 @@ class PlayerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final model = context.read<TrainModel>();
+    final selectedPlayers = context.select<TrainModel, List<PlayerEntity>>(
+        (model) => model.selectedPlayers);
     return AppContainer(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
       borderRadius: BorderRadius.circular(16),
       child: Row(
         children: [
-          Switch(value: true, onChanged: (val) {}),
+          Switch(
+            value: selectedPlayers.contains(player),
+            onChanged: (val) {
+              model.toggleSelectedPlayers(player);
+            },
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -33,8 +42,7 @@ class PlayerTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  "${player.sensor.number} ${player.sensor.device.remoteId
-                      .str}",
+                  "${player.sensor.number} ${player.sensor.device.remoteId.str}",
                   style: theme.textTheme.displaySmall,
                   overflow: TextOverflow.ellipsis,
                 )
@@ -96,7 +104,7 @@ class _IndicatorWidget extends StatelessWidget {
       value: sensor,
       child: Consumer<SensorEntity>(
         builder: (context, sensor, child) {
-          final status = sensor.sensorStatus;
+          final status = sensor.status;
           return ClipOval(
             child: SizedBox(
               width: 8,

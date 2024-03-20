@@ -37,11 +37,25 @@ ThemeData createLightTheme() {
     indicatorColor: AppColors.lightGreen,
     progressIndicatorTheme:
         const ProgressIndicatorThemeData(color: AppColors.green),
-    switchTheme: const SwitchThemeData(
-      overlayColor: MaterialStatePropertyAll(AppColors.green),
-      thumbColor: MaterialStatePropertyAll(Colors.white),
-      trackColor: MaterialStatePropertyAll(AppColors.green),
-      trackOutlineColor: MaterialStatePropertyAll(AppColors.green),
+    switchTheme: SwitchThemeData(
+      overlayColor: const MaterialStatePropertyAll(AppColors.green),
+      thumbColor: const MaterialStatePropertyAll(Colors.white),
+      trackColor:
+          MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+          return AppColors.green;
+        } else {
+          return AppColors.gray186;
+        }
+      }),
+      trackOutlineColor:
+          MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+        if (states.contains(MaterialState.selected)) {
+          return AppColors.green;
+        } else {
+          return AppColors.gray186;
+        }
+      }),
     ),
   );
 }

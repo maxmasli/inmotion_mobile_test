@@ -10,19 +10,25 @@ class StatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<TrainModel>();
-    return AppContainer(
-      height: 86,
-      width: 86,
-      borderRadius: BorderRadius.circular(1000),
-      padding: const EdgeInsets.all(8),
-      child: SvgPicture.asset(
-        switch (model.systemStatus) {
-          SystemStatus.off => AppIcons.off,
-          SystemStatus.rec => AppIcons.rec,
-          SystemStatus.error => AppIcons.error,
-        },
-      ),
+    return Selector<TrainModel, SystemStatus>(
+      selector: (context, model) => model.systemStatus,
+      shouldRebuild: (prev, next) => prev != next,
+      builder: (context, systemStatus, child) {
+        return AppContainer(
+          height: 86,
+          width: 86,
+          borderRadius: BorderRadius.circular(1000),
+          padding: const EdgeInsets.all(8),
+          child: SvgPicture.asset(
+            switch (systemStatus) {
+              SystemStatus.off => AppIcons.off,
+              SystemStatus.ready => AppIcons.ready,
+              SystemStatus.rec => AppIcons.rec,
+              SystemStatus.error => AppIcons.error,
+            },
+          ),
+        );
+      },
     );
   }
 }

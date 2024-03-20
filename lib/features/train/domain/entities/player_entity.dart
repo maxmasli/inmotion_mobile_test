@@ -23,11 +23,26 @@ class PlayerEntity extends ChangeNotifier {
     required this.name,
     required this.number,
     required SensorEntity sensor,
+    VoidCallback? onSensorStatusUpdate,
   })  : _runningType = RunningType.onFoot,
-        _sensor = sensor;
+        _sensor = sensor {
+    if (onSensorStatusUpdate != null) {
+      log("add listener");
+      _sensor.addListener(() {
+        onSensorStatusUpdate();
+      });
+    }
+  }
 
-  PlayerEntity.fromDevice(BluetoothDevice device)
-      : this(name: "Name", number: 01, sensor: SensorEntity(device: device, number: 1));
+  PlayerEntity.fromDevice({
+    required BluetoothDevice device,
+    VoidCallback? onSensorStatusUpdate,
+  }) : this(
+          name: "Name",
+          number: 01,
+          sensor: SensorEntity(device: device, number: 1),
+          onSensorStatusUpdate: onSensorStatusUpdate,
+        );
 
   RunningType get runningType => _runningType;
 
@@ -63,13 +78,11 @@ class PlayerEntity extends ChangeNotifier {
   // int get speed => _gpsMeasures.lastOrNull?.speed ?? 0;
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
-    log("add measure");
     _measures.add(payload);
     _sensor.notify(meta);
   }
 
   void notifySensor([TagMeta? meta]) {
-    log("notify sensor");
     _sensor.notify(meta);
   }
 }

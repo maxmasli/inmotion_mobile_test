@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
@@ -11,17 +15,22 @@ class AppTimerWidget extends StatelessWidget {
     required this.controller,
     required this.onStartPressed,
     required this.onStopPressed,
-    required this.onPausePressed,
+    this.isEnabled = true,
   });
 
   final AppTimerController controller;
+
+  /// Если [isEnabled] == true, то будут активны кнопки старт и стоп
+  /// и соответственно будут вызываться методы [onStartPressed] и [onStopPressed]
+  final bool isEnabled;
+
   final VoidCallback onStartPressed;
   final VoidCallback onStopPressed;
-  final VoidCallback onPausePressed;
 
   // Widget height is 86
   @override
   Widget build(BuildContext context) {
+    log("timer rebuild");
     final theme = Theme.of(context);
     return RepaintBoundary(
       child: ChangeNotifierProvider.value(
@@ -44,9 +53,12 @@ class AppTimerWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       const SizedBox(width: 10),
-                      Text(
-                        controller.formattedTime,
-                        style: theme.textTheme.headlineLarge,
+                      Opacity(
+                        opacity: isEnabled ? 1 : 0.2,
+                        child: Text(
+                          controller.formattedTime,
+                          style: theme.textTheme.headlineLarge,
+                        ),
                       ),
                       const Spacer(),
                       Row(
@@ -55,50 +67,47 @@ class AppTimerWidget extends StatelessWidget {
                             onTap: switch (controller.state) {
                               TimerState.stopped => onStartPressed,
                               TimerState.running => null,
-                              TimerState.paused => onStartPressed,
                             },
                             svgPath: AppIcons.play,
+                            isTimerEnabled: isEnabled,
                           ),
                           const SizedBox(width: 15),
                           TimerIcon(
                             onTap: switch (controller.state) {
                               TimerState.stopped => null,
-                              TimerState.running => onPausePressed,
-                              TimerState.paused => onStopPressed,
+                              TimerState.running => onStopPressed,
                             },
-                            // В случае если нажата пауза, то берется иконка стоп
-                            // В других случаях иконка паузы
-                            svgPath: controller.state == TimerState.paused
-                                ? AppIcons.stop
-                                : AppIcons.pause,
+                            svgPath: AppIcons.stop,
+                            isTimerEnabled: isEnabled,
                           ),
                         ],
                       )
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  width: double.infinity,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: switch (controller.state) {
-                      TimerState.stopped => AppColors.green,
-                      TimerState.running => AppColors.blue.withOpacity(0.3),
-                      TimerState.paused => AppColors.blue,
-                    },
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(16),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      switch (controller.state) {
-                        TimerState.stopped => "Начните тренировку",
-                        TimerState.running => "Идет тренировка",
-                        TimerState.paused => "ПАУЗА",
+                Opacity(
+                  opacity: isEnabled ? 1 : 0.2,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    width: double.infinity,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: switch (controller.state) {
+                        TimerState.stopped => AppColors.green,
+                        TimerState.running => AppColors.blue.withOpacity(0.3),
                       },
-                      style: theme.textTheme.labelSmall,
+                      borderRadius: const BorderRadius.vertical(
+                        bottom: Radius.circular(16),
+                      ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        switch (controller.state) {
+                          TimerState.stopped => "Начните тренировку",
+                          TimerState.running => "Идет тренировка",
+                        },
+                        style: theme.textTheme.labelSmall,
+                      ),
                     ),
                   ),
                 )
@@ -112,21 +121,27 @@ class AppTimerWidget extends StatelessWidget {
 }
 
 class TimerIcon extends StatelessWidget {
-  const TimerIcon({super.key, required this.onTap, required this.svgPath});
+  const TimerIcon({
+    super.key,
+    required this.onTap,
+    required this.svgPath,
+    required this.isTimerEnabled,
+  });
 
   final VoidCallback? onTap;
   final String svgPath;
+  final bool isTimerEnabled;
 
   @override
   Widget build(BuildContext context) {
     return Opacity(
-      opacity: onTap != null ? 1 : 0.2,
+      opacity: onTap != null && isTimerEnabled ? 1 : 0.2,
       child: Material(
         color: Colors.transparent,
         shape: const RoundedRectangleBorder(),
         child: InkWell(
           borderRadius: BorderRadius.circular(1000),
-          onTap: onTap,
+          onTap: isTimerEnabled ? onTap : null,
           child: Ink(
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
