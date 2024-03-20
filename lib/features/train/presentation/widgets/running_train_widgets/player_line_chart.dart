@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -23,7 +25,7 @@ class PlayerLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
+    log('build');
     return SfCartesianChart(
       zoomPanBehavior: ZoomPanBehavior(
         enablePinching: true,

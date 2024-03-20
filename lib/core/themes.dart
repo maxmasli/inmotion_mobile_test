@@ -10,6 +10,7 @@ ThemeData createLightTheme() {
           primaryContainer: Colors.white,
           secondaryContainer: AppColors.lightGreen,
           tertiaryContainer: AppColors.green,
+          error: AppColors.red,
         ),
     inputDecorationTheme: const InputDecorationTheme(
       hintStyle: TextStyle(
@@ -33,18 +34,15 @@ ThemeData createLightTheme() {
       space: 1,
     ),
     appBarTheme: const AppBarTheme(backgroundColor: AppColors.lightGreen),
-
     indicatorColor: AppColors.lightGreen,
-    progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: AppColors.green
-    ),
-
+    progressIndicatorTheme:
+        const ProgressIndicatorThemeData(color: AppColors.green),
     switchTheme: const SwitchThemeData(
       overlayColor: MaterialStatePropertyAll(AppColors.green),
       thumbColor: MaterialStatePropertyAll(Colors.white),
       trackColor: MaterialStatePropertyAll(AppColors.green),
-      trackOutlineColor: MaterialStatePropertyAll(AppColors.green)
-    )
+      trackOutlineColor: MaterialStatePropertyAll(AppColors.green),
+    ),
   );
 }
 
@@ -53,67 +51,66 @@ TextTheme _baseTextTheme(bool isDark) {
     return const TextTheme();
   } else {
     return const TextTheme(
-      titleMedium: TextStyle(
-        fontFamily: 'RobotoMedium',
-        fontSize: 17,
-        color: AppColors.green,
-      ),
-      titleLarge: TextStyle(
-        fontFamily: 'RobotoMedium',
-        fontSize: 28,
-        color: AppColors.green,
-      ),
-      //------------------------
-      displaySmall: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 12,
-        color: AppColors.gray134,
-      ),
-      displayLarge: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 17,
-        color: AppColors.gray186,
-      ),
-      //------------------------
-      labelSmall: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 14,
-        color: Colors.white,
-      ),
-      labelMedium: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 17,
-        color: Colors.black,
-      ),
-      labelLarge: TextStyle(
-        fontFamily: 'RobotoMedium',
-        fontSize: 22,
-        color: Colors.white,
-      ),
-      //------------------------
-      headlineSmall: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 12,
-        color: Colors.black,
-      ),
-      headlineMedium: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: Colors.black,
-      ),
-      headlineLarge: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 28,
-        color: AppColors.gray73,
-      ),
-      //-------------------------
-      bodyMedium: TextStyle(
-        fontFamily: 'Roboto',
-        fontSize: 17,
-        color: AppColors.gray134,
-        fontWeight: FontWeight.w600,
-      )
-    );
+        titleMedium: TextStyle(
+          fontFamily: 'RobotoMedium',
+          fontSize: 17,
+          color: AppColors.green,
+        ),
+        titleLarge: TextStyle(
+          fontFamily: 'RobotoMedium',
+          fontSize: 28,
+          color: AppColors.green,
+        ),
+        //------------------------
+        displaySmall: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 12,
+          color: AppColors.gray134,
+        ),
+        displayLarge: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 17,
+          color: AppColors.gray186,
+        ),
+        //------------------------
+        labelSmall: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 14,
+          color: Colors.white,
+        ),
+        labelMedium: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 17,
+          color: Colors.black,
+        ),
+        labelLarge: TextStyle(
+          fontFamily: 'RobotoMedium',
+          fontSize: 22,
+          color: Colors.white,
+        ),
+        //------------------------
+        headlineSmall: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 12,
+          color: Colors.black,
+        ),
+        headlineMedium: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.black,
+        ),
+        headlineLarge: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 28,
+          color: AppColors.gray73,
+        ),
+        //-------------------------
+        bodyMedium: TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 17,
+          color: AppColors.gray134,
+          fontWeight: FontWeight.w600,
+        ));
   }
 }

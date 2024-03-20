@@ -1,10 +1,9 @@
-import 'package:collection/collection.dart';
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/gps_measure_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/gps_sensor_entity.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/hr_measure_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/hr_sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 
@@ -16,7 +15,7 @@ class PlayerEntity extends ChangeNotifier {
   final int number;
 
   RunningType _runningType;
-  SensorEntity? _sensor;
+  SensorEntity _sensor;
 
   final List<MeasureEntity> _measures = [];
 
@@ -28,11 +27,11 @@ class PlayerEntity extends ChangeNotifier {
         _sensor = sensor;
 
   PlayerEntity.fromDevice(BluetoothDevice device)
-      : this(name: "Name", number: 01, sensor: SensorEntity(device: device));
+      : this(name: "Name", number: 01, sensor: SensorEntity(device: device, number: 1));
 
   RunningType get runningType => _runningType;
 
-  SensorEntity? get sensor => _sensor;
+  SensorEntity get sensor => _sensor;
 
   //TODO переделать как в расчетах
 
@@ -63,8 +62,15 @@ class PlayerEntity extends ChangeNotifier {
   //
   // int get speed => _gpsMeasures.lastOrNull?.speed ?? 0;
 
-  void addMeasure(MeasureEntity payload) {
+  void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
+    log("add measure");
     _measures.add(payload);
+    _sensor.notify(meta);
+  }
+
+  void notifySensor([TagMeta? meta]) {
+    log("notify sensor");
+    _sensor.notify(meta);
   }
 }
 

@@ -27,13 +27,13 @@ class InmotionTagDataDecoder {
 
   // В данный декодер помещаем те пакеты, которые приходят от Advertise сообщений по BLE
   // И, видимо в будущем сообщения которые будут приходить через LPS
-  (InmotionTagMeta, MeasureEntity) decodeFrame(List<int> frameData) {
+  (TagMeta, MeasureEntity) decodeFrame(List<int> frameData) {
 
     final buf = Uint8Buffer()..addAll(frameData);
 
     final blob = buf.buffer.asByteData(0, metaDataLength);
 
-    final meta = InmotionTagMeta(
+    final meta = TagMeta(
         blob.getUint8(0),
         blob.getUint8(1),
         blob.getUint8(2),

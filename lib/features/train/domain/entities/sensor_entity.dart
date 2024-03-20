@@ -1,10 +1,88 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
 
-class SensorEntity {
+class SensorEntity extends ChangeNotifier {
+  // Timeout
+  Timer? _timeoutTimer;
+  int _timeoutCounter = 0;
 
+  //
   final BluetoothDevice device;
+  final int number;
+  bool _isHrOk = false;
+  SensorStatus _sensorStatus = SensorStatus.disconnected;
 
-  const SensorEntity({
+  SensorStatus get sensorStatus => _sensorStatus;
+
+  bool get isHrOk => _isHrOk;
+
+  SensorEntity({
     required this.device,
-  });
+    required this.number,
+  }) {
+    _startTimeoutTimer();
+  }
+
+  void _startTimeoutTimer() {
+    _timeoutTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _timeoutCounter += 1;
+      log(_timeoutCounter.toString());
+      _updateStatus();
+    });
+  }
+
+  /// Метод который вызывается как только пришло измерение, чтобы понять
+  /// что данные приходят и с девайсом все хорошо
+  void notify([TagMeta? meta]) {
+    _timeoutCounter = 0;
+    _updateHrStatus(meta);
+    _updateStatus();
+  }
+
+  void _updateHrStatus(TagMeta? meta) {
+    if (meta != null && meta.hrOk != _isHrOk) {
+      _isHrOk = meta.hrOk;
+      notifyListeners();
+    }
+  }
+
+  void _updateStatus() {
+    if (_timeoutCounter >= 30 && _sensorStatus != SensorStatus.disconnected) {
+      _sensorStatus = SensorStatus.disconnected;
+      log("Sensor status disconnected");
+      notifyListeners();
+    } else if (_timeoutCounter >= 15 &&
+        _timeoutCounter < 30 &&
+        _sensorStatus != SensorStatus.timeout) {
+      _sensorStatus = SensorStatus.timeout;
+      log("Sensor status timeout");
+      notifyListeners();
+    } else if (_timeoutCounter < 15 &&
+        _sensorStatus != SensorStatus.connected) {
+      _sensorStatus = SensorStatus.connected;
+      log("Sensor status connected");
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timeoutTimer?.cancel();
+    super.dispose();
+  }
+}
+
+enum SensorStatus {
+  /// Девайс подключен
+  connected,
+
+  /// Девайс не отвечает в течении 30 сек.
+  timeout,
+
+  /// Девайс не отвечает в течении минуты и больше
+  disconnected,
 }

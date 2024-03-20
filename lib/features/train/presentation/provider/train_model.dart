@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data_decoder.dart';
-import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resources.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/repositories/gps_sensor_repository.dart';
-import 'package:inmotion_mobile_test/features/train/domain/repositories/hr_sensor_repository.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TrainModel extends ChangeNotifier {
@@ -69,21 +64,31 @@ class TrainModel extends ChangeNotifier {
         _foundedDevices.clear();
         for (final scanResult in results) {
           if (scanResult.advertisementData.serviceUuids.contains(guid)) {
+            //log(scanResult.device.advName);
             /// Девайс нашелся, но не добавлен
             if (!_players
-                .map((p) => p.sensor?.device)
+                .map((p) => p.sensor.device)
                 .contains(scanResult.device)) {
+              log("device found");
               _foundedDevices.add(scanResult.device);
-            } else if (_systemStatus == SystemStatus.rec) {
+              notifyListeners();
+              return;
+            }
+            final player = _players
+                .where((p) => p.sensor.device == scanResult.device)
+                .first;
+
+            final serviceGuid = scanResult.advertisementData.serviceUuids[0];
+            final frame = scanResult.advertisementData.serviceData[serviceGuid];
+            final (meta, payload) = decoder.decodeFrame(frame!);
+
+            if (_systemStatus != SystemStatus.rec) {
+              /// Если не идет запись
               /// Девайс добавлен, обновляем данные player если идет запись
-              final player = _players
-                  .where((p) => p.sensor?.device == scanResult.device)
-                  .first;
-              final serviceGuid = scanResult.advertisementData.serviceUuids[0];
-              final frame =
-                  scanResult.advertisementData.serviceData[serviceGuid];
-              final (meta, payload) = decoder.decodeFrame(frame!);
-              player.addMeasure(payload);
+              player.notifySensor(meta);
+            } else if (_systemStatus != SystemStatus.rec) {
+              /// Если идет запись
+              player.addMeasure(payload, meta);
             }
             notifyListeners();
           }
@@ -133,7 +138,7 @@ class TrainModel extends ChangeNotifier {
   Future<void> _checkPermissions() async {
     _hasAllPermissions = true;
     if (!(await Permission.bluetoothScan.request().isGranted)) {
-      print("bluetoothScan no!!!");
+      log("bluetoothScan no!!!");
       _hasAllPermissions = false;
       notifyListeners();
       return;
@@ -141,13 +146,13 @@ class TrainModel extends ChangeNotifier {
     if (!(await Permission.bluetoothConnect.request().isGranted)) {
       _hasAllPermissions = false;
       notifyListeners();
-      print("bluetoothConnect no!!!");
+      log("bluetoothConnect no!!!");
       return;
     }
     if (!(await Permission.location.request().isGranted)) {
       _hasAllPermissions = false;
       notifyListeners();
-      print("location no!!!");
+      log("location no!!!");
       return;
     }
     notifyListeners();
@@ -163,4 +168,5 @@ class TrainModel extends ChangeNotifier {
 
 enum SystemStatus { off, rec, error }
 
+/// Для правильного показа этапа
 enum TrainStage { prepare, running, end }

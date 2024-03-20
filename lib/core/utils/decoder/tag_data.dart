@@ -17,14 +17,14 @@ class IMU {
   }
 }
 
-class InmotionTagMeta {
+class TagMeta {
   int increment;
   int label;
   int charge;
   int memoryUsage;
   int status;
 
-  InmotionTagMeta(
+  TagMeta(
       this.increment,
       this.label,
       this.charge,

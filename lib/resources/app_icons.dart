@@ -10,7 +10,7 @@ class AppIcons {
   static const String edit = 'assets/icons/edit.svg';
   static const String error = 'assets/icons/error.svg';
   static const String heart = 'assets/icons/heart.svg';
-  static const String heartGray = 'assets/icons/heart_gray.svg';
+  static const String heartSmall = 'assets/icons/heart_small.svg';
   static const String logo = 'assets/icons/logo.svg';
   static const String off = 'assets/icons/off.svg';
   static const String pause = 'assets/icons/pause.svg';

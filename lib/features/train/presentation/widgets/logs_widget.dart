@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/di.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:provider/provider.dart';
 
 class LogsWidget extends StatefulWidget {
