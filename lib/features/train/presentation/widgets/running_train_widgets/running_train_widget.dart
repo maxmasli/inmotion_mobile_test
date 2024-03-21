@@ -42,7 +42,7 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
                 return ScrollablePositionedList.separated(
                   physics:
                   isExpanded ? const NeverScrollableScrollPhysics() : null,
-                  itemCount: model.players2.length,
+                  itemCount: model.players.length,
                   itemScrollController: itemController,
                   padding: EdgeInsets.only(
                     bottom: height * bottomSheetMinHeight - 20,
@@ -52,7 +52,7 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
                       maxHeight: constraints.maxHeight -
                           height * bottomSheetMinHeight +
                           4,
-                      player: model.players2[i],
+                      player: model.players[i],
                       onExpansion: (_, isExpanded) {
                         if (isExpanded) {
                           scrollToIndex(i);

@@ -15,6 +15,27 @@ class TrainModel extends ChangeNotifier {
   // Status
   var _trainStage = TrainStage.prepare;
 
+  TrainStage get trainStage => _trainStage;
+
+  SystemStatus get systemStatus {
+    /// Если в _selectedPlayers есть неподключенные, то SystemStatus.error
+    /// При любых обстоятельствах, тренировка это или нет, если есть неподключенные датчики то ошибка
+    if (_selectedPlayers
+        .where((p) => p.sensor.status != SensorStatus.connected)
+        .isNotEmpty) return SystemStatus.error;
+
+    /// Если выбранных игроков нет и тренировка не идет то SystemStatus.off
+    if (selectedPlayers.isEmpty && !_isTrainStart) return SystemStatus.off;
+
+    /// Если есть выбранные игроки, то тренировка не начата
+    if (selectedPlayers.isNotEmpty && !_isTrainStart) return SystemStatus.ready;
+
+    /// Если тренировка начата
+    if (_isTrainStart) return SystemStatus.rec;
+
+    throw Exception("Unexcepted behavior of systemStatus");
+  }
+
   // Repositories
 
   // Permissions
@@ -27,20 +48,13 @@ class TrainModel extends ChangeNotifier {
   StreamSubscription<List<ScanResult>>? _scanResultStream;
   BluetoothAdapterState? _bluetoothState;
 
-  //TODO список игроков будет вместо девайсов
   final List<BluetoothDevice> _foundedDevices = [];
-
-  bool get isBLEOn => _bluetoothState == BluetoothAdapterState.on;
 
   List<BluetoothDevice> get foundedDevices => _foundedDevices;
 
+  bool get isBLEOn => _bluetoothState == BluetoothAdapterState.on;
+
   // Model
-  // TODO переделать/убрать
-  final List<PlayerEntity> _players2 = demoPlayersList;
-
-  // TODO переделать/убрать
-  List<PlayerEntity> get players2 => _players2;
-
   bool _isTrainStart = false;
 
   final _players = <PlayerEntity>[];
@@ -51,38 +65,20 @@ class TrainModel extends ChangeNotifier {
 
   List<PlayerEntity> get selectedPlayers => _selectedPlayers;
 
-  SystemStatus get systemStatus {
-    /// Если в _selectedPlayers есть неподключенные, то SystemStatus.error
-    if (_selectedPlayers
-        .where((p) => p.sensor.status != SensorStatus.connected)
-        .isNotEmpty) return SystemStatus.error;
-
-    /// Если выбранных игроков нет и тренировка не идет то SystemStatus.off
-    if (selectedPlayers.isEmpty && !_isTrainStart) return SystemStatus.off;
-
-    if (selectedPlayers.isNotEmpty && !_isTrainStart) return SystemStatus.ready;
-
-    if (_isTrainStart) return SystemStatus.rec;
-
-    throw Exception("Unexcepted behavior of systemStatus");
-  }
-
-  TrainStage get trainStage => _trainStage;
-
   void _startScanning() async {
     await _checkPermissions();
     if (!_hasAllPermissions || !isBLEOn) return;
 
-    // Для идентификации датчиков
+    /// Для идентификации датчиков
+    /// Все датчики будут иметь этот Guid
     final guid = Guid("243a0000-1234-2374-5673-a8a1593ef645");
 
-    // Метод работает всегда для прослушки имерений из adv пакетов
+    /// Поток работает всегда для прослушки имерений из adv пакетов
     _scanResultStream = FlutterBluePlus.onScanResults.listen(
       (results) {
         _foundedDevices.clear();
         for (final scanResult in results) {
           if (scanResult.advertisementData.serviceUuids.contains(guid)) {
-            //log(scanResult.device.advName);
             /// Девайс нашелся, но не добавлен
             if (!_players
                 .map((p) => p.sensor.device)
@@ -91,6 +87,7 @@ class TrainModel extends ChangeNotifier {
               notifyListeners();
               return;
             }
+            /// Девайс уже добавлен, достаем данные
             final player = _players
                 .where((p) => p.sensor.device == scanResult.device)
                 .first;
@@ -147,7 +144,6 @@ class TrainModel extends ChangeNotifier {
           /// вызвать notifyListeners для пересчета полей модели
           notifyListeners();
         });
-
     _foundedDevices.remove(device);
     _players.add(player);
     _selectedPlayers.add(player);

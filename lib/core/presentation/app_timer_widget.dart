@@ -22,6 +22,8 @@ class AppTimerWidget extends StatelessWidget {
 
   /// Если [isEnabled] == true, то будут активны кнопки старт и стоп
   /// и соответственно будут вызываться методы [onStartPressed] и [onStopPressed]
+  /// Если таймер идет, и [isEnabled] == false, то таймер продолжает работать
+  /// и кнопки старт и стоп доступны
   final bool isEnabled;
 
   final VoidCallback onStartPressed;
@@ -54,7 +56,7 @@ class AppTimerWidget extends StatelessWidget {
                     children: [
                       const SizedBox(width: 10),
                       Opacity(
-                        opacity: isEnabled ? 1 : 0.2,
+                        opacity: (controller.isRunning || isEnabled) ? 1 : 0.2,
                         child: Text(
                           controller.formattedTime,
                           style: theme.textTheme.headlineLarge,
@@ -69,7 +71,7 @@ class AppTimerWidget extends StatelessWidget {
                               TimerState.running => null,
                             },
                             svgPath: AppIcons.play,
-                            isTimerEnabled: isEnabled,
+                            isTimerEnabled: (controller.isRunning || isEnabled),
                           ),
                           const SizedBox(width: 15),
                           TimerIcon(
@@ -78,7 +80,7 @@ class AppTimerWidget extends StatelessWidget {
                               TimerState.running => onStopPressed,
                             },
                             svgPath: AppIcons.stop,
-                            isTimerEnabled: isEnabled,
+                            isTimerEnabled: (controller.isRunning || isEnabled),
                           ),
                         ],
                       )
@@ -86,7 +88,7 @@ class AppTimerWidget extends StatelessWidget {
                   ),
                 ),
                 Opacity(
-                  opacity: isEnabled ? 1 : 0.2,
+                  opacity: (controller.isRunning || isEnabled) ? 1 : 0.2,
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     width: double.infinity,

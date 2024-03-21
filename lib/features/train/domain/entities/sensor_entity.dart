@@ -38,11 +38,11 @@ class SensorEntity extends ChangeNotifier {
   /// что данные приходят и с девайсом все хорошо
   void notify([TagMeta? meta]) {
     _timeoutCounter = 0;
-    _updateHrStatus(meta);
+    _updateMetaStatus(meta);
     _updateStatus();
   }
 
-  void _updateHrStatus(TagMeta? meta) {
+  void _updateMetaStatus(TagMeta? meta) {
     if (meta != null && meta.hrOk != _isHrOk) {
       _isHrOk = meta.hrOk;
       notifyListeners();

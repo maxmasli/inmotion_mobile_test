@@ -29,9 +29,6 @@ class _TrainBodyState extends State<TrainBody> {
   @override
   Widget build(BuildContext context) {
     final model = context.read<TrainModel>();
-    final trainStage = context.select<TrainModel, TrainStage>(
-      (model) => model.trainStage,
-    );
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
       child: Stack(

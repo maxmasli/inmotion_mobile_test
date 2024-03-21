@@ -14,6 +14,8 @@ class AppTimerController extends ChangeNotifier {
 
   TimerState get state => _state;
 
+  bool get isRunning => state == TimerState.running;
+
   String get formattedTime => _time.hhmmss();
 
   int get timeInSeconds => _time;

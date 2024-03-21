@@ -1,9 +1,9 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/hr_measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 
@@ -48,34 +48,23 @@ class PlayerEntity extends ChangeNotifier {
 
   SensorEntity get sensor => _sensor;
 
-  //TODO переделать как в расчетах
 
-  int get distance => 10;
+
+  int get distance => _measures.map((m) => m.distance ?? 0).sum.toInt();
 
   int get steps => (distance * step).round();
 
-  int get pulse => 10;
+  int get pulse => _measures.lastOrNull?.hr ?? 0;
 
+  //TODO переделать координаты
   List<(int x, int y, int speed)> get coordinates => [(1, 2, 3)];
 
-  List<HrMeasureEntity> get hrMeasures => [];
+  List<int> get hrMeasures => _measures.map((m) => m.hr ?? 0).toList();
 
-  int get speed => 0;
+  int get speed => _measures.lastOrNull?.speed?.toInt() ?? 0;
 
-  // TODO расчеты
-
-  // int get distance => _gpsMeasures.map((m) => m.distance).sum;
-  //
-  // int get steps => (distance * step).round();
-  //
-  // int get pulse => _hrMeasures.lastOrNull?.hr ?? 0;
-  //
   // List<(int x, int y, int speed)> get coordinates =>
   //     _gpsMeasures.map((m) => (m.x, m.y, m.speed)).toList();
-  //
-  // List<HrMeasureEntity> get hrMeasures => _hrMeasures;
-  //
-  // int get speed => _gpsMeasures.lastOrNull?.speed ?? 0;
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     _measures.add(payload);

@@ -10,7 +10,4 @@ final getIt = GetIt.instance;
 void setup() {
   final logController = AppLogsController();
   getIt.registerSingleton(logController);
-
-  getIt.registerSingleton<HrSensorRepository>(HrSensorRepositoryImpl());
-  getIt.registerSingleton<GpsSensorRepository>(GpsSensorRepositoryImpl());
 }
