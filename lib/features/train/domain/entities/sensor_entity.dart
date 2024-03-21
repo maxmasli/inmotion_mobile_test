@@ -9,7 +9,7 @@ class SensorEntity extends ChangeNotifier {
   // Timeout
   Timer? _timeoutTimer;
   int _timeoutCounter = 999;
-  
+
   final BluetoothDevice device;
   final int number;
   bool _isHrOk = false;

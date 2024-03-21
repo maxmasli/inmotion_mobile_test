@@ -1,18 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:typed_data';
 
-import 'package:cbor/cbor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
-import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data_decoder.dart';
-import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resources.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:typed_data/typed_buffers.dart';
 
 class TrainModel extends ChangeNotifier {
   // Status
@@ -80,50 +74,53 @@ class TrainModel extends ChangeNotifier {
     await _checkPermissions();
     if (!_hasAllPermissions || !isBLEOn) return;
 
-    _appBLEConnection.startScanning((scanResults) {
-      _foundedDevices.clear();
-      for (final scanResult in scanResults) {
-        final device = scanResult.$1;
-        final meta = scanResult.$2;
-        final payload = scanResult.$3;
+    _appBLEConnection.startScanning(
+      (scanResults) {
+        _foundedDevices.clear();
+        for (final scanResult in scanResults) {
+          log("get data!!!!!");
+          final device = scanResult.$1;
+          final meta = scanResult.$2;
+          final payload = scanResult.$3;
 
+          /// Если девайс еще не добавлен
+          if (!_players.map((p) => p.sensor.device).contains(device)) {
+            _foundedDevices.add(device);
+            notifyListeners();
+            return;
+          }
 
-        /// Если девайс еще не добавлен
-        if (!_players.map((p) => p.sensor.device).contains(device)) {
-          _foundedDevices.add(device);
+          /// Девайс уже добавлен, достаем данные
+          final player = _players.where((p) => p.sensor.device == device).first;
+
+          if (!_isTrainStart) {
+            /// Если не идет запись
+            player.notifySensor(meta);
+          } else {
+            /// Если идет запись
+            player.addMeasure(payload, meta);
+          }
           notifyListeners();
-          return;
         }
-        /// Девайс уже добавлен, достаем данные
-        final player = _players.where((p) => p.sensor.device == device).first;
-
-        if (!_isTrainStart) {
-          /// Если не идет запись
-          player.notifySensor(meta);
-        } else {
-          /// Если идет запись
-          player.addMeasure(payload, meta);
-        }
-        notifyListeners();
-      }
-    });
+      },
+    );
   }
 
   void _downloadDataFromDevices() async {
     log("Downloading data");
     _appBLEConnection.downloadDataFromPlayers(
-        selectedPlayers,
-            (player, measures) {
-          log('Player - ${player.name}');
-          log('Payload: ');
-          for (final meas in measures) {
-            log(meas.toString());
-          }
-        },
-            (percent) {
-          _loadingPercent = percent;
-          notifyListeners();
+      selectedPlayers,
+      (player, measures) {
+        log('Player - ${player.name}');
+        log('Payload: ');
+        for (final meas in measures) {
+          log(meas.toString());
         }
+      },
+      (percent) {
+        _loadingPercent = percent;
+        notifyListeners();
+      },
     );
   }
 
