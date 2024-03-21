@@ -53,8 +53,6 @@ class TrainModel extends ChangeNotifier {
 
   final _appBLEConnection = AppBLEConnection();
 
-  // StreamSubscription<BluetoothAdapterState>? _bleStatusStream;
-  // StreamSubscription<List<ScanResult>>? _scanResultStream;
   BluetoothAdapterState? _bluetoothState;
 
   final List<BluetoothDevice> _foundedDevices = [];
@@ -89,6 +87,7 @@ class TrainModel extends ChangeNotifier {
         final meta = scanResult.$2;
         final payload = scanResult.$3;
 
+
         /// Если девайс еще не добавлен
         if (!_players.map((p) => p.sensor.device).contains(device)) {
           _foundedDevices.add(device);
@@ -108,6 +107,24 @@ class TrainModel extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  void _downloadDataFromDevices() async {
+    log("Downloading data");
+    _appBLEConnection.downloadDataFromPlayers(
+        selectedPlayers,
+            (player, measures) {
+          log('Player - ${player.name}');
+          log('Payload: ');
+          for (final meas in measures) {
+            log(meas.toString());
+          }
+        },
+            (percent) {
+          _loadingPercent = percent;
+          notifyListeners();
+        }
+    );
   }
 
   void init() {
@@ -169,24 +186,6 @@ class TrainModel extends ChangeNotifier {
     _trainStage = TrainStage.prepare;
     _startScanning();
     notifyListeners();
-  }
-
-  void _downloadDataFromDevices() async {
-    log("Downloading data");
-    _appBLEConnection.downloadDataFromPlayers(
-      selectedPlayers,
-      (player, measures) {
-        log('Player - ${player.name}');
-        log('Payload: ');
-        for (final meas in measures) {
-          log(meas.toString());
-        }
-      },
-      (percent) {
-        _loadingPercent = percent;
-        notifyListeners();
-      }
-    );
   }
 
   Future<void> _checkPermissions() async {

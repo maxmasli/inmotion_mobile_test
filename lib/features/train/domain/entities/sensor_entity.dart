@@ -8,9 +8,8 @@ import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
 class SensorEntity extends ChangeNotifier {
   // Timeout
   Timer? _timeoutTimer;
-  int _timeoutCounter = 0;
-
-  //
+  int _timeoutCounter = 999;
+  
   final BluetoothDevice device;
   final int number;
   bool _isHrOk = false;
