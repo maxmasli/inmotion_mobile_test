@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:cbor/cbor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data_decoder.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resources.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
@@ -14,8 +15,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:typed_data/typed_buffers.dart';
 
 class TrainModel extends ChangeNotifier {
-  final decoder = InmotionTagDataDecoder();
-
   // Status
   var _trainStage = TrainStage.prepare;
 
@@ -51,8 +50,11 @@ class TrainModel extends ChangeNotifier {
   bool get hasAllPermissions => _hasAllPermissions;
 
   // BLE
-  StreamSubscription<BluetoothAdapterState>? _bleStatusStream;
-  StreamSubscription<List<ScanResult>>? _scanResultStream;
+
+  final _appBLEConnection = AppBLEConnection();
+
+  // StreamSubscription<BluetoothAdapterState>? _bleStatusStream;
+  // StreamSubscription<List<ScanResult>>? _scanResultStream;
   BluetoothAdapterState? _bluetoothState;
 
   final List<BluetoothDevice> _foundedDevices = [];
@@ -80,61 +82,43 @@ class TrainModel extends ChangeNotifier {
     await _checkPermissions();
     if (!_hasAllPermissions || !isBLEOn) return;
 
-    /// Для идентификации датчиков
-    /// Все датчики будут иметь этот Guid
-    final serviceGuid = Guid("243a0000-1234-2374-5673-a8a1593ef645");
+    _appBLEConnection.startScanning((scanResults) {
+      _foundedDevices.clear();
+      for (final scanResult in scanResults) {
+        final device = scanResult.$1;
+        final meta = scanResult.$2;
+        final payload = scanResult.$3;
 
-    /// Поток работает всегда для прослушки имерений из adv пакетов
-    _scanResultStream = FlutterBluePlus.onScanResults.listen(
-      (results) {
-        _foundedDevices.clear();
-        for (final scanResult in results) {
-          if (scanResult.advertisementData.serviceUuids.contains(serviceGuid)) {
-            /// Девайс нашелся, но не добавлен
-            if (!_players
-                .map((p) => p.sensor.device)
-                .contains(scanResult.device)) {
-              _foundedDevices.add(scanResult.device);
-              notifyListeners();
-              return;
-            }
-
-            /// Девайс уже добавлен, достаем данные
-            final player = _players
-                .where((p) => p.sensor.device == scanResult.device)
-                .first;
-
-            final serviceGuid = scanResult.advertisementData.serviceUuids[0];
-            final frame = scanResult.advertisementData.serviceData[serviceGuid];
-            final (meta, payload) = decoder.decodeFrame(frame!);
-
-            if (!_isTrainStart) {
-              /// Если не идет запись
-              player.notifySensor(meta);
-            } else {
-              /// Если идет запись
-              player.addMeasure(payload, meta);
-            }
-            notifyListeners();
-          }
+        /// Если девайс еще не добавлен
+        if (!_players.map((p) => p.sensor.device).contains(device)) {
+          _foundedDevices.add(device);
+          notifyListeners();
+          return;
         }
-      },
-      onError: (e) => log(e),
-    );
-    await FlutterBluePlus.startScan();
+        /// Девайс уже добавлен, достаем данные
+        final player = _players.where((p) => p.sensor.device == device).first;
+
+        if (!_isTrainStart) {
+          /// Если не идет запись
+          player.notifySensor(meta);
+        } else {
+          /// Если идет запись
+          player.addMeasure(payload, meta);
+        }
+        notifyListeners();
+      }
+    });
   }
 
   void init() {
     _startScanning();
-    _bleStatusStream = FlutterBluePlus.adapterState.listen(
-      (BluetoothAdapterState state) {
-        _bluetoothState = state;
-        notifyListeners();
-        if (state == BluetoothAdapterState.on) {
-          _startScanning();
-        }
-      },
-    );
+    _appBLEConnection.listenBLEStatus((state) {
+      _bluetoothState = state;
+      notifyListeners();
+      if (state == BluetoothAdapterState.on) {
+        _startScanning();
+      }
+    });
   }
 
   void toggleSelectedPlayers(PlayerEntity player) {
@@ -188,81 +172,21 @@ class TrainModel extends ChangeNotifier {
   }
 
   void _downloadDataFromDevices() async {
-    log("start downloading");
-    _loadingPercent = 0;
-    notifyListeners();
-    // read char to get payload count
-    // char with uuid 243a0000-1234-2374-5673-a8a1593ef645
-    final serviceGuid = Guid("243a0000-1234-2374-5673-a8a1593ef645");
-    final charGuid = Guid("243a0003-1234-2374-5673-a8a1593ef645");
-
-    var totalLength = 0;
-    var downloaded = 0;
-
-    for (final player in selectedPlayers) {
-      final device = player.sensor.device;
-      await device.connect();
-      final service = (await device.discoverServices())
-          .firstWhere((service) => service.serviceUuid == serviceGuid);
-      final payloadChar = service.characteristics
-          .firstWhere((char) => char.characteristicUuid == charGuid);
-
-      List<int> value = await payloadChar.read();
-      final byteData = ByteData.sublistView(Uint8List.fromList(value));
-      final length = byteData.getInt32(0, Endian.little);
-      totalLength += length;
-    }
-
-    log("total length: ${totalLength}");
-
-    for (final player in selectedPlayers) {
-      final device = player.sensor.device;
-      //already connected
-      //await device.connect();
-      final service = (await device.discoverServices())
-          .firstWhere((service) => service.serviceUuid == serviceGuid);
-      final payloadChar = service.characteristics
-          .firstWhere((char) => char.characteristicUuid == charGuid);
-
-      payloadChar.setNotifyValue(true);
-
-      final measureList = <MeasureEntity>[];
-      StreamSubscription<List<int>>? charSubscription;
-      final StreamController<List<int>> savedDataStreamController =
-          StreamController();
-
-      CborDecoder().bind(savedDataStreamController.stream).listen(
-        (value) {
-          Uint8Buffer object = value.toObject() as Uint8Buffer;
-          final dataPayload = decoder.decodePayload(object);
-          measureList.add(dataPayload);
-          downloaded += 1;
-          _loadingPercent = downloaded / totalLength * 100;
-          notifyListeners();
-        },
-        onDone: () async {
-          await payloadChar.setNotifyValue(false);
-          charSubscription?.cancel();
-          await device.disconnect();
-          // for (final data in measureList) {
-          //   log(data.toString());
-          // }
-        },
-      );
-
-      charSubscription = payloadChar.onValueReceived.listen(
-        (payload) async {
-          if (payload.isEmpty) {
-            savedDataStreamController.close();
-            return;
-          }
-          savedDataStreamController.sink.add(payload);
-        },
-        onDone: () {
-          print("charSubscription DONE!");
-        },
-      );
-    }
+    log("Downloading data");
+    _appBLEConnection.downloadDataFromPlayers(
+      selectedPlayers,
+      (player, measures) {
+        log('Player - ${player.name}');
+        log('Payload: ');
+        for (final meas in measures) {
+          log(meas.toString());
+        }
+      },
+      (percent) {
+        _loadingPercent = percent;
+        notifyListeners();
+      }
+    );
   }
 
   Future<void> _checkPermissions() async {
@@ -290,8 +214,7 @@ class TrainModel extends ChangeNotifier {
 
   @override
   void dispose() {
-    _bleStatusStream?.cancel();
-    _scanResultStream?.cancel();
+    _appBLEConnection.dispose();
     super.dispose();
   }
 }
