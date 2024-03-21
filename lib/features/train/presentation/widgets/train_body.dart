@@ -8,6 +8,7 @@ import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/end_train_widgets/end_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/prepare_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/running_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
@@ -70,7 +71,7 @@ class _TrainBodyState extends State<TrainBody> {
                   return switch (trainStage) {
                     TrainStage.prepare => const PrepareTrainWidget(),
                     TrainStage.running => const RunningTrainWidget(),
-                    TrainStage.end => Text("end"),
+                    TrainStage.end => const EndTrainWidget(),
                   };
                 },
               ),

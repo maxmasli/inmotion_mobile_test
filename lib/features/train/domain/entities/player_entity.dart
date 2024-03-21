@@ -27,7 +27,6 @@ class PlayerEntity extends ChangeNotifier {
   })  : _runningType = RunningType.onFoot,
         _sensor = sensor {
     if (onSensorStatusUpdate != null) {
-      log("add listener");
       _sensor.addListener(() {
         onSensorStatusUpdate();
       });
@@ -47,8 +46,6 @@ class PlayerEntity extends ChangeNotifier {
   RunningType get runningType => _runningType;
 
   SensorEntity get sensor => _sensor;
-
-
 
   int get distance => _measures.map((m) => m.distance ?? 0).sum.toInt();
 
