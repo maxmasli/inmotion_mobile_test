@@ -8,9 +8,9 @@ import 'package:inmotion_mobile_test/features/train/domain/entities/measure_enti
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 
 // One step == 75cm or 0.75m
-const step = 0.75;
 
 class PlayerEntity extends ChangeNotifier {
+  // TODO create UUID
   final String name;
   final int number;
 
@@ -47,9 +47,9 @@ class PlayerEntity extends ChangeNotifier {
 
   SensorEntity get sensor => _sensor;
 
-  int get distance => _measures.map((m) => m.distance ?? 0).sum.toInt();
+  int get distance => _measures.last.distance?.toInt() ?? 0;
 
-  int get steps => (distance * step).round();
+  int get steps => _measures.last.steps ?? 0;
 
   int get pulse => _measures.lastOrNull?.hr ?? 0;
 
@@ -70,6 +70,11 @@ class PlayerEntity extends ChangeNotifier {
 
   void notifySensor([TagMeta? meta]) {
     _sensor.notify(meta);
+  }
+
+  void setMeasures(List<MeasureEntity> measures) {
+    _measures.clear();
+    _measures.addAll(measures);
   }
 }
 

@@ -7,14 +7,14 @@ import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/end_train_widgets/end_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/prepare_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/running_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_history_sheet.dart';
 import 'package:provider/provider.dart';
-
-const bottomSheetMinHeight = 0.15;
 
 class TrainBody extends StatefulWidget {
   const TrainBody({super.key});
@@ -77,28 +77,12 @@ class _TrainBodyState extends State<TrainBody> {
               ),
             ],
           ),
-          DraggableScrollableSheet(
-            initialChildSize: bottomSheetMinHeight,
-            minChildSize: bottomSheetMinHeight,
-            maxChildSize: 0.8,
-            builder: (BuildContext context, ScrollController scrollController) {
-              return Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                  color: Colors.red,
-                ),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    children: [
-                      for (final i in List.generate(100, (i) => i)) ...[
-                        Text('something №$i')
-                      ]
-                    ],
-                  ),
-                ),
-              );
-            },
+          TrainHistorySheet(
+            trains: [
+              TrainEntity(startTime: DateTime.now(), trainName: "test 1"),
+              TrainEntity(startTime: DateTime.now(), trainName: "test 2"),
+              TrainEntity(startTime: DateTime.now(), trainName: "test 3"),
+            ],
           ),
         ],
       ),

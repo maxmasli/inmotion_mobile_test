@@ -1,6 +1,10 @@
 import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
 
 class MeasureEntity {
+  // TODO create UUID maybe
+
+  // TODO
+
   DateTime? time;
   int? hr;
 

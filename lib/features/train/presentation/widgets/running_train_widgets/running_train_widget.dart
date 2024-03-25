@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/legend_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/player_tile.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_body.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_history_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 

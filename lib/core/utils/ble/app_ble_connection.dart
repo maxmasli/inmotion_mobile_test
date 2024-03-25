@@ -34,6 +34,19 @@ class AppBLEConnection {
     );
   }
 
+  //TODO rename
+  void writeToDevices(List<PlayerEntity> players) async {
+    // for (final device in players.map((p) => p.sensor.device)) {
+    //   await device.connect();
+    //   final service = (await device.discoverServices())
+    //       .firstWhere((service) => service.serviceUuid == _serviceGuid);
+    //   final char = service.characteristics
+    //       .firstWhere((char) => char.characteristicUuid == _charGuid);
+    //   await char.write([0x1]);
+    //   await device.disconnect();
+    // }
+  }
+
   /// Метод возвращает список [ScanResult] - адвертаиз пакеты уже с нужными сервисами [_serviceGuid]
   /// То есть конкретные нужные метки
   void startScanning(
@@ -44,8 +57,7 @@ class AppBLEConnection {
         onReceivedScanResults(
           results.map(
             (r) {
-              final serviceGuid = r.advertisementData.serviceUuids[0];
-              final frame = r.advertisementData.serviceData[serviceGuid]!;
+              final frame = r.advertisementData.serviceData[_serviceGuid]!;
               final (meta, payload) = _decoder.decodeFrame(frame);
               return (r.device, meta, payload);
             },

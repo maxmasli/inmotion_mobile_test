@@ -5,7 +5,7 @@ import 'package:inmotion_mobile_test/features/train/presentation/provider/train_
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/bluetooth_empty_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/device_tile.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/player_tile.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_body.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_history_sheet.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 

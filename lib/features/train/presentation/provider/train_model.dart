@@ -6,6 +6,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TrainModel extends ChangeNotifier {
@@ -64,11 +65,19 @@ class TrainModel extends ChangeNotifier {
 
   final _selectedPlayers = <PlayerEntity>[];
 
+  final _trains = <TrainEntity>[];
+
+  TrainEntity? _train;
+
   double get loadingPercent => _loadingPercent;
 
   List<PlayerEntity> get players => _players;
 
   List<PlayerEntity> get selectedPlayers => _selectedPlayers;
+
+  List<TrainEntity> get trains => _trains;
+
+  TrainEntity? get train => _train;
 
   void _startScanning() async {
     await _checkPermissions();
@@ -78,7 +87,6 @@ class TrainModel extends ChangeNotifier {
       (scanResults) {
         _foundedDevices.clear();
         for (final scanResult in scanResults) {
-          log("get data!!!!!");
           final device = scanResult.$1;
           final meta = scanResult.$2;
           final payload = scanResult.$3;
@@ -111,11 +119,8 @@ class TrainModel extends ChangeNotifier {
     _appBLEConnection.downloadDataFromPlayers(
       selectedPlayers,
       (player, measures) {
-        log('Player - ${player.name}');
-        log('Payload: ');
-        for (final meas in measures) {
-          log(meas.toString());
-        }
+        player.setMeasures(measures);
+        train!.addPlayer(player);
       },
       (percent) {
         _loadingPercent = percent;
@@ -125,7 +130,6 @@ class TrainModel extends ChangeNotifier {
   }
 
   void init() {
-    _startScanning();
     _appBLEConnection.listenBLEStatus((state) {
       _bluetoothState = state;
       notifyListeners();
@@ -165,6 +169,8 @@ class TrainModel extends ChangeNotifier {
     assert(_trainStage == TrainStage.prepare,
         "TrainStage is not prepare. Can not start train");
     _trainStage = TrainStage.running;
+    _train = TrainEntity(startTime: DateTime.now());
+    //_appBLEConnection.writeToDevices(_selectedPlayers);
     notifyListeners();
   }
 
@@ -172,7 +178,9 @@ class TrainModel extends ChangeNotifier {
     _isTrainStart = false;
     assert(_trainStage == TrainStage.running,
         "TrainStage is not running. Can not stop train");
+    assert(_train != null, 'TrainEntity == null');
     _trainStage = TrainStage.end;
+    _train!.endTime = DateTime.now();
     _downloadDataFromDevices();
     notifyListeners();
   }
