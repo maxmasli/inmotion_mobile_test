@@ -72,16 +72,18 @@ class AppBLEConnection {
   }
 
   void downloadDataFromPlayers(
-    List<PlayerEntity> players,
-    Function(PlayerEntity, List<MeasureEntity>) onPlayerDataDownload, [
+    List<PlayerEntity> players, {
+    required Function(PlayerEntity, List<MeasureEntity>) onPlayerDataDownload,
     Function(double)? onPercentUpdated,
-  ]) async {
+    Function? onStop,
+  }) async {
     var totalLength = 0;
     var downloaded = 0;
     if (onPercentUpdated != null) onPercentUpdated(0);
 
     for (final player in players) {
-      final device = player.sensor.device;
+      assert(player.hasSensor, 'Sensor is null');
+      final device = player.sensor!.device;
       await device.connect();
       final service = (await device.discoverServices())
           .firstWhere((service) => service.serviceUuid == _serviceGuid);
@@ -95,7 +97,7 @@ class AppBLEConnection {
     }
 
     for (final player in players) {
-      final device = player.sensor.device;
+      final device = player.sensor!.device;
       //already connected
       //await device.connect();
       final service = (await device.discoverServices())
@@ -115,8 +117,12 @@ class AppBLEConnection {
           final dataPayload = _decoder.decodePayload(object);
           measureList.add(dataPayload);
           downloaded += 1;
+          final percent = downloaded / totalLength * 100;
           if (onPercentUpdated != null) {
-            onPercentUpdated(downloaded / totalLength * 100);
+            onPercentUpdated(percent);
+          }
+          if (percent >= 100 && onStop != null) {
+            onStop();
           }
         },
         onDone: () async {

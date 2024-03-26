@@ -15,6 +15,7 @@ import 'package:inmotion_mobile_test/features/train/presentation/widgets/running
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_history_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class TrainBody extends StatefulWidget {
   const TrainBody({super.key});
@@ -77,13 +78,7 @@ class _TrainBodyState extends State<TrainBody> {
               ),
             ],
           ),
-          TrainHistorySheet(
-            trains: [
-              TrainEntity(startTime: DateTime.now(), trainName: "test 1"),
-              TrainEntity(startTime: DateTime.now(), trainName: "test 2"),
-              TrainEntity(startTime: DateTime.now(), trainName: "test 3"),
-            ],
-          ),
+          TrainHistorySheet(),
         ],
       ),
     );

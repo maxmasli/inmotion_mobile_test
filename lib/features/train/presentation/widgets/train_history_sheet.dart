@@ -1,22 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_tile.dart';
+import 'package:provider/provider.dart';
 
 const bottomSheetMinHeight = 0.15;
 
-class TrainHistorySheet extends StatefulWidget {
+class TrainHistorySheet extends StatelessWidget {
   const TrainHistorySheet({
     super.key,
-    required this.trains,
   });
 
-  final List<TrainEntity> trains;
-
-  @override
-  State<TrainHistorySheet> createState() => _TrainHistorySheetState();
-}
-
-class _TrainHistorySheetState extends State<TrainHistorySheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -34,7 +30,6 @@ class _TrainHistorySheetState extends State<TrainHistorySheet> {
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
           child: _TrainSliverList(
             controller: scrollController,
-            trains: widget.trains,
           ),
         );
       },
@@ -45,57 +40,61 @@ class _TrainHistorySheetState extends State<TrainHistorySheet> {
 class _TrainSliverList extends StatelessWidget {
   const _TrainSliverList({
     required this.controller,
-    required this.trains,
   });
 
   final ScrollController controller;
-  final List<TrainEntity> trains;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return CustomScrollView(
-      controller: controller,
-      slivers: [
-        SliverAppBar(
-          toolbarHeight: 30,
-          titleSpacing: 0,
-          pinned: true,
-          backgroundColor: theme.colorScheme.primaryContainer,
-          surfaceTintColor: theme.colorScheme.primaryContainer,
-          title: Row(
-            children: [
-              Text(
-                "Архив тренировок",
-                style: theme.textTheme.titleMedium,
-              )
-            ],
-          ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Редактировать",
-                    style: theme.textTheme.titleSmall,
-                  ),
-                )
-              ],
+    return Selector<TrainModel, List<TrainEntity>>(
+      selector: (context, model) => model.trains,
+      builder: (context, trains, child) {
+        log('sheet build');
+        return CustomScrollView(
+          controller: controller,
+          slivers: [
+            SliverAppBar(
+              toolbarHeight: 30,
+              titleSpacing: 0,
+              pinned: true,
+              backgroundColor: theme.colorScheme.primaryContainer,
+              surfaceTintColor: theme.colorScheme.primaryContainer,
+              title: Row(
+                children: [
+                  Text(
+                    "Архив тренировок",
+                    style: theme.textTheme.titleMedium,
+                  )
+                ],
+              ),
+              bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Редактировать",
+                        style: theme.textTheme.titleSmall,
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            childCount: trains.length,
-            (context, index) {
-              return TrainTile(train: trains[index]);
-            },
-          ),
-        )
-      ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                childCount: trains.length,
+                    (context, index) {
+                  return TrainTile(train: trains.reversed.toList()[index]);
+                },
+              ),
+            )
+          ],
+        );
+      },
     );
   }
 }

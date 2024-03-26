@@ -3,10 +3,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:inmotion_mobile_test/core/domain/usecases/usecase.dart';
 import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
+import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TrainModel extends ChangeNotifier {
@@ -22,7 +26,7 @@ class TrainModel extends ChangeNotifier {
     /// Если в _selectedPlayers есть неподключенные, то SystemStatus.error
     /// При любых обстоятельствах, тренировка это или нет, если есть неподключенные датчики то ошибка
     if (_selectedPlayers
-        .where((p) => p.sensor.status != SensorStatus.connected)
+        .where((p) => p.sensor!.status != SensorStatus.connected)
         .isNotEmpty) return SystemStatus.error;
 
     /// Если выбранных игроков нет и тренировка не идет то SystemStatus.off
@@ -37,7 +41,10 @@ class TrainModel extends ChangeNotifier {
     throw Exception("Unexcepted behavior of systemStatus");
   }
 
-  // Repositories
+  // Use cases
+  final _saveTrainUseCase = getIt<SaveTrainUseCase>();
+
+  final _getTrainsUseCase = getIt<GetTrainsUseCase>();
 
   // Permissions
   var _hasAllPermissions = true;
@@ -45,7 +52,6 @@ class TrainModel extends ChangeNotifier {
   bool get hasAllPermissions => _hasAllPermissions;
 
   // BLE
-
   final _appBLEConnection = AppBLEConnection();
 
   BluetoothAdapterState? _bluetoothState;
@@ -65,7 +71,8 @@ class TrainModel extends ChangeNotifier {
 
   final _selectedPlayers = <PlayerEntity>[];
 
-  final _trains = <TrainEntity>[];
+  // TODO сделать лист final, но с ним не обновляется список
+  var _trains = <TrainEntity>[];
 
   TrainEntity? _train;
 
@@ -75,9 +82,9 @@ class TrainModel extends ChangeNotifier {
 
   List<PlayerEntity> get selectedPlayers => _selectedPlayers;
 
-  List<TrainEntity> get trains => _trains;
-
   TrainEntity? get train => _train;
+
+  List<TrainEntity> get trains => _trains;
 
   void _startScanning() async {
     await _checkPermissions();
@@ -92,14 +99,17 @@ class TrainModel extends ChangeNotifier {
           final payload = scanResult.$3;
 
           /// Если девайс еще не добавлен
-          if (!_players.map((p) => p.sensor.device).contains(device)) {
+          if (!_players.map((p) => p.sensor!.device).contains(device)) {
             _foundedDevices.add(device);
             notifyListeners();
             return;
           }
 
           /// Девайс уже добавлен, достаем данные
-          final player = _players.where((p) => p.sensor.device == device).first;
+          final player = _players.where((p) {
+            assert(p.hasSensor, 'Sensor is null');
+            return p.sensor!.device == device;
+          }).first;
 
           if (!_isTrainStart) {
             /// Если не идет запись
@@ -118,18 +128,24 @@ class TrainModel extends ChangeNotifier {
     log("Downloading data");
     _appBLEConnection.downloadDataFromPlayers(
       selectedPlayers,
-      (player, measures) {
+      onPlayerDataDownload: (player, measures) {
         player.setMeasures(measures);
         train!.addPlayer(player);
+        log(train.toString());
       },
-      (percent) {
+      onPercentUpdated: (percent) {
         _loadingPercent = percent;
         notifyListeners();
       },
+      onStop: () async {
+        /// Update trains
+        await _saveTrainUseCase(TrainParams(train!));
+        await updateTrains();
+      }
     );
   }
 
-  void init() {
+  void init() async {
     _appBLEConnection.listenBLEStatus((state) {
       _bluetoothState = state;
       notifyListeners();
@@ -137,6 +153,7 @@ class TrainModel extends ChangeNotifier {
         _startScanning();
       }
     });
+    await updateTrains();
   }
 
   void toggleSelectedPlayers(PlayerEntity player) {
@@ -169,7 +186,9 @@ class TrainModel extends ChangeNotifier {
     assert(_trainStage == TrainStage.prepare,
         "TrainStage is not prepare. Can not start train");
     _trainStage = TrainStage.running;
-    _train = TrainEntity(startTime: DateTime.now());
+    _train = TrainEntity(
+      startTime: DateTime.now(),
+    );
     //_appBLEConnection.writeToDevices(_selectedPlayers);
     notifyListeners();
   }
@@ -213,6 +232,13 @@ class TrainModel extends ChangeNotifier {
       log("location no!!!");
       return;
     }
+    notifyListeners();
+  }
+
+  Future<void> updateTrains() async {
+    final updatesTrains = await _getTrainsUseCase();
+    _trains = updatesTrains;
+    _trains.sort((a, b) => a.startTime.compareTo(b.startTime));
     notifyListeners();
   }
 

@@ -42,14 +42,14 @@ class PlayerTile extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  "${player.sensor.number} ${player.sensor.device.remoteId.str}",
+                  "${player.sensor!.number} ${player.sensor!.device.remoteId.str}",
                   style: theme.textTheme.displaySmall,
                   overflow: TextOverflow.ellipsis,
                 )
               ],
             ),
           ),
-          _HrInfoWidget(sensor: player.sensor),
+          _HrInfoWidget(sensor: player.sensor!),
           const SizedBox(width: 8),
           AppIconButton(
             icon: SvgPicture.asset(AppIcons.edit),
@@ -59,7 +59,7 @@ class PlayerTile extends StatelessWidget {
           const SizedBox(width: 8),
           SvgPicture.asset(AppIcons.battery100, height: 30),
           const SizedBox(width: 8),
-          _IndicatorWidget(sensor: player.sensor),
+          _IndicatorWidget(sensor: player.sensor!),
         ],
       ),
     );

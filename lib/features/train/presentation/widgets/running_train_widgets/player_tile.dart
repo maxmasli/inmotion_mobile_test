@@ -1,4 +1,5 @@
 import 'package:expansion_widget/expansion_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
@@ -193,7 +194,7 @@ class _PlayerTileState extends State<PlayerTile> {
                   );
                 },
                 content: Container(
-                  height: widget.maxHeight - titleHeight + 8,
+                  height: widget.maxHeight - titleHeight,
                   margin: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
@@ -264,35 +265,42 @@ class _PlayerTileState extends State<PlayerTile> {
                             ])),
                       ),
                       const SizedBox(height: 8),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // TODO переделать с intl
-                        children: [
-                          LegendItem(
-                            text: "Ходьба",
-                            color: AppColors.blue,
-                            maxWidth: 80,
-                            minWidth: 50,
-                          ),
-                          LegendItem(
-                            color: AppColors.green,
-                            text: "Легкий бег",
-                            maxWidth: 80,
-                            minWidth: 50,
-                          ),
-                          LegendItem(
-                            color: AppColors.orange,
-                            text: "Средний темп",
-                            maxWidth: 80,
-                            minWidth: 50,
-                          ),
-                          LegendItem(
-                            color: AppColors.red,
-                            text: "Макс. скорость",
-                            maxWidth: 80,
-                            minWidth: 50,
-                          ),
-                        ],
+                      DefaultTextStyle(
+                        style: theme.textTheme.displaySmall!,
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // TODO переделать с intl
+                          children: [
+                            LegendItem(
+                              text: "Ходьба",
+                              color: AppColors.blue,
+                              maxWidth: 80,
+                              minWidth: 50,
+                              hasOverflow: false,
+                            ),
+                            LegendItem(
+                              color: AppColors.green,
+                              text: "Легкий бег",
+                              maxWidth: 80,
+                              minWidth: 50,
+                              hasOverflow: false,
+                            ),
+                            LegendItem(
+                              color: AppColors.orange,
+                              text: "Средний темп",
+                              maxWidth: 80,
+                              minWidth: 50,
+                              hasOverflow: false,
+                            ),
+                            LegendItem(
+                              color: AppColors.red,
+                              text: "Макс. скорость",
+                              maxWidth: 80,
+                              minWidth: 50,
+                              hasOverflow: false,
+                            ),
+                          ],
+                        ),
                       )
                     ],
                   ),

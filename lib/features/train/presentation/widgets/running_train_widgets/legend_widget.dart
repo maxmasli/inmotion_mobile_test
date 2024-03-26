@@ -52,6 +52,7 @@ class LegendItem extends StatelessWidget {
     this.maxWidth = 100,
     this.minWidth = 100,
     this.hasIndicator = true,
+    this.hasOverflow = true,
   });
 
   final Color color;
@@ -59,6 +60,7 @@ class LegendItem extends StatelessWidget {
   final double maxWidth;
   final double minWidth;
   final bool hasIndicator;
+  final bool hasOverflow;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class LegendItem extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              overflow: TextOverflow.ellipsis,
+              overflow: hasOverflow ? TextOverflow.ellipsis : null,
             ),
           )
         ],

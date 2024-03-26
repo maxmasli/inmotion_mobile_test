@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/sheet_button.dart';
 import 'package:intl/intl.dart';
 
 class TrainTile extends StatelessWidget {
@@ -32,7 +31,7 @@ class TrainTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          SheetButton(
+          _SheetButton(
             padding: const EdgeInsets.all(4),
             child: Center(
               child: Text(
@@ -43,6 +42,48 @@ class TrainTile extends StatelessWidget {
             onPressed: () {},
           )
         ],
+      ),
+    );
+  }
+}
+
+class _SheetButton extends StatelessWidget {
+  const _SheetButton({
+    super.key,
+    required this.onPressed,
+    this.borderRadius,
+    required this.child,
+    this.padding,
+  });
+
+  final VoidCallback onPressed;
+  final BorderRadius? borderRadius;
+  final EdgeInsets? padding;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      borderRadius: borderRadius ?? BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: borderRadius ?? BorderRadius.circular(16),
+        child: Container(
+          padding: padding,
+          decoration: BoxDecoration(
+            borderRadius: borderRadius ?? BorderRadius.circular(16),
+            border: Border.all(
+                color: theme.primaryColor.withOpacity(0.5), width: 3),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minWidth: 80,
+            ),
+            child: child,
+          ),
+        ),
       ),
     );
   }

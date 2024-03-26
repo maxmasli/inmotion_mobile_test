@@ -30,7 +30,7 @@ abstract class $AppRouter extends _i3.RootStackRouter {
         ),
       );
     },
-    MainRoute.name: (routeData) {
+    TrainRoute.name: (routeData) {
       return _i3.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i2.TrainScreen(),
@@ -79,14 +79,14 @@ class AuthRouteArgs {
 
 /// generated route for
 /// [_i2.TrainScreen]
-class MainRoute extends _i3.PageRouteInfo<void> {
-  const MainRoute({List<_i3.PageRouteInfo>? children})
+class TrainRoute extends _i3.PageRouteInfo<void> {
+  const TrainRoute({List<_i3.PageRouteInfo>? children})
       : super(
-          MainRoute.name,
+          TrainRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'MainRoute';
+  static const String name = 'TrainRoute';
 
   static const _i3.PageInfo<void> page = _i3.PageInfo<void>(name);
 }
