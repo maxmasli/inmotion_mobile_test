@@ -50,6 +50,7 @@ class _TrainSliverList extends StatelessWidget {
     final theme = Theme.of(context);
     return Selector<TrainModel, List<TrainEntity>>(
       selector: (context, model) => model.trains,
+      shouldRebuild: (prev, curr) => prev != curr,
       builder: (context, trains, child) {
         return CustomScrollView(
           controller: controller,

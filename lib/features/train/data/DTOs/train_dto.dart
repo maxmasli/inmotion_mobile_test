@@ -30,6 +30,7 @@ class TrainDTO {
 
   TrainEntity toEntity() {
     return TrainEntity(
+      trainName: trainName,
       startTime: startTime,
       endTime: endTime,
       uuid: uuid,

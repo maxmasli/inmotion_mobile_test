@@ -13,6 +13,7 @@ import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/update_train_usecase.dart';
 
 final getIt = GetIt.instance;
 
@@ -48,4 +49,7 @@ void setup() {
 
   getIt.registerFactory(() => GetPlayersSensorUseCase(
       sensorPlayersRepository: getIt<SensorPlayersRepository>()));
+
+  getIt.registerFactory(
+      () => UpdateTrainUseCase(trainRepository: getIt<TrainRepository>()));
 }

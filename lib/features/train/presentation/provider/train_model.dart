@@ -13,6 +13,7 @@ import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/update_train_usecase.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TrainModel extends ChangeNotifier {
@@ -51,6 +52,8 @@ class TrainModel extends ChangeNotifier {
   final _savePlayerSensorUseCase = getIt<SavePlayerSensorUseCase>();
 
   final _getPlayersSensorUseCase = getIt<GetPlayersSensorUseCase>();
+
+  final _updateTrainUseCase = getIt<UpdateTrainUseCase>();
 
   // Permissions
   var _hasAllPermissions = true;
@@ -144,9 +147,7 @@ class TrainModel extends ChangeNotifier {
         notifyListeners();
       },
       onStop: () async {
-        /// Update trains
         await _saveTrainUseCase(TrainParams(train!));
-        await updateTrains();
       }
     );
   }
@@ -194,6 +195,19 @@ class TrainModel extends ChangeNotifier {
     await _savePlayerSensorUseCase(PlayersParams(player));
   }
 
+  void updateCurrentTrainName(String name) async {
+    assert(train != null, 'Current train is null');
+    train!.trainName = name;
+    await _updateTrainUseCase(TrainParams(train!));
+  }
+
+  Future<void> updateTrains() async {
+    final updatesTrains = await _getTrainsUseCase();
+    _trains = updatesTrains;
+    _trains.sort((a, b) => a.startTime.compareTo(b.startTime));
+    notifyListeners();
+  }
+
   void startRecording() {
     _isTrainStart = true;
     assert(_trainStage == TrainStage.prepare,
@@ -217,12 +231,12 @@ class TrainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void prepareRecording() {
+  void prepareRecording() async {
     assert(_trainStage == TrainStage.end,
         "TrainStage is not stop. Can not prepare train");
     _trainStage = TrainStage.prepare;
-    _startScanning();
     notifyListeners();
+    await updateTrains();
   }
 
   Future<void> _checkPermissions() async {
@@ -245,13 +259,6 @@ class TrainModel extends ChangeNotifier {
       log("location no!!!");
       return;
     }
-    notifyListeners();
-  }
-
-  Future<void> updateTrains() async {
-    final updatesTrains = await _getTrainsUseCase();
-    _trains = updatesTrains;
-    _trains.sort((a, b) => a.startTime.compareTo(b.startTime));
     notifyListeners();
   }
 

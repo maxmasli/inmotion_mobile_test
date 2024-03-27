@@ -15,7 +15,6 @@ class EndTrainWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = context.read<TrainModel>();
-    final height = MediaQuery.of(context).size.height;
     return Expanded(
       child: SingleChildScrollView(
         child: Column(
@@ -53,7 +52,7 @@ class EndTrainWidget extends StatelessWidget {
                         ),
                         percent: percent,
                         onPressed: () {
-                          log("asd");
+                          log("download excel");
                         },
                       ),
                       if (percent >= 100) ...[
@@ -61,7 +60,7 @@ class EndTrainWidget extends StatelessWidget {
                         TrainTextField(
                           hint: 'Введите название тренировки',
                           onChanged: (value) {
-                            print(value);
+                            model.updateCurrentTrainName(value);
                           },
                         ),
                         const SizedBox(height: 10),
