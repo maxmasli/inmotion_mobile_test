@@ -1,13 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/di.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/end_train_widgets/end_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/prepare_train_widget.dart';
@@ -15,7 +10,6 @@ import 'package:inmotion_mobile_test/features/train/presentation/widgets/running
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_history_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 class TrainBody extends StatefulWidget {
   const TrainBody({super.key});
@@ -78,7 +72,7 @@ class _TrainBodyState extends State<TrainBody> {
               ),
             ],
           ),
-          TrainHistorySheet(),
+          const TrainHistorySheet(),
         ],
       ),
     );

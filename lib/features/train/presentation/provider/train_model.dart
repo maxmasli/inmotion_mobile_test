@@ -9,7 +9,9 @@ import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -46,6 +48,10 @@ class TrainModel extends ChangeNotifier {
 
   final _getTrainsUseCase = getIt<GetTrainsUseCase>();
 
+  final _savePlayerSensorUseCase = getIt<SavePlayerSensorUseCase>();
+
+  final _getPlayersSensorUseCase = getIt<GetPlayersSensorUseCase>();
+
   // Permissions
   var _hasAllPermissions = true;
 
@@ -67,7 +73,8 @@ class TrainModel extends ChangeNotifier {
 
   bool _isTrainStart = false;
 
-  final _players = <PlayerEntity>[];
+  // TODO сделать лист final, но с ним не обновляется список
+  var _players = <PlayerEntity>[];
 
   final _selectedPlayers = <PlayerEntity>[];
 
@@ -131,7 +138,6 @@ class TrainModel extends ChangeNotifier {
       onPlayerDataDownload: (player, measures) {
         player.setMeasures(measures);
         train!.addPlayer(player);
-        log(train.toString());
       },
       onPercentUpdated: (percent) {
         _loadingPercent = percent;
@@ -146,6 +152,12 @@ class TrainModel extends ChangeNotifier {
   }
 
   void init() async {
+    /// Загрузка сохраненных игроков с датчиками
+    final savedSensorPlayers = await _getPlayersSensorUseCase();
+    _players = savedSensorPlayers;
+    print("Saved players: ${_players}");
+    notifyListeners();
+
     _appBLEConnection.listenBLEStatus((state) {
       _bluetoothState = state;
       notifyListeners();
@@ -167,7 +179,7 @@ class TrainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveDevice(BluetoothDevice device) {
+  void saveDevice(BluetoothDevice device) async {
     final player = PlayerEntity.fromDevice(
         device: device,
         onSensorStatusUpdate: () {
@@ -179,6 +191,7 @@ class TrainModel extends ChangeNotifier {
     _players.add(player);
     _selectedPlayers.add(player);
     notifyListeners();
+    await _savePlayerSensorUseCase(PlayersParams(player));
   }
 
   void startRecording() {

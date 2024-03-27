@@ -16,6 +16,8 @@ class PrepareTrainWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final theme = Theme.of(context);
+
+    // TODO переделать на Selector
     final model = context.watch<TrainModel>();
     return Expanded(
       child: ListView(

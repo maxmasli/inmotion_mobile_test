@@ -1,3 +1,4 @@
+import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 
 abstract interface class UseCase<R, P extends Params> {
@@ -22,4 +23,10 @@ class BooleanParams extends Params {
   final bool value;
 
   BooleanParams(this.value);
+}
+
+class PlayersParams extends Params {
+  final PlayerEntity player;
+
+  PlayersParams(this.player);
 }

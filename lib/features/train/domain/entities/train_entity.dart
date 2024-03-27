@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:uuid/uuid.dart';
 
@@ -13,7 +11,6 @@ class TrainEntity {
   }) {
     uuid ??= const Uuid().v4();
     playersKey ??= const Uuid().v4();
-    log('Create train with uuid: $uuid', name: 'TrainEntity');
   }
 
   String? uuid;

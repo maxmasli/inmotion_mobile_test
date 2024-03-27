@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:inmotion_mobile_test/features/train/data/DTOs/player_dto.dart';
 import 'package:inmotion_mobile_test/features/train/data/DTOs/player_list_dto.dart';
 
 abstract interface class PlayersDataSource {

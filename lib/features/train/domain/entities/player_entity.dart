@@ -79,9 +79,6 @@ class PlayerEntity extends ChangeNotifier {
     _measures.clear();
     _measures.addAll(measures);
   }
-
-  @override
-  List<Object> get props => [name, number, _measures];
 }
 
 enum PlayerError { hrError, stationError, gpsError, otherError }
