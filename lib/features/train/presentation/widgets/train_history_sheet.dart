@@ -22,6 +22,7 @@ class TrainHistorySheet extends StatelessWidget {
       minChildSize: bottomSheetMinHeight,
       maxChildSize: 0.86,
       snap: true,
+      expand: true,
       builder: (BuildContext context, ScrollController scrollController) {
         return Container(
           decoration: BoxDecoration(

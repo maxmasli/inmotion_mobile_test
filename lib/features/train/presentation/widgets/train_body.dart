@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
-import 'package:inmotion_mobile_test/di.dart';
+import 'package:inmotion_mobile_test/core/presentation/keyboard_listener.dart'
+    as kl;
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/end_train_widgets/end_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/prepare_train_widget.dart';
@@ -21,12 +19,27 @@ class TrainBody extends StatefulWidget {
 }
 
 class _TrainBodyState extends State<TrainBody> {
-  final appTimerController = AppTimerController();
-  final l = getIt<AppLogsController>();
+  final _appTimerController = AppTimerController();
+
+  final _keyboardListener = kl.KeyboardListener();
+  var _isShowKeyboard = false;
+
+  @override
+  void initState() {
+    _keyboardListener.addListener(onChange: (isVisible) {
+      setState(() {
+        _isShowKeyboard = isVisible;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final model = context.read<TrainModel>();
+    final keyboardHeight =
+        MediaQuery.of(Scaffold.of(context).context).viewInsets.bottom;
+
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
       child: Stack(
@@ -43,13 +56,13 @@ class _TrainBodyState extends State<TrainBody> {
                         return AppTimerWidget(
                           isEnabled: systemStatus == SystemStatus.ready ||
                               systemStatus == SystemStatus.rec,
-                          controller: appTimerController,
+                          controller: _appTimerController,
                           onStartPressed: () {
-                            appTimerController.startTimer();
+                            _appTimerController.startTimer();
                             model.startRecording();
                           },
                           onStopPressed: () {
-                            appTimerController.stopTimer();
+                            _appTimerController.stopTimer();
                             model.stopRecording();
                           },
                         );
@@ -74,8 +87,8 @@ class _TrainBodyState extends State<TrainBody> {
               ),
               // Отступ для TrainHistorySheet
               SizedBox(
-                height:
-                    MediaQuery.of(context).size.height * bottomSheetMinHeight,
+                height: (MediaQuery.of(context).size.height - keyboardHeight) *
+                    bottomSheetMinHeight,
               ),
             ],
           ),
