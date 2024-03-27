@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
@@ -70,9 +72,14 @@ class _TrainBodyState extends State<TrainBody> {
                   };
                 },
               ),
+              // Отступ для TrainHistorySheet
+              SizedBox(
+                height:
+                    MediaQuery.of(context).size.height * bottomSheetMinHeight,
+              ),
             ],
           ),
-          const TrainHistorySheet(),
+          TrainHistorySheet(key: sheetKey),
         ],
       ),
     );

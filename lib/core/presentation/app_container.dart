@@ -9,6 +9,7 @@ class AppContainer extends StatelessWidget {
     this.height,
     this.padding,
     this.borderRadius,
+    this.elevation = 2,
     required this.child,
   });
 
@@ -19,6 +20,7 @@ class AppContainer extends StatelessWidget {
   final EdgeInsets? padding;
   final double? width;
   final double? height;
+  final double elevation;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class AppContainer extends StatelessWidget {
       child: PhysicalModel(
         color: color ?? theme.colorScheme.primaryContainer,
         borderRadius: borderRadius,
-        elevation: 2,
+        elevation: elevation,
         child: Material(
           color: Colors.transparent,
           child: InkWell(

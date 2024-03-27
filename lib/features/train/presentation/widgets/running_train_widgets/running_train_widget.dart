@@ -14,7 +14,6 @@ class RunningTrainWidget extends StatefulWidget {
 }
 
 class _RunningTrainWidgetState extends State<RunningTrainWidget> {
-
   var isExpanded = false;
   final itemController = ItemScrollController();
 
@@ -38,27 +37,22 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
-                final height = MediaQuery.of(context).size.height;
                 return ScrollablePositionedList.separated(
+                  padding: EdgeInsets.zero,
                   physics:
-                  isExpanded ? const NeverScrollableScrollPhysics() : null,
+                      isExpanded ? const NeverScrollableScrollPhysics() : null,
                   itemCount: model.players.length,
                   itemScrollController: itemController,
-                  padding: EdgeInsets.only(
-                    bottom: height * bottomSheetMinHeight - 20,
-                  ),
                   itemBuilder: (context, i) {
                     return PlayerTile(
-                      maxHeight: constraints.maxHeight -
-                          height * bottomSheetMinHeight +
-                          4,
+                      maxHeight: constraints.maxHeight,
                       player: model.players[i],
                       onExpansion: (_, isExpanded) {
                         if (isExpanded) {
                           scrollToIndex(i);
                         }
                         setState(
-                              () {
+                          () {
                             this.isExpanded = !this.isExpanded;
                           },
                         );
@@ -72,8 +66,6 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
               },
             ),
           ),
-          const SizedBox(height: 20),
-          //LogsWidget(controller: l),
         ],
       ),
     );

@@ -21,7 +21,6 @@ class PrepareTrainWidget extends StatelessWidget {
     final model = context.watch<TrainModel>();
     return Expanded(
       child: ListView(
-        padding: EdgeInsets.only(bottom: height * bottomSheetMinHeight - 15),
         children: [
           if (model.players.isEmpty)
             const BluetoothEmptyWidget()

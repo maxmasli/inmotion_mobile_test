@@ -193,7 +193,7 @@ class _PlayerTileState extends State<PlayerTile> {
                   );
                 },
                 content: Container(
-                  height: widget.maxHeight - titleHeight,
+                  height: widget.maxHeight - titleHeight - 30,
                   margin: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.primaryContainer,
@@ -204,8 +204,7 @@ class _PlayerTileState extends State<PlayerTile> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: widget.maxHeight - titleHeight - 70,
-                        //height: 210,
+                        height: widget.maxHeight - titleHeight - 100,
                         child: Row(
                           children: [
                             Expanded(

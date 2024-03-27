@@ -7,6 +7,7 @@ import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_t
 import 'package:provider/provider.dart';
 
 const bottomSheetMinHeight = 0.15;
+final sheetKey = GlobalKey();
 
 class TrainHistorySheet extends StatelessWidget {
   const TrainHistorySheet({
@@ -50,7 +51,6 @@ class _TrainSliverList extends StatelessWidget {
     return Selector<TrainModel, List<TrainEntity>>(
       selector: (context, model) => model.trains,
       builder: (context, trains, child) {
-        log('sheet build');
         return CustomScrollView(
           controller: controller,
           slivers: [
@@ -87,7 +87,7 @@ class _TrainSliverList extends StatelessWidget {
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 childCount: trains.length,
-                    (context, index) {
+                (context, index) {
                   return TrainTile(train: trains.reversed.toList()[index]);
                 },
               ),
