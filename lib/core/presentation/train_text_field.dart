@@ -17,17 +17,9 @@ class TrainTextField extends StatelessWidget {
     final theme = Theme.of(context);
     return RepaintBoundary(
       child: TextField(
+        textAlign: TextAlign.center,
         style: theme.textTheme.titleSmall,
         onChanged: onChanged,
-        onEditingComplete: () {
-          log('testfield event onEditingComplete');
-        },
-        onSubmitted: (value) {
-          log('testfield event onSubmitted $value');
-        },
-        onTapOutside: (k) {
-          log('testfield event onTapOutside');
-        },
         decoration: InputDecoration(
           hintText: hint,
           contentPadding: const EdgeInsets.all(6),

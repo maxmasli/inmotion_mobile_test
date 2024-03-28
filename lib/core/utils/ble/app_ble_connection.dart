@@ -21,8 +21,6 @@ class AppBLEConnection {
 
   StreamSubscription<List<ScanResult>>? _scanResultStream;
 
-  StreamController<List<int>>? _savedDataStreamController;
-
   /// Вызывается при начале работы для отслеживания статуса
   void listenBLEStatus(
     Function(BluetoothAdapterState state) onStatusUpdated,
@@ -96,6 +94,7 @@ class AppBLEConnection {
       totalLength += length;
     }
 
+
     for (final player in players) {
       final device = player.sensor!.device;
       //already connected
@@ -105,13 +104,11 @@ class AppBLEConnection {
       final payloadChar = service.characteristics
           .firstWhere((char) => char.characteristicUuid == _charGuid);
 
-      payloadChar.setNotifyValue(true);
-
       final measureList = <MeasureEntity>[];
       StreamSubscription<List<int>>? charSubscription;
-      _savedDataStreamController = StreamController();
+      final savedDataStreamController = StreamController<List<int>>();
 
-      const CborDecoder().bind(_savedDataStreamController!.stream).listen(
+      const CborDecoder().bind(savedDataStreamController.stream).listen(
         (value) {
           Uint8Buffer object = value.toObject() as Uint8Buffer;
           final dataPayload = _decoder.decodePayload(object);
@@ -127,9 +124,8 @@ class AppBLEConnection {
         },
         onDone: () async {
           await payloadChar.setNotifyValue(false);
-          charSubscription?.cancel();
+          await charSubscription?.cancel();
           await device.disconnect();
-
           onPlayerDataDownload(player, measureList);
         },
       );
@@ -137,18 +133,18 @@ class AppBLEConnection {
       charSubscription = payloadChar.onValueReceived.listen(
         (payload) async {
           if (payload.isEmpty) {
-            _savedDataStreamController?.close();
+            savedDataStreamController.close();
             return;
           }
-          _savedDataStreamController?.sink.add(payload);
+          savedDataStreamController.sink.add(payload);
         },
       );
+      await payloadChar.setNotifyValue(true);
     }
   }
 
   void dispose() async {
     await _bleStatusStream?.cancel();
     await _scanResultStream?.cancel();
-    await _savedDataStreamController?.close();
   }
 }

@@ -37,6 +37,8 @@ class _TrainBodyState extends State<TrainBody> {
   @override
   Widget build(BuildContext context) {
     final model = context.read<TrainModel>();
+
+    // Для корректного отступа для BottomSheet
     final keyboardHeight =
         MediaQuery.of(Scaffold.of(context).context).viewInsets.bottom;
 

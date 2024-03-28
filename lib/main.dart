@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:inmotion_mobile_test/app.dart';
 import 'package:inmotion_mobile_test/features/train/data/DTOs/measure_dto.dart';
@@ -10,6 +11,8 @@ import 'package:inmotion_mobile_test/di.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterBluePlus.setLogLevel(LogLevel.none);
 
   await Hive.initFlutter();
   Hive.registerAdapter(MeasureDTOAdapter());

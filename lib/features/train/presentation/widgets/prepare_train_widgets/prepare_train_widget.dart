@@ -25,7 +25,10 @@ class PrepareTrainWidget extends StatelessWidget {
           if (model.players.isEmpty)
             const BluetoothEmptyWidget()
           else
-            for (final player in model.players) ...[PlayerTile(player: player)],
+            for (final player in model.players) ...[
+              PlayerTile(player: player),
+              const SizedBox(height: 8),
+            ],
           const SizedBox(height: 12),
           AppContainer(
             borderRadius: BorderRadius.circular(16),
