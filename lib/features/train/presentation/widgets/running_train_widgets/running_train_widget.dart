@@ -28,7 +28,7 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<TrainModel>();
+    final model = context.read<TrainModel>();
     return Expanded(
       child: Column(
         children: [

@@ -30,7 +30,6 @@ class AppTimerWidget extends StatelessWidget {
   // Widget height is 86
   @override
   Widget build(BuildContext context) {
-    log("timer rebuild");
     final theme = Theme.of(context);
     return RepaintBoundary(
       child: ChangeNotifierProvider.value(

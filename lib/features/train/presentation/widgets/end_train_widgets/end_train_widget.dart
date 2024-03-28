@@ -58,6 +58,7 @@ class EndTrainWidget extends StatelessWidget {
                       if (percent >= 100) ...[
                         const SizedBox(height: 10),
                         TrainTextField(
+                          controller: TextEditingController(),
                           hint: 'Введите название тренировки',
                           onChanged: (value) {
                             model.updateCurrentTrainName(value);

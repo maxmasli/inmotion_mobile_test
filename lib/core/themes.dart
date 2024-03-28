@@ -49,7 +49,7 @@ ThemeData createLightTheme() {
         }
       }),
       trackOutlineColor:
-          MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+          MaterialStateProperty.resolveWith<Color>((states) {
         if (states.contains(MaterialState.selected)) {
           return AppColors.green;
         } else {
@@ -65,6 +65,18 @@ ThemeData createLightTheme() {
         visualDensity: VisualDensity.compact
       ),
     ),
+
+    checkboxTheme: CheckboxThemeData(
+      visualDensity: VisualDensity.compact,
+      fillColor: MaterialStateProperty.resolveWith<Color>((states) {
+        if (states.contains(MaterialState.selected)) {
+          return AppColors.lightGreen;
+        } else {
+          return Colors.transparent;
+        }
+      }),
+      side: const BorderSide(color: AppColors.lightGreen, width: 2)
+    )
   );
 }
 

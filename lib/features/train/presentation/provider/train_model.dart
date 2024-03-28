@@ -9,6 +9,7 @@ import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
@@ -55,6 +56,8 @@ class TrainModel extends ChangeNotifier {
 
   final _updateTrainUseCase = getIt<UpdateTrainUseCase>();
 
+  final _deleteTrainsUseCase = getIt<DeleteTrainsUseCase>();
+
   // Permissions
   var _hasAllPermissions = true;
 
@@ -65,7 +68,7 @@ class TrainModel extends ChangeNotifier {
 
   BluetoothAdapterState? _bluetoothState;
 
-  final List<BluetoothDevice> _foundedDevices = [];
+  final _foundedDevices = <BluetoothDevice>[];
 
   List<BluetoothDevice> get foundedDevices => _foundedDevices;
 
@@ -156,7 +159,6 @@ class TrainModel extends ChangeNotifier {
     /// Загрузка сохраненных игроков с датчиками
     final savedSensorPlayers = await _getPlayersSensorUseCase();
     _players = savedSensorPlayers;
-    print("Saved players: ${_players}");
     notifyListeners();
 
     _appBLEConnection.listenBLEStatus((state) {
@@ -201,10 +203,21 @@ class TrainModel extends ChangeNotifier {
     await _updateTrainUseCase(TrainParams(train!));
   }
 
+  void updateTrainName(TrainEntity train, String name) async {
+    train.trainName = name;
+    await _updateTrainUseCase(TrainParams(train));
+  }
+
   Future<void> updateTrains() async {
     final updatesTrains = await _getTrainsUseCase();
     _trains = updatesTrains;
     _trains.sort((a, b) => a.startTime.compareTo(b.startTime));
+    notifyListeners();
+  }
+
+  Future<void> deleteTrains(List<TrainEntity> trains) async {
+    await _deleteTrainsUseCase(TrainsListParams(trains));
+    await updateTrains();
     notifyListeners();
   }
 

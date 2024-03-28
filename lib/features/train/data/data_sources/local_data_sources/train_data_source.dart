@@ -22,9 +22,9 @@ final class TrainDataSourceImpl implements TrainDataSource {
 
   @override
   Future<void> deleteTrains(Iterable<TrainDTO> trains) async {
-    log('Deleting trains', name: 'TrainDataSourceImpl');
     final box = await _openBox();
     for (final train in trains) {
+      log('Deleting train ${train.uuid}', name: 'TrainDataSourceImpl');
       await box.delete(train.uuid);
     }
     await box.close();

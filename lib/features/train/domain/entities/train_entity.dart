@@ -32,6 +32,6 @@ class TrainEntity {
 
   @override
   String toString() {
-    return "TrainEntity: $trainName, startTime: $startTime";
+    return "TrainEntity: $uuid, startTime: $startTime";
   }
 }

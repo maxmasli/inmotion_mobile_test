@@ -69,10 +69,12 @@ class PlayerEntity extends ChangeNotifier {
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     _measures.add(payload);
     _sensor?.notify(meta);
+    notifyListeners();
   }
 
   void notifySensor([TagMeta? meta]) {
     _sensor?.notify(meta);
+    notifyListeners();
   }
 
   void setMeasures(Iterable<MeasureEntity> measures) {

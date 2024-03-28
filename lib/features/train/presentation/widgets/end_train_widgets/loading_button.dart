@@ -25,32 +25,34 @@ class LoadingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLoaded = percent >= 100;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        return SizedBox(
-          width: width,
-          child: ClipRRect(
-            borderRadius: borderRadius ?? BorderRadius.zero,
-            child: GestureDetector(
-              onTap: isLoaded ? onPressed : null,
-              child: CustomPaint(
-                painter: _LoadingBarPainter(
-                  percent: percent,
-                  backgroundColor: backgroundColor,
-                  progressColor: progressColor,
-                ),
-                child: Padding(
-                  padding: padding ?? EdgeInsets.zero,
-                  child: Center(
-                    child: isLoaded ? loadedWidget : loadingWidget,
+    return RepaintBoundary(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          return SizedBox(
+            width: width,
+            child: ClipRRect(
+              borderRadius: borderRadius ?? BorderRadius.zero,
+              child: GestureDetector(
+                onTap: isLoaded ? onPressed : null,
+                child: CustomPaint(
+                  painter: _LoadingBarPainter(
+                    percent: percent,
+                    backgroundColor: backgroundColor,
+                    progressColor: progressColor,
+                  ),
+                  child: Padding(
+                    padding: padding ?? EdgeInsets.zero,
+                    child: Center(
+                      child: isLoaded ? loadedWidget : loadingWidget,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

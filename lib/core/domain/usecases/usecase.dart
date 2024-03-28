@@ -19,6 +19,12 @@ class TrainParams extends Params {
   TrainParams(this.train);
 }
 
+class TrainsListParams extends Params {
+  final List<TrainEntity> trains;
+
+  TrainsListParams(this.trains);
+}
+
 class BooleanParams extends Params {
   final bool value;
 

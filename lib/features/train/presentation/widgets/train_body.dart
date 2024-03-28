@@ -94,7 +94,7 @@ class _TrainBodyState extends State<TrainBody> {
               ),
             ],
           ),
-          TrainHistorySheet(key: sheetKey),
+          TrainHistorySheet(),
         ],
       ),
     );
