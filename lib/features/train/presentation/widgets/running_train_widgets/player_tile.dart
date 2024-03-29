@@ -115,7 +115,7 @@ class _PlayerTileState extends State<PlayerTile> {
                                                   style: theme
                                                       .textTheme.headlineMedium),
                                               Text(
-                                                'Датчик 01',
+                                                'Датчик ${player.sensor?.number}',
                                                 style:
                                                     theme.textTheme.headlineSmall,
                                               )

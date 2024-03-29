@@ -23,18 +23,23 @@ class PlayerDTO {
   @HiveField(5)
   final int? deviceNumber;
 
+  @HiveField(6)
+  final String uuid;
+
   PlayerDTO({
     required this.name,
     required this.number,
     required this.measures,
     this.deviceId,
     this.deviceNumber,
+    required this.uuid,
   });
 
   PlayerEntity toEntity() {
     return PlayerEntity(
       name: name,
       number: number,
+      uuid: uuid,
       sensor: deviceId != null && deviceNumber != null
           ? SensorEntity(
               device: BluetoothDevice.fromId(deviceId!),
@@ -46,6 +51,7 @@ class PlayerDTO {
 
   factory PlayerDTO.fromEntity(PlayerEntity entity) {
     return PlayerDTO(
+      uuid: entity.uuid!,
       name: entity.name,
       number: entity.number,
       measures: entity.measures.map((m) => MeasureDTO.fromEntity(m)).toList(),

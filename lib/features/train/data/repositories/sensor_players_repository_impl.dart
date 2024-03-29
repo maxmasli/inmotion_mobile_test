@@ -22,4 +22,10 @@ class SensorPlayersRepositoryImpl implements SensorPlayersRepository {
     return await sensorPlayerDataSource
         .savePlayer(PlayerDTO.fromEntity(playerEntity));
   }
+
+  @override
+  Future<void> updatePlayer(PlayerEntity playerEntity) async {
+    return await sensorPlayerDataSource
+        .updatePlayer(PlayerDTO.fromEntity(playerEntity));
+  }
 }

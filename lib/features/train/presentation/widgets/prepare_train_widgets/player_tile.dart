@@ -6,6 +6,7 @@ import 'package:inmotion_mobile_test/core/presentation/app_icon_button.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/player_edit_dialog.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 
@@ -20,49 +21,72 @@ class PlayerTile extends StatelessWidget {
     final model = context.read<TrainModel>();
     final selectedPlayers = context.select<TrainModel, List<PlayerEntity>>(
         (model) => model.selectedPlayers);
-    return AppContainer(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
-      borderRadius: BorderRadius.circular(16),
-      child: Row(
-        children: [
-          Switch(
-            value: selectedPlayers.contains(player),
-            onChanged: (val) {
-              model.toggleSelectedPlayers(player);
-            },
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "${player.number} ${player.name}",
-                  style: theme.textTheme.bodyMedium,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  "${player.sensor!.number} ${player.sensor!.device.remoteId.str}",
-                  style: theme.textTheme.displaySmall,
-                  overflow: TextOverflow.ellipsis,
-                )
-              ],
-            ),
-          ),
-          _HrInfoWidget(sensor: player.sensor!),
-          const SizedBox(width: 8),
-          AppIconButton(
-            icon: SvgPicture.asset(AppIcons.edit),
-            onPressed: () {},
-            size: 30,
-          ),
-          const SizedBox(width: 8),
-          SvgPicture.asset(AppIcons.battery100, height: 30),
-          const SizedBox(width: 8),
-          _IndicatorWidget(sensor: player.sensor!),
-        ],
-      ),
-    );
+    return ChangeNotifierProvider<PlayerEntity>.value(
+        value: player,
+        child: Consumer<PlayerEntity>(
+          builder: (context, player, child) {
+            return AppContainer(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+              borderRadius: BorderRadius.circular(16),
+              child: Row(
+                children: [
+                  Switch(
+                    value: selectedPlayers.contains(player),
+                    onChanged: (val) {
+                      model.toggleSelectedPlayers(player);
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${player.number} ${player.name}",
+                          style: theme.textTheme.bodyMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          "${player.sensor!.number} ${player.sensor!.device.remoteId.str}",
+                          style: theme.textTheme.displaySmall,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
+                  ),
+                  _HrInfoWidget(sensor: player.sensor!),
+                  const SizedBox(width: 8),
+                  AppIconButton(
+                    icon: SvgPicture.asset(AppIcons.edit),
+                    onPressed: () async {
+                      final data = await showDialog<(String, String, String)>(
+                        context: context,
+                        builder: (context) {
+                          return PlayerEditDialog(
+                            initFields: (
+                              player.name,
+                              player.number.toString(),
+                              player.sensor!.number.toString() ?? '',
+                            ),
+                          );
+                        },
+                      );
+                      if (data != null) {
+                        await model.updateSensorPlayer(
+                            player, data.$1, data.$2, data.$3);
+                      }
+                    },
+                    size: 30,
+                  ),
+                  const SizedBox(width: 8),
+                  SvgPicture.asset(AppIcons.battery100, height: 30),
+                  const SizedBox(width: 8),
+                  _IndicatorWidget(sensor: player.sensor!),
+                ],
+              ),
+            );
+          },
+        ));
   }
 }
 

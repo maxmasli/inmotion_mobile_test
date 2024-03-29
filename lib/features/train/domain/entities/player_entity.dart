@@ -4,13 +4,14 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
+import 'package:uuid/uuid.dart';
 
 // One step == 75cm or 0.75m
 
 class PlayerEntity extends ChangeNotifier {
-  // TODO create UUID
-  final String name;
-  final int number;
+  String? uuid;
+  String name;
+  int number;
 
   RunningType _runningType;
   SensorEntity? _sensor;
@@ -20,6 +21,7 @@ class PlayerEntity extends ChangeNotifier {
   PlayerEntity({
     required this.name,
     required this.number,
+    this.uuid,
     SensorEntity? sensor,
     VoidCallback? onSensorStatusUpdate,
   })
@@ -30,6 +32,8 @@ class PlayerEntity extends ChangeNotifier {
         onSensorStatusUpdate();
       });
     }
+
+    uuid ??= const Uuid().v4();
   }
 
   PlayerEntity.fromDevice({

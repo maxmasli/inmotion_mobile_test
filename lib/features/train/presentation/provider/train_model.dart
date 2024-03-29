@@ -7,7 +7,6 @@ import 'package:inmotion_mobile_test/core/domain/usecases/usecase.dart';
 import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
 import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_sensor_usecase.dart';
@@ -16,6 +15,8 @@ import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/update_train_usecase.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../domain/entities/sensor_entity.dart';
 
 class TrainModel extends ChangeNotifier {
   // Status
@@ -139,26 +140,21 @@ class TrainModel extends ChangeNotifier {
 
   void _downloadDataFromDevices() async {
     log("Downloading data");
-    _appBLEConnection.downloadDataFromPlayers(
-      selectedPlayers,
-      onPlayerDataDownload: (player, measures) {
-        player.setMeasures(measures);
-        train!.addPlayer(player);
-      },
-      onPercentUpdated: (percent) {
-        _loadingPercent = percent;
-        notifyListeners();
-      },
-      onStop: () async {
-        await _saveTrainUseCase(TrainParams(train!));
-      }
-    );
+    _appBLEConnection.downloadDataFromPlayers(selectedPlayers,
+        onPlayerDataDownload: (player, measures) {
+      player.setMeasures(measures);
+      train!.addPlayer(player);
+    }, onPercentUpdated: (percent) {
+      _loadingPercent = percent;
+      notifyListeners();
+    }, onStop: () async {
+      await _saveTrainUseCase(TrainParams(train!));
+    });
   }
 
   void init() async {
     /// Загрузка сохраненных игроков с датчиками
-    final savedSensorPlayers = await _getPlayersSensorUseCase();
-    _players = savedSensorPlayers;
+    _players = await _getPlayersSensorUseCase();
     notifyListeners();
 
     _appBLEConnection.listenBLEStatus((state) {
@@ -219,6 +215,15 @@ class TrainModel extends ChangeNotifier {
     await _deleteTrainsUseCase(TrainsListParams(trains));
     await updateTrains();
     notifyListeners();
+  }
+
+  Future<void> updateSensorPlayer(PlayerEntity player, String name,
+      String number, String deviceNumber) async {
+    player.name = name;
+    player.number = int.parse(number);
+    player.sensor!.number = int.parse(deviceNumber);
+    await _savePlayerSensorUseCase(PlayersParams(player));
+    player.notifyListeners();
   }
 
   void startRecording() {

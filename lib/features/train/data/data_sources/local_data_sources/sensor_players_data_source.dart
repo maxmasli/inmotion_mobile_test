@@ -6,6 +6,7 @@ import 'package:inmotion_mobile_test/features/train/data/DTOs/player_dto.dart';
 abstract interface class SensorPlayerDataSource {
   Future<void> savePlayer(PlayerDTO player);
   Future<List<PlayerDTO>> getPlayers();
+  Future<void> updatePlayer(PlayerDTO player);
 }
 
 class SensorPlayerDataSourceImpl implements SensorPlayerDataSource {
@@ -22,12 +23,20 @@ class SensorPlayerDataSourceImpl implements SensorPlayerDataSource {
   Future<void> savePlayer(PlayerDTO player) async {
     log('Save player with sensor: ${player.deviceId}', name: 'SensorPlayerDataSourceImpl');
     final box = await _openBox();
-    await box.add(player);
+    await box.put(player.uuid, player);
     await box.close();
   }
 
   Future<Box<PlayerDTO>> _openBox() async {
     const boxName = 'sensor_players';
     return await Hive.openBox(boxName);
+  }
+
+  // TODO update пока ненужен, вместо него savePlayer
+  @override
+  Future<void> updatePlayer(PlayerDTO player) async {
+    final box = await _openBox();
+    await box.put(player.uuid, player);
+    await box.close();
   }
 }

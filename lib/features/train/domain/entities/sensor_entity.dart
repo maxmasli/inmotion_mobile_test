@@ -11,7 +11,7 @@ class SensorEntity extends ChangeNotifier {
   int _timeoutCounter = 999;
 
   final BluetoothDevice device;
-  final int number;
+  int number;
   bool _isHrOk = false;
   SensorStatus _status = SensorStatus.disconnected;
 

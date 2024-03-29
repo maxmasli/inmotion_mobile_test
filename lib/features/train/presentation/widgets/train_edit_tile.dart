@@ -22,7 +22,6 @@ class TrainEditTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = context.read<TrainModel>();
-    print('BUILD TRAIN EDIT TILE with train: ${train.trainName}');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -41,7 +40,6 @@ class TrainEditTile extends StatelessWidget {
                 model.updateTrainName(train, value);
               },
             ),
-            //child: Text(train.trainName),
           ),
           Checkbox(
             value: isSelected,

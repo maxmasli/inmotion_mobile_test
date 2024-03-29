@@ -22,13 +22,14 @@ class PlayerDTOAdapter extends TypeAdapter<PlayerDTO> {
       measures: (fields[3] as List).cast<MeasureDTO>(),
       deviceId: fields[4] as String?,
       deviceNumber: fields[5] as int?,
+      uuid: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, PlayerDTO obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
@@ -38,7 +39,9 @@ class PlayerDTOAdapter extends TypeAdapter<PlayerDTO> {
       ..writeByte(4)
       ..write(obj.deviceId)
       ..writeByte(5)
-      ..write(obj.deviceNumber);
+      ..write(obj.deviceNumber)
+      ..writeByte(6)
+      ..write(obj.uuid);
   }
 
   @override
