@@ -24,8 +24,7 @@ class PlayerEntity extends ChangeNotifier {
     this.uuid,
     SensorEntity? sensor,
     VoidCallback? onSensorStatusUpdate,
-  })
-      : _runningType = RunningType.onFoot,
+  })  : _runningType = RunningType.onFoot,
         _sensor = sensor {
     if (onSensorStatusUpdate != null && _sensor != null) {
       _sensor!.addListener(() {
@@ -40,11 +39,11 @@ class PlayerEntity extends ChangeNotifier {
     required BluetoothDevice device,
     VoidCallback? onSensorStatusUpdate,
   }) : this(
-    name: "Name",
-    number: 01,
-    sensor: SensorEntity(device: device, number: 1),
-    onSensorStatusUpdate: onSensorStatusUpdate,
-  );
+          name: "Name",
+          number: 01,
+          sensor: SensorEntity(device: device, number: 1),
+          onSensorStatusUpdate: onSensorStatusUpdate,
+        );
 
   bool get hasSensor => _sensor != null;
 
@@ -58,8 +57,9 @@ class PlayerEntity extends ChangeNotifier {
 
   int get pulse => _measures.lastOrNull?.hr ?? 0;
 
-  //TODO переделать координаты
-  List<(int x, int y, int speed)> get coordinates => [(1, 2, 3)];
+  List<(double x, double y, int speed)> get coordinates => _measures
+      .map((m) => (m.latitude ?? 0, m.longitude ?? 0, m.speed?.toInt() ?? 0))
+      .toList();
 
   List<int> get hrMeasures => _measures.map((m) => m.hr ?? 0).toList();
 

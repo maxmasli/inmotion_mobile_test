@@ -41,12 +41,12 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
                   padding: EdgeInsets.zero,
                   physics:
                       isExpanded ? const NeverScrollableScrollPhysics() : null,
-                  itemCount: model.players.length,
+                  itemCount: model.selectedPlayers.length,
                   itemScrollController: itemController,
                   itemBuilder: (context, i) {
                     return PlayerTile(
                       maxHeight: constraints.maxHeight,
-                      player: model.players[i],
+                      player: model.selectedPlayers[i],
                       onExpansion: (_, isExpanded) {
                         if (isExpanded) {
                           scrollToIndex(i);

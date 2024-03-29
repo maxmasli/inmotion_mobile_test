@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -7,7 +5,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class PlayerLineChart extends StatelessWidget {
   const PlayerLineChart({super.key, required this.data});
 
-  final List<(int x, int y, int speed)> data;
+  final List<(double x, double y, int speed)> data;
 
   // // 36000
   // final List<ChartData> chartData = [
@@ -25,7 +23,6 @@ class PlayerLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('build');
     return SfCartesianChart(
       zoomPanBehavior: ZoomPanBehavior(
         enablePinching: true,
@@ -36,19 +33,13 @@ class PlayerLineChart extends StatelessWidget {
       ),
       margin: EdgeInsets.zero,
       primaryYAxis: const NumericAxis(
-        interval: 10,
         crossesAt: 0,
-        minimum: -60,
-        maximum: 60,
         labelStyle: TextStyle(color: Colors.transparent),
         axisLine: AxisLine(color: Colors.transparent),
         majorTickLines: MajorTickLines(color: Colors.transparent),
       ),
       primaryXAxis: const NumericAxis(
-        interval: 10,
         crossesAt: 0,
-        minimum: -90,
-        maximum: 90,
         labelStyle: TextStyle(color: Colors.transparent),
         axisLine: AxisLine(color: Colors.transparent),
         majorTickLines: MajorTickLines(color: Colors.transparent),
@@ -70,9 +61,3 @@ class PlayerLineChart extends StatelessWidget {
   }
 }
 
-// class ChartData {
-//   ChartData(this.x, this.y);
-//
-//   final int x;
-//   final int y;
-// }
