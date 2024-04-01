@@ -73,10 +73,12 @@ class AppBLEConnection {
     List<PlayerEntity> players, {
     required Function(PlayerEntity, List<MeasureEntity>) onPlayerDataDownload,
     Function(double)? onPercentUpdated,
-    Function? onStop,
+    required Future<void> Function() onStop,
   }) async {
     var totalLength = 0;
     var downloaded = 0;
+    final devices = players.length;
+    var finishedDevices = 0;
     if (onPercentUpdated != null) onPercentUpdated(0);
 
     for (final player in players) {
@@ -109,7 +111,7 @@ class AppBLEConnection {
       final savedDataStreamController = StreamController<List<int>>();
 
       const CborDecoder().bind(savedDataStreamController.stream).listen(
-        (value) {
+        (value) async {
           Uint8Buffer object = value.toObject() as Uint8Buffer;
           final dataPayload = _decoder.decodePayload(object);
           measureList.add(dataPayload);
@@ -118,15 +120,17 @@ class AppBLEConnection {
           if (onPercentUpdated != null) {
             onPercentUpdated(percent);
           }
-          if (percent >= 100 && onStop != null) {
-            onStop();
-          }
         },
         onDone: () async {
           await payloadChar.setNotifyValue(false);
           await charSubscription?.cancel();
           await device.disconnect();
           onPlayerDataDownload(player, measureList);
+
+          finishedDevices++;
+          if (finishedDevices == devices) {
+            await onStop();
+          }
         },
       );
 
