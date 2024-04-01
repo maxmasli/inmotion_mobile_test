@@ -50,8 +50,8 @@ class PrepareTrainWidget extends StatelessWidget {
           for (final device in model.foundedDevices) ...[
             DeviceTile(
               device: device,
-              onTap: () {
-                model.saveDevice(device);
+              onTap: () async {
+                await model.saveDevice(device);
               },
             )
           ]

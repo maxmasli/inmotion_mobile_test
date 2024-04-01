@@ -9,6 +9,7 @@ import 'package:inmotion_mobile_test/features/train/presentation/provider/train_
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_edit_tile.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 const bottomSheetMinHeight = 0.15;
 
@@ -129,7 +130,8 @@ class _TrainEditSliverListState extends State<_TrainEditSliverList> {
                                   : true, // все выбранные
                           onChanged: (value) {
                             setState(() {
-                              if (selectedTrains.length == trains.length) { // Если все выбранные
+                              if (selectedTrains.length == trains.length) {
+                                // Если все выбранные
                                 selectedTrains.clear();
                               } else {
                                 selectedTrains.clear();
@@ -196,9 +198,7 @@ class _TrainEditSliverListState extends State<_TrainEditSliverList> {
                       setState(() {
                         if (selectedTrains.contains(train)) {
                           selectedTrains.remove(train);
-                          log('selected trains remove');
                         } else {
-                          log('selected trains add ${train.uuid}');
                           selectedTrains.add(train);
                         }
                       });
@@ -223,9 +223,16 @@ class _TrainSliverList extends StatelessWidget {
   final ScrollController controller;
   final VoidCallback onEditPressed;
 
+  Future<void> createAndShareFile(TrainModel model, TrainEntity train) async {
+    final path = await model.createExcel(train);
+    final xfile = XFile(path);
+    await Share.shareXFiles([xfile]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final model = context.read<TrainModel>();
     return Selector<TrainModel, List<TrainEntity>>(
       selector: (context, model) => model.trains,
       shouldRebuild: (prev, curr) => prev != curr,
@@ -267,7 +274,15 @@ class _TrainSliverList extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 childCount: trains.length,
                 (context, index) {
-                  return TrainTile(train: trains.reversed.toList()[index]);
+                  return TrainTile(
+                    train: trains.reversed.toList()[index],
+                    onPressed: () async {
+                      await createAndShareFile(
+                        model,
+                        trains.reversed.toList()[index],
+                      );
+                    },
+                  );
                 },
               ),
             )

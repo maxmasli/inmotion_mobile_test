@@ -8,6 +8,7 @@ import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
 import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
@@ -59,6 +60,8 @@ class TrainModel extends ChangeNotifier {
 
   final _deleteTrainsUseCase = getIt<DeleteTrainsUseCase>();
 
+  final _createExcelUseCase = getIt<CreateExcelUseCase>();
+
   // Permissions
   var _hasAllPermissions = true;
 
@@ -100,11 +103,11 @@ class TrainModel extends ChangeNotifier {
 
   List<TrainEntity> get trains => _trains;
 
-  void _startScanning() async {
+  Future<void> _startScanning() async {
     await _checkPermissions();
     if (!_hasAllPermissions || !isBLEOn) return;
 
-    _appBLEConnection.startScanning(
+    await _appBLEConnection.startScanning(
       (scanResults) {
         _foundedDevices.clear();
         for (final scanResult in scanResults) {
@@ -138,18 +141,22 @@ class TrainModel extends ChangeNotifier {
     );
   }
 
-  void _downloadDataFromDevices() async {
+  Future<void> _downloadDataFromDevices() async {
     log("Downloading data");
-    _appBLEConnection.downloadDataFromPlayers(selectedPlayers,
-        onPlayerDataDownload: (player, measures) {
-      player.setMeasures(measures);
-      train!.addPlayer(player);
-    }, onPercentUpdated: (percent) {
-      _loadingPercent = percent;
-      notifyListeners();
-    }, onStop: () async {
-      await _saveTrainUseCase(TrainParams(train!));
-    });
+    await _appBLEConnection.downloadDataFromPlayers(
+      selectedPlayers,
+      onPlayerDataDownload: (player, measures) {
+        player.setMeasures(measures);
+        train!.addPlayer(player);
+      },
+      onPercentUpdated: (percent) {
+        _loadingPercent = percent;
+        notifyListeners();
+      },
+      onStop: () async {
+        await _saveTrainUseCase(TrainParams(train!));
+      },
+    );
   }
 
   void init() async {
@@ -157,11 +164,11 @@ class TrainModel extends ChangeNotifier {
     _players = await _getPlayersSensorUseCase();
     notifyListeners();
 
-    _appBLEConnection.listenBLEStatus((state) {
+    _appBLEConnection.listenBLEStatus((state) async {
       _bluetoothState = state;
       notifyListeners();
       if (state == BluetoothAdapterState.on) {
-        _startScanning();
+        await _startScanning();
       }
     });
     await updateTrains();
@@ -178,7 +185,7 @@ class TrainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveDevice(BluetoothDevice device) async {
+  Future<void> saveDevice(BluetoothDevice device) async {
     final player = PlayerEntity.fromDevice(
         device: device,
         onSensorStatusUpdate: () {
@@ -193,13 +200,13 @@ class TrainModel extends ChangeNotifier {
     await _savePlayerSensorUseCase(PlayersParams(player));
   }
 
-  void updateCurrentTrainName(String name) async {
+  Future<void> updateCurrentTrainName(String name) async {
     assert(train != null, 'Current train is null');
     train!.trainName = name;
     await _updateTrainUseCase(TrainParams(train!));
   }
 
-  void updateTrainName(TrainEntity train, String name) async {
+  Future<void> updateTrainName(TrainEntity train, String name) async {
     train.trainName = name;
     await _updateTrainUseCase(TrainParams(train));
   }
@@ -226,6 +233,10 @@ class TrainModel extends ChangeNotifier {
     player.notifyListeners();
   }
 
+  Future<String> createExcel(TrainEntity train) async {
+    return await _createExcelUseCase(TrainParams(train));
+  }
+
   void startRecording() {
     _isTrainStart = true;
     assert(_trainStage == TrainStage.prepare,
@@ -238,14 +249,14 @@ class TrainModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void stopRecording() {
+  void stopRecording() async {
     _isTrainStart = false;
     assert(_trainStage == TrainStage.running,
         "TrainStage is not running. Can not stop train");
     assert(_train != null, 'TrainEntity == null');
     _trainStage = TrainStage.end;
     _train!.endTime = DateTime.now();
-    _downloadDataFromDevices();
+    await _downloadDataFromDevices();
     notifyListeners();
   }
 
@@ -281,9 +292,9 @@ class TrainModel extends ChangeNotifier {
   }
 
   @override
-  void dispose() {
-    _appBLEConnection.dispose();
+  void dispose() async {
     super.dispose();
+    await _appBLEConnection.dispose();
   }
 }
 

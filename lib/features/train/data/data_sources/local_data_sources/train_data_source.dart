@@ -32,7 +32,7 @@ final class TrainDataSourceImpl implements TrainDataSource {
 
   @override
   Future<void> saveTrain(TrainDTO train) async {
-    log('Save train: ${train.uuid}', name: 'TrainDataSourceImpl');
+    log('Save train: ${train.uuid} with players key: ${train.playersKey}', name: 'TrainDataSourceImpl');
     final box = await _openBox();
     await box.put(train.uuid, train);
     await box.close();

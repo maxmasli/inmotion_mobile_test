@@ -1,6 +1,5 @@
 import 'package:inmotion_mobile_test/core/domain/usecases/usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/repositories/players_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/sensor_players_repository.dart';
 
 class GetPlayersSensorUseCase

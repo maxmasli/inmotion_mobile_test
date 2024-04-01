@@ -36,8 +36,8 @@ class TrainEditTile extends StatelessWidget {
             child: TrainTextField(
               controller: TextEditingController(text: train.trainName),
               hint: 'Введите название',
-              onChanged: (value) {
-                model.updateTrainName(train, value);
+              onChanged: (value) async {
+                await model.updateTrainName(train, value);
               },
             ),
           ),

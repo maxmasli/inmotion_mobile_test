@@ -29,7 +29,7 @@ class PlayersDataSourceImpl implements PlayersDataSource {
 
   @override
   Future<void> savePlayers(String key, PlayerListDTO playerList) async {
-    log('Save players with key: $key', name: 'PlayersDataSourceImpl');
+    log('Save players with key: $key, length: ${playerList.list.length}', name: 'PlayersDataSourceImpl');
     final box = await _openBox();
     await box.put(key, playerList);
     await box.close();

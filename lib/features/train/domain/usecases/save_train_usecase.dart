@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:inmotion_mobile_test/core/domain/usecases/usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/players_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/train_repository.dart';
@@ -14,8 +16,8 @@ class SaveTrainUseCase implements UseCase<void, TrainParams> {
   @override
   Future<void> call(TrainParams params) async {
     assert(params.train.playersKey != null, 'Players key is null');
-    await trainRepository.saveTrain(params.train);
-    await playersRepository.savePlayers(
-        params.train.playersKey!, params.train.players);
+    final train = params.train;
+    await trainRepository.saveTrain(train);
+    await playersRepository.savePlayers(train.playersKey!, train.players);
   }
 }

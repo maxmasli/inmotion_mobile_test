@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:inmotion_mobile_test/features/train/data/DTOs/player_dto.dart';
 import 'package:inmotion_mobile_test/features/train/data/DTOs/player_list_dto.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/local_data_sources/players_data_source.dart';
@@ -26,6 +28,7 @@ class PlayersRepositoryImpl implements PlayersRepository {
 
   @override
   Future<void> savePlayers(String key, Iterable<PlayerEntity> players) async {
+    log('List<PlayerEntity> to PlayerListDTO, length: ${players.length}', name: 'PlayersRepositoryImpl');
     return await playersDataSource.savePlayers(
         key,
         PlayerListDTO(

@@ -47,7 +47,7 @@ class AppBLEConnection {
 
   /// Метод возвращает список [ScanResult] - адвертаиз пакеты уже с нужными сервисами [_serviceGuid]
   /// То есть конкретные нужные метки
-  void startScanning(
+  Future<void> startScanning(
       Function(List<(BluetoothDevice, TagMeta, MeasureEntity)> scanResults)
           onReceivedScanResults) async {
     _scanResultStream = FlutterBluePlus.onScanResults.listen(
@@ -69,7 +69,7 @@ class AppBLEConnection {
     );
   }
 
-  void downloadDataFromPlayers(
+  Future<void> downloadDataFromPlayers(
     List<PlayerEntity> players, {
     required Function(PlayerEntity, List<MeasureEntity>) onPlayerDataDownload,
     Function(double)? onPercentUpdated,
@@ -143,7 +143,7 @@ class AppBLEConnection {
     }
   }
 
-  void dispose() async {
+  Future<void> dispose() async {
     await _bleStatusStream?.cancel();
     await _scanResultStream?.cancel();
   }

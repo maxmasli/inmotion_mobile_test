@@ -9,6 +9,7 @@ import 'package:inmotion_mobile_test/features/train/data/repositories/train_repo
 import 'package:inmotion_mobile_test/features/train/domain/repositories/players_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/sensor_players_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/train_repository.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
@@ -56,4 +57,7 @@ void setup() {
 
   getIt.registerFactory(
       () => DeleteTrainsUseCase(trainRepository: getIt<TrainRepository>()));
+
+  getIt.registerFactory(
+      () => CreateExcelUseCase(playersRepository: getIt<PlayersRepository>()));
 }

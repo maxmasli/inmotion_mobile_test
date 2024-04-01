@@ -11,6 +11,6 @@ class DeleteTrainsUseCase implements UseCase<void, TrainsListParams> {
 
   @override
   Future<void> call(TrainsListParams params) async {
-    return trainRepository.deleteTrains(params.trains);
+    return await trainRepository.deleteTrains(params.trains);
   }
 }

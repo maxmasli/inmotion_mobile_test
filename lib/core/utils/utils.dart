@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/settings.dart';
+import 'package:path_provider/path_provider.dart';
 
 Color getColorByPulse(int pulse) {
   if (pulse >= Settings.maximumIntensity) {
@@ -39,4 +42,14 @@ Color getColorBySpeed(int speed) {
   } else {
     return AppColors.blue;
   }
+}
+
+Future<Directory> getWorkingDirectory() async {
+  if (Platform.isAndroid) {
+    return await Directory('/storage/emulated/0/Documents/Movecross').create();
+  }
+
+  final docDir = await getApplicationDocumentsDirectory();
+
+  return Directory('${docDir.path}/Movecross');
 }

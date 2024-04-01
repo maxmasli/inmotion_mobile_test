@@ -67,9 +67,6 @@ class PlayerEntity extends ChangeNotifier {
 
   int get speed => _measures.lastOrNull?.speed?.toInt() ?? 0;
 
-  // List<(int x, int y, int speed)> get coordinates =>
-  //     _gpsMeasures.map((m) => (m.x, m.y, m.speed)).toList();
-
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     _measures.add(payload);
     _sensor?.notify(meta);

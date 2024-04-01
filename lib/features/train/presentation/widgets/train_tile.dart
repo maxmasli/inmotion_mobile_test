@@ -6,9 +6,11 @@ class TrainTile extends StatelessWidget {
   TrainTile({
     super.key,
     required this.train,
+    required this.onPressed,
   });
 
   final TrainEntity train;
+  final VoidCallback onPressed;
   final formatTime = DateFormat('HH:mm');
 
   @override
@@ -33,13 +35,13 @@ class TrainTile extends StatelessWidget {
           ),
           _SheetButton(
             padding: const EdgeInsets.all(4),
+            onPressed: onPressed,
             child: Center(
               child: Text(
                 "Excel",
                 style: theme.textTheme.titleSmall,
               ),
             ),
-            onPressed: () {},
           )
         ],
       ),
