@@ -14,7 +14,6 @@ class PrepareTrainWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     final theme = Theme.of(context);
 
     // TODO переделать на Selector
@@ -53,34 +52,11 @@ class PrepareTrainWidget extends StatelessWidget {
               onTap: () async {
                 await model.saveDevice(device);
               },
-            )
+            ),
+            const SizedBox(height: 8),
           ]
         ],
       ),
     );
-    // return Expanded(
-    //   child: Column(
-    //     children: [
-    //       if (model.isBLEOn && model.hasAllPermissions)
-    //         if (model.devices.isEmpty)
-    //           const CircularProgressIndicator()
-    //         else
-    //           Expanded(
-    //             child: ListView.builder(
-    //               shrinkWrap: true,
-    //               itemCount: model.devices.length,
-    //               padding: EdgeInsets.only(
-    //                 bottom: height * bottomSheetMinHeight - 20,
-    //               ),
-    //               itemBuilder: (context, i) {
-    //                 return Text(model.devices[i].advName);
-    //               },
-    //             ),
-    //           )
-    //       else
-    //         const BluetoothOffWidget()
-    //     ],
-    //   )
-    // );
   }
 }

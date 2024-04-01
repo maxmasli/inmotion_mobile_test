@@ -48,19 +48,20 @@ class AppBLEConnection {
   /// Метод возвращает список [ScanResult] - адвертаиз пакеты уже с нужными сервисами [_serviceGuid]
   /// То есть конкретные нужные метки
   Future<void> startScanning(
-      Function(List<(BluetoothDevice, TagMeta, MeasureEntity)> scanResults)
-          onReceivedScanResults) async {
+    Future<void> Function(List<(BluetoothDevice, TagMeta, MeasureEntity)>)
+        onReceivedScanResults,
+  ) async {
     _scanResultStream = FlutterBluePlus.onScanResults.listen(
-      (results) {
-        onReceivedScanResults(
-          results.map(
-            (r) {
-              final frame = r.advertisementData.serviceData[_serviceGuid]!;
-              final (meta, payload) = _decoder.decodeFrame(frame);
-              return (r.device, meta, payload);
-            },
-          ).toList(),
-        );
+      (results) async {
+        final mapped = results.map(
+              (r) {
+            final frame = r.advertisementData.serviceData[_serviceGuid]!;
+            final (meta, payload) = _decoder.decodeFrame(frame);
+            return (r.device, meta, payload);
+          },
+        ).toList();
+
+        await onReceivedScanResults(mapped);
       },
       onError: (e) => log(e),
     );
@@ -95,7 +96,6 @@ class AppBLEConnection {
       final length = byteData.getInt32(0, Endian.little);
       totalLength += length;
     }
-
 
     for (final player in players) {
       final device = player.sensor!.device;

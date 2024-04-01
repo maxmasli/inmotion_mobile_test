@@ -108,18 +108,18 @@ class TrainModel extends ChangeNotifier {
     if (!_hasAllPermissions || !isBLEOn) return;
 
     await _appBLEConnection.startScanning(
-      (scanResults) {
+      (scanResults) async {
+        print(scanResults);
         _foundedDevices.clear();
         for (final scanResult in scanResults) {
           final device = scanResult.$1;
           final meta = scanResult.$2;
           final payload = scanResult.$3;
-
           /// Если девайс еще не добавлен
           if (!_players.map((p) => p.sensor!.device).contains(device)) {
             _foundedDevices.add(device);
             notifyListeners();
-            return;
+            continue;
           }
 
           /// Девайс уже добавлен, достаем данные
@@ -128,6 +128,7 @@ class TrainModel extends ChangeNotifier {
             return p.sensor!.device == device;
           }).first;
 
+          //if (player == null) return;
           if (!_isTrainStart) {
             /// Если не идет запись
             player.notifySensor(meta);
