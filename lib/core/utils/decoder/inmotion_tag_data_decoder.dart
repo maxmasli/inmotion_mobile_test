@@ -66,7 +66,7 @@ class InmotionTagDataDecoder {
 
       int hour = blob.getUint8(0);
       int minute = blob.getUint8(1);
-      int milliseconds = blob.getUint16(2);
+      int milliseconds = blob.getUint16(2, Endian.little);
       int seconds = milliseconds ~/ 1000;
       milliseconds = milliseconds % 1000;
 
