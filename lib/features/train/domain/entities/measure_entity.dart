@@ -16,14 +16,23 @@ class MeasureEntity {
   });
 
   DateTime? time;
+
+  /* Пульс в уд/мин */
   int? hr;
 
+  /* Широта и долгота в градусах */
   double? latitude, longitude;
 
+  /* Скорость в м/с */
   double? speed;
+
+  /* Пройденное расстояние в метрах */
   double? distance;
 
+  /* Количество шагов */
   int? steps;
+
+  /* Активность в псевдоединицах 0-255 */
   int? activity;
 
   List<IMU>? imu;
@@ -41,6 +50,4 @@ class MeasureEntity {
       if (imu != null) "imu: $imu"
     ].join(", ");
   }
-
-// DateTime dt = DateTime();
 }

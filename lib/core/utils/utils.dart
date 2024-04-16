@@ -20,7 +20,7 @@ Color getColorByPulse(int pulse) {
 }
 
 // TODO заменить с импользованием intl
-String getRunBySpeed(int speed, BuildContext context) {
+String getRunBySpeed(double speed, BuildContext context) {
   if (speed >= 8) {
     return "Ускорение";
   } else if (speed >= 5) {

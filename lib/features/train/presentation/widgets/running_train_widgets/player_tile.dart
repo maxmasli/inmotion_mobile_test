@@ -88,7 +88,7 @@ class _PlayerTileState extends State<PlayerTile> {
                                       ],
                                     ),
                                     Text(
-                                      getRunBySpeed(player.speed, context),
+                                      getRunBySpeed(player.speedMps, context),
                                       overflow: TextOverflow.ellipsis,
                                       style: theme.textTheme.labelSmall,
                                     )
@@ -229,7 +229,7 @@ class _PlayerTileState extends State<PlayerTile> {
                                               color: AppColors.darkBlue),
                                         ),
                                         child: Text(
-                                          "${player.speed}",
+                                          player.speedKph.toStringAsFixed(1),
                                           style: theme.textTheme.labelMedium
                                               ?.copyWith(
                                                   color: AppColors.darkBlue),
