@@ -28,33 +28,35 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
     final theme = Theme.of(context);
     return AlertDialog(
       title: Text("Редактирование игрока", style: theme.textTheme.titleMedium),
-      content: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text("Имя", style: theme.textTheme.displayMedium),
-          _PlayerEditDialogTextField(
-            controller: _nameController,
-          ),
-          const SizedBox(height: 10),
-          Text("Номер", style: theme.textTheme.displayMedium),
-          _PlayerEditDialogTextField(
-            controller: _numberController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text("Номер датчика", style: theme.textTheme.displayMedium),
-          _PlayerEditDialogTextField(
-            controller: _deviceNumberController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-          ),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Имя", style: theme.textTheme.displayMedium),
+            _PlayerEditDialogTextField(
+              controller: _nameController,
+            ),
+            const SizedBox(height: 10),
+            Text("Номер", style: theme.textTheme.displayMedium),
+            _PlayerEditDialogTextField(
+              controller: _numberController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+            ),
+            const SizedBox(height: 10),
+            Text("Номер датчика", style: theme.textTheme.displayMedium),
+            _PlayerEditDialogTextField(
+              controller: _deviceNumberController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(

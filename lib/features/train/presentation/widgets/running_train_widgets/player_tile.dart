@@ -38,6 +38,7 @@ class _PlayerTileState extends State<PlayerTile> {
         value: widget.player,
         child: Consumer<PlayerEntity>(
           builder: (context, player, child) {
+            final isHrOk = player.sensor!.isHrOk;
             return PhysicalModel(
               color: theme.colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(16),
@@ -63,39 +64,7 @@ class _PlayerTileState extends State<PlayerTile> {
                         height: titleHeight,
                         child: Row(
                           children: [
-                            Container(
-                              width: 90,
-                              color: getColorByPulse(player.pulse),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        SvgPicture.asset(
-                                          AppIcons.heart,
-                                          width: 14,
-                                          height: 14,
-                                        ),
-                                        Text(
-                                          "${player.pulse}",
-                                          style: theme.textTheme.labelLarge,
-                                        )
-                                      ],
-                                    ),
-                                    Text(
-                                      getRunBySpeed(player.speedMps, context),
-                                      overflow: TextOverflow.ellipsis,
-                                      style: theme.textTheme.labelSmall,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                            hrInfo(player),
                             Expanded(
                               child: Column(
                                 children: [
@@ -112,12 +81,12 @@ class _PlayerTileState extends State<PlayerTile> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text('${player.number}',
-                                                  style: theme
-                                                      .textTheme.headlineMedium),
+                                                  style: theme.textTheme
+                                                      .headlineMedium),
                                               Text(
                                                 'Датчик ${player.sensor?.number}',
-                                                style:
-                                                    theme.textTheme.headlineSmall,
+                                                style: theme
+                                                    .textTheme.headlineSmall,
                                               )
                                             ],
                                           ),
@@ -131,13 +100,35 @@ class _PlayerTileState extends State<PlayerTile> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Flexible(
-                                                child: Text(
-                                                  player.name,
-                                                  style: theme
-                                                      .textTheme.headlineMedium,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Flexible(
+                                                    child: Text(
+                                                      player.name,
+                                                      style: theme.textTheme
+                                                          .headlineMedium,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      if (!isHrOk)
+                                                        SvgPicture.asset(
+                                                          AppIcons.heart,
+                                                          colorFilter:
+                                                              ColorFilter
+                                                                  .mode(
+                                                            theme.colorScheme.error,
+                                                            BlendMode.srcIn,
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  )
+                                                ],
                                               ),
                                               Row(
                                                 children: [
@@ -157,32 +148,11 @@ class _PlayerTileState extends State<PlayerTile> {
                                             ],
                                           ),
                                         ),
+                                        const SizedBox(width: 20),
                                       ],
                                     ),
                                   ),
-                                  LayoutBuilder(
-                                    builder: (context, constraints) {
-                                      return RangesWidget(
-                                        width: constraints.maxWidth,
-                                        height: 30,
-                                        values: StatsCalculator.getHrStats(
-                                          player.hrMeasures,
-                                        ),
-                                        builder: (value, i) {
-                                          return Center(
-                                            child: Text(
-                                              '${(value * 100).round()}%',
-                                              style: theme.textTheme.displaySmall
-                                                  ?.copyWith(
-                                                color: AppColors.blue,
-                                              ),
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                  )
+                                  rangesWidget(player),
                                 ],
                               ),
                             ),
@@ -211,13 +181,15 @@ class _PlayerTileState extends State<PlayerTile> {
                               child: PlayerLineChart(data: player.coordinates),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                         width: 30,
@@ -309,5 +281,92 @@ class _PlayerTileState extends State<PlayerTile> {
         ),
       ),
     );
+  }
+
+  Widget rangesWidget(PlayerEntity player) {
+    final isHrOk = player.sensor!.isHrOk;
+    final theme = Theme.of(context);
+    if (isHrOk) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return RangesWidget(
+            width: constraints.maxWidth,
+            height: 30,
+            values: StatsCalculator.getHrStats(
+              player.hrMeasures,
+            ),
+            builder: (value, i) {
+              return Center(
+                child: Text(
+                  '${(value * 100).round()}%',
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    color: AppColors.blue,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              );
+            },
+          );
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget hrInfo(PlayerEntity player) {
+    final isHrOk = player.sensor!.isHrOk;
+    final theme = Theme.of(context);
+    if (isHrOk) {
+      return Container(
+        width: 90,
+        color: getColorByPulse(player.pulse),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SvgPicture.asset(
+                    AppIcons.heart,
+                    width: 14,
+                    height: 14,
+                  ),
+                  Text(
+                    "${player.pulse}",
+                    style: theme.textTheme.labelLarge,
+                  )
+                ],
+              ),
+              Text(
+                getRunBySpeed(player.speedMps, context),
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall,
+              )
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        width: 90,
+        color: theme.primaryColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(AppIcons.heart),
+            const SizedBox(height: 5),
+            Text(
+              getRunBySpeed(player.speedMps, context),
+              overflow: TextOverflow.ellipsis,
+              style: theme.textTheme.labelSmall,
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

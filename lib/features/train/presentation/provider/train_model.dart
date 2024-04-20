@@ -109,7 +109,6 @@ class TrainModel extends ChangeNotifier {
 
     await _appBLEConnection.startScanning(
       (scanResults) async {
-        print(scanResults);
         _foundedDevices.clear();
         for (final scanResult in scanResults) {
           final device = scanResult.$1;

@@ -17,7 +17,8 @@ class SensorEntity extends ChangeNotifier {
 
   SensorStatus get status => _status;
 
-  bool get isHrOk => _isHrOk;
+  bool get isHrOk => false;
+  //bool get isHrOk => _isHrOk;
 
   SensorEntity({
     required this.device,
