@@ -1,4 +1,5 @@
 import 'package:inmotion_mobile_test/core/domain/usecases/usecase.dart';
+import 'package:inmotion_mobile_test/core/utils/excel/csv_generator.dart';
 import 'package:inmotion_mobile_test/core/utils/excel/excel_generator.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/players_repository.dart';
 
@@ -19,6 +20,8 @@ class CreateExcelUseCase implements UseCase<String, TrainParams> {
     }
     print('Train players length: ${train.players.length}');
     final path = await ExcelGenerator().createExcel(train);
+
+    CsvGenerator().createCsv(train);
     return path;
   }
 }
