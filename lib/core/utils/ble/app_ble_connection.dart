@@ -112,19 +112,19 @@ class AppBLEConnection {
 
       const CborDecoder().bind(savedDataStreamController.stream).listen(
         (value) async {
-          Uint8Buffer object = value.toObject() as Uint8Buffer;
-          final dataPayload = _decoder.decodePayload(object);
-          measureList.add(dataPayload);
-          downloaded += 1;
-          final percent = downloaded / totalLength * 100;
-          if (onPercentUpdated != null) {
-            onPercentUpdated(percent);
-          }
+            Uint8Buffer object = value.toObject() as Uint8Buffer;
+            final dataPayload = _decoder.decodePayload(object);
+            measureList.add(dataPayload);
+            downloaded += 1;
+            final percent = downloaded / totalLength * 100;
+            if (onPercentUpdated != null) {
+              onPercentUpdated(percent);
+            }
         },
         onDone: () async {
           await payloadChar.setNotifyValue(false);
           await charSubscription?.cancel();
-          await device.disconnect();
+          device.disconnect(queue: false);
           onPlayerDataDownload(player, measureList);
 
           finishedDevices++;
