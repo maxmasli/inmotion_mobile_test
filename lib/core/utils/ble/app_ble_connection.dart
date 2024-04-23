@@ -8,6 +8,7 @@ import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data_decode
 import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:typed_data/typed_buffers.dart';
 
 class AppBLEConnection {
@@ -33,17 +34,26 @@ class AppBLEConnection {
   }
 
   //TODO rename
-  void writeToDevices(List<PlayerEntity> players) async {
-    // for (final device in players.map((p) => p.sensor.device)) {
-    //   await device.connect();
-    //   final service = (await device.discoverServices())
-    //       .firstWhere((service) => service.serviceUuid == _serviceGuid);
-    //   final char = service.characteristics
-    //       .firstWhere((char) => char.characteristicUuid == _charGuid);
-    //   await char.write([0x1]);
-    //   await device.disconnect();
-    // }
+  void writeToDevices(Iterable<BluetoothDevice> devices, Guid guid, List<int> data) async {
+    for (final device in devices) {
+      await device.connect();
+      await device.connect();
+      final service = (await device.discoverServices())
+          .firstWhere((service) => service.serviceUuid == _serviceGuid);
+      final char = service.characteristics
+          .firstWhere((char) => char.characteristicUuid == guid);
+      await char.write(data);
+      await device.disconnect();
+    }
   }
+
+  void devicesStartRecording(Iterable<BluetoothDevice> devices) {
+    writeToDevices(devices, _charGuid, [0x01]);
+  }
+
+  // void devicesStopRecording(Iterable<BluetoothDevice> devices) {
+  //   writeToDevices(devices, _charGuid, [0x00]);
+  // }
 
   /// Метод возвращает список [ScanResult] - адвертаиз пакеты уже с нужными сервисами [_serviceGuid]
   /// То есть конкретные нужные метки
@@ -105,6 +115,7 @@ class AppBLEConnection {
           .firstWhere((service) => service.serviceUuid == _serviceGuid);
       final payloadChar = service.characteristics
           .firstWhere((char) => char.characteristicUuid == _charGuid);
+      await payloadChar.write([0x00]);
 
       final measureList = <MeasureEntity>[];
       StreamSubscription<List<int>>? charSubscription;
@@ -115,11 +126,6 @@ class AppBLEConnection {
             Uint8Buffer object = value.toObject() as Uint8Buffer;
             final dataPayload = _decoder.decodePayload(object);
             measureList.add(dataPayload);
-            downloaded += 1;
-            final percent = downloaded / totalLength * 100;
-            if (onPercentUpdated != null) {
-              onPercentUpdated(percent);
-            }
         },
         onDone: () async {
           await payloadChar.setNotifyValue(false);
@@ -141,6 +147,11 @@ class AppBLEConnection {
             return;
           }
           savedDataStreamController.sink.add(payload);
+          downloaded += payload.length;
+          final percent = downloaded / totalLength * 100;
+          if (onPercentUpdated != null) {
+            onPercentUpdated(percent);
+          }
         },
       );
       await payloadChar.setNotifyValue(true);

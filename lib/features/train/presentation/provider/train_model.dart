@@ -246,7 +246,9 @@ class TrainModel extends ChangeNotifier {
     _train = TrainEntity(
       startTime: DateTime.now(),
     );
-    //_appBLEConnection.writeToDevices(_selectedPlayers);
+    _appBLEConnection.devicesStartRecording(
+      _selectedPlayers.map((e) => e.sensor?.device).nonNulls
+    );
     notifyListeners();
   }
 
