@@ -162,6 +162,11 @@ class TrainModel extends ChangeNotifier {
   void init() async {
     /// Загрузка сохраненных игроков с датчиками
     _players = await _getPlayersSensorUseCase();
+    for (final player in _players) { // устанавливаем слушатели на оновление статуса
+      player.setOnSensorStatusUpdate(() {
+        notifyListeners();
+      });
+    }
     notifyListeners();
 
     _appBLEConnection.listenBLEStatus((state) async {

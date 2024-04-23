@@ -71,6 +71,12 @@ class PlayerEntity extends ChangeNotifier {
   /* Скорость в км/ч */
   double get speedKph => speedMps * 1000 / 3600;
 
+  void setOnSensorStatusUpdate(VoidCallback callback) {
+    if (_sensor != null) {
+      _sensor!.addListener(callback);
+    }
+  }
+
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     _measures.add(payload);
     _sensor?.notify(meta);

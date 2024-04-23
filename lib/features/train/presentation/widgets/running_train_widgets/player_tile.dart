@@ -120,9 +120,9 @@ class _PlayerTileState extends State<PlayerTile> {
                                                         SvgPicture.asset(
                                                           AppIcons.heart,
                                                           colorFilter:
-                                                              ColorFilter
-                                                                  .mode(
-                                                            theme.colorScheme.error,
+                                                              ColorFilter.mode(
+                                                            theme.colorScheme
+                                                                .error,
                                                             BlendMode.srcIn,
                                                           ),
                                                         ),
@@ -353,18 +353,25 @@ class _PlayerTileState extends State<PlayerTile> {
       return Container(
         width: 90,
         color: theme.primaryColor,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(AppIcons.heart),
-            const SizedBox(height: 5),
-            Text(
-              getRunBySpeed(player.speedMps, context),
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelSmall,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                AppIcons.heart,
+                width: 14,
+                height: 14,
+              ),
+              const SizedBox(height: 5),
+              Text(
+                getRunBySpeed(player.speedMps, context),
+                overflow: TextOverflow.ellipsis,
+                style: theme.textTheme.labelSmall,
+              ),
+            ],
+          ),
         ),
       );
     }

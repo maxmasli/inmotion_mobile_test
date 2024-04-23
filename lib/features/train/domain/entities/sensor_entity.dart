@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
 
+const timeoutTime = 5;
+const disconnectedTime = 10;
+
 class SensorEntity extends ChangeNotifier {
   // Timeout
   Timer? _timeoutTimer;
@@ -17,8 +20,7 @@ class SensorEntity extends ChangeNotifier {
 
   SensorStatus get status => _status;
 
-  bool get isHrOk => false;
-  //bool get isHrOk => _isHrOk;
+  bool get isHrOk => _isHrOk;
 
   SensorEntity({
     required this.device,
@@ -50,17 +52,17 @@ class SensorEntity extends ChangeNotifier {
   }
 
   void _updateStatus() {
-    if (_timeoutCounter >= 10 && _status != SensorStatus.disconnected) {
+    if (_timeoutCounter >= disconnectedTime && _status != SensorStatus.disconnected) {
       _status = SensorStatus.disconnected;
       log("Sensor status disconnected");
       notifyListeners();
-    } else if (_timeoutCounter >= 5 &&
-        _timeoutCounter < 10 &&
+    } else if (_timeoutCounter >= timeoutTime &&
+        _timeoutCounter < disconnectedTime &&
         _status != SensorStatus.timeout) {
       _status = SensorStatus.timeout;
       log("Sensor status timeout");
       notifyListeners();
-    } else if (_timeoutCounter < 5 &&
+    } else if (_timeoutCounter < timeoutTime &&
         _status != SensorStatus.connected) {
       _status = SensorStatus.connected;
       log("Sensor status connected");
