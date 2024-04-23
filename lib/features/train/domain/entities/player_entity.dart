@@ -69,7 +69,7 @@ class PlayerEntity extends ChangeNotifier {
   double get speedMps => _measures.lastOrNull?.speed ?? 0;
 
   /* Скорость в км/ч */
-  double get speedKph => speedMps * 1000 / 3600;
+  double get speedKph => speedMps * 3600 / 1000;
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     _measures.add(payload);
