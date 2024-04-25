@@ -44,7 +44,7 @@ class TrainModel extends ChangeNotifier {
     /// Если тренировка начата
     if (_isTrainStart) return SystemStatus.rec;
 
-    throw Exception("Unexcepted behavior of systemStatus");
+    throw Exception("Unexpected behavior of systemStatus");
   }
 
   // Use cases
@@ -83,12 +83,10 @@ class TrainModel extends ChangeNotifier {
 
   bool _isTrainStart = false;
 
-  // TODO сделать лист final, но с ним не обновляется список
   var _players = <PlayerEntity>[];
 
   final _selectedPlayers = <PlayerEntity>[];
 
-  // TODO сделать лист final, но с ним не обновляется список
   var _trains = <TrainEntity>[];
 
   TrainEntity? _train;

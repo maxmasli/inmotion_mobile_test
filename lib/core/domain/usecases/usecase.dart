@@ -36,3 +36,15 @@ class PlayersParams extends Params {
 
   PlayersParams(this.player);
 }
+
+class AuthInfoParams extends Params {
+  final String login;
+  final String password;
+  final String device;
+
+  AuthInfoParams({
+    required this.login,
+    required this.password,
+    required this.device,
+  });
+}
