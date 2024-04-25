@@ -18,7 +18,7 @@ class BluetoothEmptyWidget extends StatelessWidget {
             style: theme.textTheme.bodyMedium,
           ),
           Text(
-            "Включите Bluetooth на смартфоне. Нажмите кнопку ниже и добавьте ранее не подключенный датчик или выберете уже используемый на этом устройстве",
+            "Включите Bluetooth на смартфоне. Нажмите кнопку ниже для добавление нового датчика",
             style: theme.textTheme.displaySmall,
           ),
         ],

@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
+import 'package:inmotion_mobile_test/resources/resources.dart';
 
 class DeviceTile extends StatelessWidget {
   const DeviceTile({super.key, required this.device, required this.onTap});
@@ -15,10 +18,18 @@ class DeviceTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       padding: const EdgeInsets.all(10),
       onTap: onTap,
-      child: Text(
-        "${device.advName} ${device.remoteId.str}",
-        style: theme.textTheme.bodyMedium,
-        overflow: TextOverflow.ellipsis,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              "ID: ${device.advName} ${device.remoteId.str}",
+              style: theme.textTheme.displayMedium,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          SvgPicture.asset(AppIcons.add, colorFilter: ColorFilter.mode(theme.primaryColor, BlendMode.srcIn),)
+        ],
       ),
     );
   }
