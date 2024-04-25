@@ -26,6 +26,9 @@ class TrainModel extends ChangeNotifier {
   TrainStage get trainStage => _trainStage;
 
   SystemStatus get systemStatus {
+    /// Если тренировка начата
+    if (_isTrainStart) return SystemStatus.rec;
+
     /// Если сейчас экран окончания тренировки, то SystemStatus.off
     if (_trainStage == TrainStage.end) return SystemStatus.off;
 
@@ -40,9 +43,6 @@ class TrainModel extends ChangeNotifier {
 
     /// Если есть выбранные игроки, то тренировка не начата
     if (selectedPlayers.isNotEmpty && !_isTrainStart) return SystemStatus.ready;
-
-    /// Если тренировка начата
-    if (_isTrainStart) return SystemStatus.rec;
 
     throw Exception("Unexpected behavior of systemStatus");
   }
@@ -107,6 +107,7 @@ class TrainModel extends ChangeNotifier {
 
     await _appBLEConnection.startScanning(
       (scanResults) async {
+        log('${scanResults.length} $scanResults', name: 'TrainModel');
         _foundedDevices.clear();
         for (final scanResult in scanResults) {
           final device = scanResult.$1;
@@ -128,7 +129,7 @@ class TrainModel extends ChangeNotifier {
           //if (player == null) return;
           if (!_isTrainStart) {
             /// Если не идет запись
-            player.notifySensor(meta);
+            player.notifySensor(payload, meta);
           } else {
             /// Если идет запись
             player.addMeasure(payload, meta);

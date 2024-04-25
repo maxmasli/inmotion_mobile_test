@@ -91,7 +91,7 @@ class _PlayerTileState extends State<PlayerTile> {
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(width: 16),
+                                        const SizedBox(width: 10),
                                         Expanded(
                                           flex: 5,
                                           child: Column(
@@ -144,11 +144,12 @@ class _PlayerTileState extends State<PlayerTile> {
                                                         .textTheme.displaySmall,
                                                   )
                                                 ],
-                                              )
+                                              ),
+                                              const SizedBox(height: 2),
                                             ],
                                           ),
                                         ),
-                                        const SizedBox(width: 20),
+                                        const SizedBox(width: 10),
                                       ],
                                     ),
                                   ),

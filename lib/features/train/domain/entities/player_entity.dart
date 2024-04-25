@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -15,6 +17,8 @@ class PlayerEntity extends ChangeNotifier {
 
   RunningType _runningType;
   SensorEntity? _sensor;
+
+  MeasureEntity? lastMeasure;
 
   final List<MeasureEntity> _measures = [];
 
@@ -58,7 +62,8 @@ class PlayerEntity extends ChangeNotifier {
   int get pulse => _measures.lastOrNull?.hr ?? 0;
 
   List<(double x, double y, int speed)> get coordinates => _measures
-      .map((m) => (m.latitude ?? 0, m.longitude ?? 0, m.speed?.toInt() ?? 0))
+      .where((m) => m.latitude != null && m.longitude != null)
+      .map((m) => (m.latitude!, m.longitude!, m.speed?.toInt() ?? 0))
       .toList();
 
   List<int> get hrMeasures => _measures.map((m) => m.hr ?? 0).toList();
@@ -78,12 +83,28 @@ class PlayerEntity extends ChangeNotifier {
   }
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
+    log("measure received: lat: ${payload.latitude} lon: ${payload.longitude}",
+        name: "PlayerEntity");
+    // TODO сравнивать по inc
+    // if (lastMeasure == null || lastMeasure!.time != payload.time) {
+    //   _measures.add(payload);
+    //   _sensor?.notify(meta);
+    //   lastMeasure = payload;
+    //   notifyListeners();
+    // }
+
     _measures.add(payload);
     _sensor?.notify(meta);
     notifyListeners();
   }
 
-  void notifySensor([TagMeta? meta]) {
+  void notifySensor(MeasureEntity payload, [TagMeta? meta]) {
+    // if (lastMeasure == null || lastMeasure!.time != payload.time) {
+    //   _sensor?.notify(meta);
+    //   lastMeasure = payload;
+    //   notifyListeners();
+    // }
+
     _sensor?.notify(meta);
     notifyListeners();
   }

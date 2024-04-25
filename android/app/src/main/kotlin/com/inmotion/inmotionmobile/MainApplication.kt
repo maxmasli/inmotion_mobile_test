@@ -1,4 +1,4 @@
-package com.example.yandex_map_test
+package com.inmotion.inmotionmobile
 
 import android.app.Application
 
