@@ -1,10 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 class PlayerEditDialog extends StatefulWidget {
   const PlayerEditDialog({super.key, required this.initFields});
 
-  final (String name, String number, String deviceNumber) initFields;
+  final ({
+    String name,
+    String number,
+    String deviceNumber,
+    String deviceName
+  }) initFields;
 
   @override
   State<PlayerEditDialog> createState() => _PlayerEditDialogState();
@@ -18,44 +25,76 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.initFields.$1);
-    _numberController = TextEditingController(text: widget.initFields.$2);
-    _deviceNumberController = TextEditingController(text: widget.initFields.$3);
+    _nameController = TextEditingController(text: widget.initFields.name);
+    _numberController = TextEditingController(text: widget.initFields.number);
+    _deviceNumberController =
+        TextEditingController(text: widget.initFields.deviceNumber);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text("Редактирование игрока", style: theme.textTheme.titleMedium),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Имя", style: theme.textTheme.displayMedium),
-            _PlayerEditDialogTextField(
-              controller: _nameController,
-            ),
-            const SizedBox(height: 10),
-            Text("Номер", style: theme.textTheme.displayMedium),
-            _PlayerEditDialogTextField(
-              controller: _numberController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-            ),
-            const SizedBox(height: 10),
-            Text("Номер датчика", style: theme.textTheme.displayMedium),
-            _PlayerEditDialogTextField(
-              controller: _deviceNumberController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-            ),
-          ],
+      title: Text(widget.initFields.deviceName,
+          style: theme.textTheme.titleMedium),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 400),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                      width: 60,
+                      child: Text("Имя", style: theme.textTheme.displayMedium)),
+                  Expanded(
+                    child: _PlayerEditDialogTextField(
+                      controller: _nameController,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  SizedBox(
+                      width: 60,
+                      child:
+                          Text("Номер", style: theme.textTheme.displayMedium)),
+                  Expanded(
+                    child: _PlayerEditDialogTextField(
+                      controller: _numberController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  SizedBox(
+                      width: 60,
+                      child: Text("Датчик ЧСС",
+                          style: theme.textTheme.displayMedium)),
+                  Expanded(
+                    child: _PlayerEditDialogTextField(
+                      controller: _deviceNumberController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       actions: [

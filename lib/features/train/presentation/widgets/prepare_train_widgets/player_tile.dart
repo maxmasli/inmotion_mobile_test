@@ -15,6 +15,25 @@ class PlayerTile extends StatelessWidget {
 
   final PlayerEntity player;
 
+  Future<void> openEditDialog(BuildContext context, TrainModel model) async {
+    final data = await showDialog<(String, String, String)>(
+      context: context,
+      builder: (context) {
+        return PlayerEditDialog(
+          initFields: (
+            name: player.name,
+            number: player.number.toString(),
+            deviceNumber: player.sensor!.number.toString(),
+            deviceName: player.sensor!.device.advName,
+          ),
+        );
+      },
+    );
+    if (data != null) {
+      await model.updateSensorPlayer(player, data.$1, data.$2, data.$3);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -58,24 +77,7 @@ class PlayerTile extends StatelessWidget {
                   const SizedBox(width: 8),
                   AppIconButton(
                     icon: SvgPicture.asset(AppIcons.edit),
-                    onPressed: () async {
-                      final data = await showDialog<(String, String, String)>(
-                        context: context,
-                        builder: (context) {
-                          return PlayerEditDialog(
-                            initFields: (
-                              player.name,
-                              player.number.toString(),
-                              player.sensor!.number.toString() ?? '',
-                            ),
-                          );
-                        },
-                      );
-                      if (data != null) {
-                        await model.updateSensorPlayer(
-                            player, data.$1, data.$2, data.$3);
-                      }
-                    },
+                    onPressed: () async => await openEditDialog(context, model),
                     size: 30,
                   ),
                   const SizedBox(width: 8),
