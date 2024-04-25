@@ -44,6 +44,18 @@ Color getColorBySpeed(int speed) {
   }
 }
 
+String getPointPathBySpeed(int speed) {
+  if (speed >= 8) {
+    return 'assets/icons/red_point.png';
+  } else if (speed >= 5) {
+    return 'assets/icons/orange_point.png';
+  } else if (speed >= 2) {
+    return 'assets/icons/green_point.png';
+  } else {
+    return 'assets/icons/blue_point.png';
+  }
+}
+
 Future<Directory> getWorkingDirectory() async {
   if (Platform.isAndroid) {
     return await Directory('/storage/emulated/0/Documents/Movecross').create();

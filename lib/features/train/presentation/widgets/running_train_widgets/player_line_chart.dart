@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
@@ -6,7 +7,7 @@ import 'package:yandex_mapkit/yandex_mapkit.dart';
 class PlayerLineChart extends StatefulWidget {
   const PlayerLineChart({super.key, required this.data});
 
-  final List<(double x, double y, int speed)> data;
+  final Iterable<(double x, double y, int speed)> data;
 
   @override
   State<PlayerLineChart> createState() => _PlayerLineChartState();
@@ -19,15 +20,16 @@ class _PlayerLineChartState extends State<PlayerLineChart> {
     return widget.data
         .map(
           (data) => PlacemarkMapObject(
-            mapId: MapObjectId('MapObject ${data.$1} ${data.$2}'),
+            mapId: MapObjectId('MapObject ${data.$1} ${data.$2} ${data.$3}'),
             point: Point(latitude: data.$1, longitude: data.$2),
             opacity: 1,
             icon: PlacemarkIcon.single(
               PlacemarkIconStyle(
-                  image: BitmapDescriptor.fromAssetImage(
-                    'assets/icons/map_point.png',
-                  ),
-                  scale: 0.8),
+                image: BitmapDescriptor.fromAssetImage(
+                  getPointPathBySpeed(data.$3),
+                ),
+                scale: 1,
+              ),
             ),
           ),
         )
@@ -36,23 +38,83 @@ class _PlayerLineChartState extends State<PlayerLineChart> {
 
   @override
   Widget build(BuildContext context) {
-    return YandexMap(
-      onMapCreated: (controller) async {
-        _mapController = controller;
-        await _mapController.moveCamera(
-          CameraUpdate.newCameraPosition(
-            const CameraPosition(
-              target: Point(
-                latitude: 50,
-                longitude: 20,
+    final theme = Theme.of(context);
+    return Stack(
+      children: [
+        YandexMap(
+          logoAlignment: const MapAlignment(
+              horizontal: HorizontalAlignment.left,
+              vertical: VerticalAlignment.bottom),
+          onMapCreated: (controller) async {
+            _mapController = controller;
+            await _mapController.moveCamera(
+              CameraUpdate.newCameraPosition(
+                const CameraPosition(
+                  target: Point(
+                    latitude: 50,
+                    longitude: 20,
+                  ),
+                  zoom: 3,
+                ),
               ),
-              zoom: 3,
-            ),
+            );
+          },
+          mapObjects: _getMapObjectsFromData(),
+        ),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: IconButton(
+            onPressed: () async {
+              final last = widget.data.lastOrNull;
+              if (last == null) return;
+              await _mapController.moveCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: Point(
+                      latitude: last.$1,
+                      longitude: last.$2,
+                    ),
+                    zoom: 30,
+                  ),
+                ),
+                animation: const MapAnimation(
+                    duration: 0.5, type: MapAnimationType.smooth),
+              );
+            },
+            icon: const Icon(Icons.navigation_outlined),
           ),
-        );
-      },
-      mapObjects: _getMapObjectsFromData(),
-
+        ),
+        Positioned(
+          right: 8,
+          bottom: 4,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.darkBlue),
+                ),
+                child: Text(
+                  widget.data.lastOrNull?.$3.toString() ?? "0",
+                  style: theme.textTheme.labelMedium
+                      ?.copyWith(color: AppColors.darkBlue),
+                ),
+              ),
+              // TODO переделать с intl
+              Text(
+                "км/ч",
+                style: theme.textTheme.displaySmall,
+              )
+            ],
+          ),
+        )
+      ],
     );
   }
 

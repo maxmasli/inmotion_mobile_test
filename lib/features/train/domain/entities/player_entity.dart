@@ -27,26 +27,17 @@ class PlayerEntity extends ChangeNotifier {
     required this.number,
     this.uuid,
     SensorEntity? sensor,
-    VoidCallback? onSensorStatusUpdate,
   })  : _runningType = RunningType.onFoot,
         _sensor = sensor {
-    if (onSensorStatusUpdate != null && _sensor != null) {
-      _sensor!.addListener(() {
-        onSensorStatusUpdate();
-      });
-    }
-
     uuid ??= const Uuid().v4();
   }
 
   PlayerEntity.fromDevice({
     required BluetoothDevice device,
-    VoidCallback? onSensorStatusUpdate,
   }) : this(
           name: "Name",
           number: 01,
           sensor: SensorEntity(device: device, number: 1),
-          onSensorStatusUpdate: onSensorStatusUpdate,
         );
 
   bool get hasSensor => _sensor != null;
@@ -61,10 +52,18 @@ class PlayerEntity extends ChangeNotifier {
 
   int get pulse => _measures.lastOrNull?.hr ?? 0;
 
-  List<(double x, double y, int speed)> get coordinates => _measures
-      .where((m) => m.latitude != null && m.longitude != null)
-      .map((m) => (m.latitude!, m.longitude!, m.speed?.toInt() ?? 0))
-      .toList();
+  // List<(double x, double y, int speed)> get coordinates => _measures
+  //     .where((m) => m.latitude != null && m.longitude != null)
+  //     .map((m) => (m.latitude!, m.longitude!, m.speed?.toInt() ?? 0))
+  //     .toList();
+
+  Iterable<(double x, double y, int speed)> get coordinates sync* {
+    for (final m in _measures) {
+      if (m.latitude != null && m.longitude != null) {
+        yield (m.latitude!, m.longitude!, speedKph.toInt());
+      }
+    }
+  }
 
   List<int> get hrMeasures => _measures.map((m) => m.hr ?? 0).toList();
 
@@ -99,6 +98,7 @@ class PlayerEntity extends ChangeNotifier {
   }
 
   void notifySensor(MeasureEntity payload, [TagMeta? meta]) {
+    // TODO сравнивать по inc
     // if (lastMeasure == null || lastMeasure!.time != payload.time) {
     //   _sensor?.notify(meta);
     //   lastMeasure = payload;

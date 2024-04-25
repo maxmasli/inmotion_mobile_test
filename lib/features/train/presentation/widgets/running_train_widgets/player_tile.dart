@@ -181,43 +181,6 @@ class _PlayerTileState extends State<PlayerTile> {
                             Expanded(
                               child: PlayerLineChart(data: player.coordinates),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 30,
-                                        height: 30,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: AppColors.darkBlue),
-                                        ),
-                                        child: Text(
-                                          player.speedKph.toStringAsFixed(1),
-                                          style: theme.textTheme.labelMedium
-                                              ?.copyWith(
-                                                  color: AppColors.darkBlue),
-                                        ),
-                                      ),
-                                      // TODO переделать с intl
-                                      Text(
-                                        "км/ч",
-                                        style: theme.textTheme.displaySmall,
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            )
                           ],
                         ),
                       ),

@@ -113,6 +113,7 @@ class TrainModel extends ChangeNotifier {
           final device = scanResult.$1;
           final meta = scanResult.$2;
           final payload = scanResult.$3;
+
           /// Если девайс еще не добавлен
           if (!_players.map((p) => p.sensor!.device).contains(device)) {
             _foundedDevices.add(device);
@@ -161,7 +162,8 @@ class TrainModel extends ChangeNotifier {
   void init() async {
     /// Загрузка сохраненных игроков с датчиками
     _players = await _getPlayersSensorUseCase();
-    for (final player in _players) { // устанавливаем слушатели на оновление статуса
+    for (final player in _players) {
+      // устанавливаем слушатели на оновление статуса
       player.setOnSensorStatusUpdate(() {
         notifyListeners();
       });
@@ -191,12 +193,11 @@ class TrainModel extends ChangeNotifier {
 
   Future<void> saveDevice(BluetoothDevice device) async {
     final player = PlayerEntity.fromDevice(
-        device: device,
-        onSensorStatusUpdate: () {
-          /// Если статус датчика изменился, олключился или подключился, надо
-          /// вызвать notifyListeners для пересчета полей модели
-          notifyListeners();
-        });
+      device: device,
+    )..setOnSensorStatusUpdate(() {
+        notifyListeners();
+      });
+
     _foundedDevices.remove(device);
     _players.add(player);
     _selectedPlayers.add(player);
@@ -250,8 +251,7 @@ class TrainModel extends ChangeNotifier {
       startTime: DateTime.now(),
     );
     _appBLEConnection.devicesStartRecording(
-      _selectedPlayers.map((e) => e.sensor?.device).nonNulls
-    );
+        _selectedPlayers.map((e) => e.sensor?.device).nonNulls);
     notifyListeners();
   }
 
