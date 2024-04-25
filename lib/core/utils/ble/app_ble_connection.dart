@@ -37,7 +37,6 @@ class AppBLEConnection {
   void writeToDevices(Iterable<BluetoothDevice> devices, Guid guid, List<int> data) async {
     for (final device in devices) {
       await device.connect();
-      await device.connect();
       final service = (await device.discoverServices())
           .firstWhere((service) => service.serviceUuid == _serviceGuid);
       final char = service.characteristics
