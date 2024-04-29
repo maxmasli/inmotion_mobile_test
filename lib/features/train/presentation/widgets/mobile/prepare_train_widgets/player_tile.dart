@@ -6,7 +6,7 @@ import 'package:inmotion_mobile_test/core/presentation/app_icon_button.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/player_edit_dialog.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/prepare_train_widgets/player_edit_dialog.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 

@@ -5,6 +5,8 @@ import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/settings.dart';
 import 'package:path_provider/path_provider.dart';
 
+const minTabletSize = 1000;
+
 Color getColorByPulse(int pulse) {
   if (pulse >= Settings.maximumIntensity) {
     return AppColors.red;

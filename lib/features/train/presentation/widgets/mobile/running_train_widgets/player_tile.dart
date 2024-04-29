@@ -5,9 +5,9 @@ import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/stats_calculator.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/legend_widget.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/player_line_chart.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/ranges_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/running_train_widgets/legend_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/running_train_widgets/player_line_chart.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/running_train_widgets/ranges_widget.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 
@@ -73,20 +73,24 @@ class _PlayerTileState extends State<PlayerTile> {
                                       children: [
                                         const SizedBox(width: 14),
                                         Expanded(
-                                          flex: 2,
+                                          flex: 3,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text('${player.number}',
-                                                  style: theme.textTheme
-                                                      .headlineMedium),
+                                              Text(
+                                                '${player.number}',
+                                                style: theme
+                                                    .textTheme.headlineMedium,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                               Text(
                                                 'Датчик ${player.sensor?.number}',
                                                 style: theme
                                                     .textTheme.headlineSmall,
+                                                overflow: TextOverflow.ellipsis,
                                               )
                                             ],
                                           ),

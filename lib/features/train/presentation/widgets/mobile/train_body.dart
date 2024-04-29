@@ -4,11 +4,11 @@ import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/core/presentation/keyboard_listener.dart'
     as kl;
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/end_train_widgets/end_train_widget.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/prepare_train_widgets/prepare_train_widget.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/running_train_widgets/running_train_widget.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/status_widget.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_history_sheet.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/end_train_widgets/end_train_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/prepare_train_widgets/prepare_train_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/running_train_widgets/running_train_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/status_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/train_history_sheet.dart';
 import 'package:provider/provider.dart';
 
 class TrainBody extends StatefulWidget {
@@ -94,7 +94,7 @@ class _TrainBodyState extends State<TrainBody> {
               ),
             ],
           ),
-          TrainHistorySheet(),
+          const TrainHistorySheet(),
         ],
       ),
     );

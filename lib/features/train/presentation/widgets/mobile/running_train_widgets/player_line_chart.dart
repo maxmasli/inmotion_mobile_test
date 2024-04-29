@@ -16,24 +16,72 @@ class PlayerLineChart extends StatefulWidget {
 class _PlayerLineChartState extends State<PlayerLineChart> {
   late final YandexMapController _mapController;
 
-  List<MapObject> _getMapObjectsFromData() {
-    return widget.data
-        .map(
-          (data) => PlacemarkMapObject(
-            mapId: MapObjectId('MapObject ${data.$1} ${data.$2} ${data.$3}'),
-            point: Point(latitude: data.$1, longitude: data.$2),
-            opacity: 1,
-            icon: PlacemarkIcon.single(
-              PlacemarkIconStyle(
-                image: BitmapDescriptor.fromAssetImage(
-                  getPointPathBySpeed(data.$3),
+  // List<MapObject> _getMapObjectsFromData() {
+  //   return widget.data
+  //       .map(
+  //         (data) => PlacemarkMapObject(
+  //           mapId: MapObjectId('MapObject ${data.$1} ${data.$2} ${data.$3}'),
+  //           point: Point(latitude: data.$1, longitude: data.$2),
+  //           opacity: 1,
+  //           icon: PlacemarkIcon.single(
+  //             PlacemarkIconStyle(
+  //               image: BitmapDescriptor.fromAssetImage(
+  //                 getPointPathBySpeed(data.$3),
+  //               ),
+  //               scale: 1,
+  //             ),
+  //           ),
+  //         ),
+  //       )
+  //       .toList();
+  // }
+
+  Iterable<MapObject> _getMapObjectsFromData() sync* {
+    // Point? startPoint;
+    // for (final data in widget.data) {
+    //   if (startPoint != null) {
+    //     yield PolylineMapObject(
+    //       mapId: MapObjectId("${data.$1} ${data.$2} ${data.$3}"),
+    //       polyline: Polyline(
+    //         points: [
+    //           startPoint,
+    //           Point(latitude: data.$1, longitude: data.$2)
+    //         ],
+    //       ),
+    //       strokeColor: getColorBySpeed(data.$3),
+    //       strokeWidth: 6
+    //     );
+    //   }
+    //   startPoint = Point(latitude: data.$1, longitude: data.$2);
+    // }
+
+    yield PolylineMapObject(
+        mapId: MapObjectId("asd"),
+        polyline: Polyline(
+          points: widget.data
+              .map((data) => Point(latitude: data.$1, longitude: data.$2))
+              .toList(),
+        ),
+        strokeColor: Colors.orange,
+        strokeWidth: 8);
+
+    final last = widget.data.lastOrNull;
+    if (last == null) return;
+
+    yield PlacemarkMapObject(
+      mapId: const MapObjectId("123"),
+      point: Point(
+          latitude: last.$1, longitude: last.$2
+      ),
+      icon: PlacemarkIcon.single(
+                PlacemarkIconStyle(
+                  image: BitmapDescriptor.fromAssetImage(
+                    'assets/icons/map_point.png'
+                  ),
+                  scale: 1,
                 ),
-                scale: 1,
               ),
-            ),
-          ),
-        )
-        .toList();
+    );
   }
 
   @override
@@ -59,7 +107,7 @@ class _PlayerLineChartState extends State<PlayerLineChart> {
               ),
             );
           },
-          mapObjects: _getMapObjectsFromData(),
+          mapObjects: _getMapObjectsFromData().toList(),
         ),
         Positioned(
           top: 0,

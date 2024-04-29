@@ -21,6 +21,7 @@ class _AuthBodyState extends State<AuthBody> {
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  // TODO вынести эту логику в provider
   void _checkAuth() {
     final login = _loginController.text.trim();
     final password = _passwordController.text.trim();

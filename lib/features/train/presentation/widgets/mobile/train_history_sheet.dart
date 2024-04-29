@@ -1,13 +1,13 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_edit_tile.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/train_tile.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/train_edit_tile.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/train_tile.dart';
+
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
