@@ -10,6 +10,7 @@ ThemeData createLightTheme() {
           primaryContainer: Colors.white,
           secondaryContainer: AppColors.lightGreen,
           tertiaryContainer: AppColors.green,
+          surface: AppColors.lightGreen2,
           error: AppColors.red,
         ),
     inputDecorationTheme: const InputDecorationTheme(
@@ -154,12 +155,19 @@ TextTheme _baseTextTheme(bool isDark) {
         color: AppColors.gray73,
       ),
       //-------------------------
+      bodySmall: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 12,
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
+      ),
       bodyMedium: TextStyle(
         fontFamily: 'Roboto',
         fontSize: 17,
         color: AppColors.gray134,
         fontWeight: FontWeight.w600,
       ),
+
     );
   }
 }

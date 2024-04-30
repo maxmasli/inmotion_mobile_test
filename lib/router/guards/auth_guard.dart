@@ -9,7 +9,7 @@ class AuthGuard extends AutoRouteGuard {
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) {
-    const authenticated = false;
+    const authenticated = true;
     l.log("Check auth", 'Auth');
     if (authenticated) {
       resolver.next(true);

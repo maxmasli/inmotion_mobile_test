@@ -20,14 +20,31 @@ class _TrainContainerBodyState extends State<TrainContainerBody> {
     const ReportBody(),
   ];
 
+  void _navigateToTab(int index) {
+    setState(() {
+      _currentScreenIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     const sideBarWidth = 170.0;
     return Row(
       children: [
-        const SizedBox(
+        SizedBox(
           width: sideBarWidth,
-          child: SideBarWidget(),
+          child: SideBarWidget(
+            currentScreenIndex: _currentScreenIndex,
+            onHomeTap: () {
+              _navigateToTab(0);
+            },
+            onReportsTap: () {
+              _navigateToTab(1);
+            },
+            onExitTap: () {
+
+            },
+          ),
         ),
         Expanded(
           child: Column(
