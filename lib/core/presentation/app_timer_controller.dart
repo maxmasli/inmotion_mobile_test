@@ -56,6 +56,12 @@ class AppTimerController extends ChangeNotifier {
     _time = 0;
     notifyListeners();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
+  }
 }
 
 enum TimerState { stopped, running }

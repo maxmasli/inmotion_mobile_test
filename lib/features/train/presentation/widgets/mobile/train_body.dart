@@ -7,7 +7,7 @@ import 'package:inmotion_mobile_test/features/train/presentation/provider/train_
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/end_train_widgets/end_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/prepare_train_widgets/prepare_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/running_train_widgets/running_train_widget.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/status_widget.dart';
+import 'package:inmotion_mobile_test/core/presentation/status_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/train_history_sheet.dart';
 import 'package:provider/provider.dart';
 
