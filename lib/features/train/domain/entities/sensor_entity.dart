@@ -54,12 +54,14 @@ class SensorEntity extends ChangeNotifier {
   void _updateStatus() {
     if (_timeoutCounter >= disconnectedTime && _status != SensorStatus.disconnected) {
       _status = SensorStatus.disconnected;
+      _isHrOk = false;
       log("Sensor status disconnected");
       notifyListeners();
     } else if (_timeoutCounter >= timeoutTime &&
         _timeoutCounter < disconnectedTime &&
         _status != SensorStatus.timeout) {
       _status = SensorStatus.timeout;
+      _isHrOk = false;
       log("Sensor status timeout");
       notifyListeners();
     } else if (_timeoutCounter < timeoutTime &&
