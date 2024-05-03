@@ -164,7 +164,10 @@ class TrainModel extends ChangeNotifier {
     _players = await _getPlayersSensorUseCase();
     for (final player in _players) {
       // устанавливаем слушатели на оновление статуса
-      player.setOnSensorStatusUpdate(() {
+      // player.setOnSensorStatusUpdate(() {
+      //   notifyListeners();
+      // });
+      player.addListener(() {
         notifyListeners();
       });
     }
@@ -194,9 +197,11 @@ class TrainModel extends ChangeNotifier {
   Future<void> saveDevice(BluetoothDevice device) async {
     final player = PlayerEntity.fromDevice(
       device: device,
-    )..setOnSensorStatusUpdate(() {
-        notifyListeners();
-      });
+    )..addListener(
+        () {
+          notifyListeners();
+        },
+      );
 
     _foundedDevices.remove(device);
     _players.add(player);

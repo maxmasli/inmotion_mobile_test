@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_logs_controller.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/local_data_sources/players_data_source.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/local_data_sources/sensor_players_data_source.dart';
 import 'package:inmotion_mobile_test/features/train/data/data_sources/local_data_sources/train_data_source.dart';
@@ -60,4 +61,6 @@ void setup() {
 
   getIt.registerFactory(
       () => CreateExcelUseCase(playersRepository: getIt<PlayersRepository>()));
+
+  getIt.registerSingleton<AppTimerController>(AppTimerController());
 }

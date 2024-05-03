@@ -30,6 +30,9 @@ class PlayerEntity extends ChangeNotifier {
   })  : _runningType = RunningType.onFoot,
         _sensor = sensor {
     uuid ??= const Uuid().v4();
+    _sensor?.addListener(() {
+      notifyListeners();
+    });
   }
 
   PlayerEntity.fromDevice({
@@ -74,12 +77,6 @@ class PlayerEntity extends ChangeNotifier {
 
   /* Скорость в км/ч */
   double get speedKph => speedMps * 3600 / 1000;
-
-  void setOnSensorStatusUpdate(VoidCallback callback) {
-    if (_sensor != null) {
-      _sensor!.addListener(callback);
-    }
-  }
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     log("measure received: lat: ${payload.latitude} lon: ${payload.longitude}",

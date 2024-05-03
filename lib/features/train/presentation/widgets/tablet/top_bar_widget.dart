@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_controller.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_timer_widget.dart';
 import 'package:inmotion_mobile_test/core/presentation/status_widget.dart';
+import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/device_info_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/satellite_info_widget.dart';
@@ -16,7 +17,7 @@ class TopBarWidget extends StatefulWidget {
 
 class _TopBarWidgetState extends State<TopBarWidget> {
 
-  final _appTimerController = AppTimerController();
+  final _appTimerController = getIt<AppTimerController>();
 
   @override
   Widget build(BuildContext context) {
