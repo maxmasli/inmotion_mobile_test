@@ -9,10 +9,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      theme: createLightTheme(),
-      routerConfig: _appRouter.config(),
-      debugShowCheckedModeBanner: false,
+    return SafeArea(
+      child: MaterialApp.router(
+        theme: createLightTheme(),
+        routerConfig: _appRouter.config(),
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }

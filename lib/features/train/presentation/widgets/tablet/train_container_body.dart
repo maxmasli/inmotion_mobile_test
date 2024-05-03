@@ -49,11 +49,17 @@ class _TrainContainerBodyState extends State<TrainContainerBody> {
         Expanded(
           child: Column(
             children: [
-              const TopBarWidget(),
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: TopBarWidget(),
+              ),
               Expanded(
-                child: IndexedStack(
-                  index: _currentScreenIndex,
-                  children: _screens,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: IndexedStack(
+                    index: _currentScreenIndex,
+                    children: _screens,
+                  ),
                 ),
               )
             ],

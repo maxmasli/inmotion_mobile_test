@@ -22,7 +22,7 @@ class SatelliteInfoWidget extends StatelessWidget {
             children: [
               RoundNumberWidget(
                 number: list
-                    .where((p) => p.sensor!.status != SensorStatus.connected)
+                    .where((p) => p.sensor!.status == SensorStatus.connected)
                     .length,
               ),
               const SizedBox(width: 10),

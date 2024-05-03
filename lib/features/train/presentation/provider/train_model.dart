@@ -72,7 +72,7 @@ class TrainModel extends ChangeNotifier {
 
   BluetoothAdapterState? _bluetoothState;
 
-  final _foundedDevices = <BluetoothDevice>[];
+  var _foundedDevices = <BluetoothDevice>[];
 
   List<BluetoothDevice> get foundedDevices => _foundedDevices;
 
@@ -108,7 +108,7 @@ class TrainModel extends ChangeNotifier {
     await _appBLEConnection.startScanning(
       (scanResults) async {
         log('${scanResults.length} $scanResults', name: 'TrainModel');
-        _foundedDevices.clear();
+        _foundedDevices = [];
         for (final scanResult in scanResults) {
           final device = scanResult.$1;
           final meta = scanResult.$2;

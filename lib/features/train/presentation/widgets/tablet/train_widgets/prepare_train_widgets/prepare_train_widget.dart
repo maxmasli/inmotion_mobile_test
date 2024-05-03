@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/prepare_train_widgets/founded_device_list_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/prepare_train_widgets/players_list.dart';
+
+class PrepareTrainWidget extends StatelessWidget {
+  const PrepareTrainWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      children: [
+        Expanded(
+            child: FoundedDeviceListWidget()
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          flex: 2,
+          child: PlayersList(),
+        ),
+      ],
+    );
+  }
+}

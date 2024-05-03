@@ -5,7 +5,11 @@ import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 
 class DeviceTile extends StatelessWidget {
-  const DeviceTile({super.key, required this.device, required this.onTap});
+  const DeviceTile({
+    super.key,
+    required this.onTap,
+    required this.device,
+  });
 
   final BluetoothDevice device;
   final VoidCallback onTap;
@@ -15,7 +19,7 @@ class DeviceTile extends StatelessWidget {
     final theme = Theme.of(context);
     return AppContainer(
       borderRadius: BorderRadius.circular(16),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       onTap: onTap,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,7 +31,10 @@ class DeviceTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          SvgPicture.asset(AppIcons.add, colorFilter: ColorFilter.mode(theme.primaryColor, BlendMode.srcIn),)
+          SvgPicture.asset(
+            AppIcons.add,
+            colorFilter: ColorFilter.mode(theme.primaryColor, BlendMode.srcIn),
+          )
         ],
       ),
     );
