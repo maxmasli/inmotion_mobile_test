@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/heart_rate_zones_widget.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/player_info_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/players_list.dart';
 
 class RunningTrainWidget extends StatefulWidget {
@@ -50,8 +51,8 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
                 ),
               ),
               if (_selectedPlayer != null)
-                const Expanded(
-                  child: Text("info"),
+                Expanded(
+                  child: PlayerInfoWidget(player: _selectedPlayer!),
                 )
             ],
           ),

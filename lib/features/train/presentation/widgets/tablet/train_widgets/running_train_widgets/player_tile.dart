@@ -160,7 +160,7 @@ class _PlayerTileState extends State<PlayerTile> {
     final theme = Theme.of(context);
     if (isHrOk) {
       return ClipRRect(
-        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(16)),
+        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(14)),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return RangesWidget(
@@ -198,7 +198,7 @@ class _PlayerTileState extends State<PlayerTile> {
         decoration: BoxDecoration(
             color: getColorByPulse(player.pulse),
             borderRadius:
-                const BorderRadius.horizontal(left: Radius.circular(16))),
+                const BorderRadius.horizontal(left: Radius.circular(14))),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Column(

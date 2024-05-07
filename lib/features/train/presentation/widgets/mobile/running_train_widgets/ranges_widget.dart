@@ -15,13 +15,7 @@ class RangesWidget extends StatelessWidget {
   final List<double> values;
   final Widget Function(double value, int i) builder;
 
-  final colors = [
-    AppColors.gray134,
-    AppColors.blue,
-    AppColors.green,
-    AppColors.orange,
-    AppColors.red,
-  ].map((c) => c.withOpacity(0.3)).toList();
+  final colors = AppColors.colorRanges.map((c) => c.withOpacity(0.3)).toList();
 
   @override
   Widget build(BuildContext context) {

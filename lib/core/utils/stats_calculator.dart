@@ -113,6 +113,26 @@ abstract class StatsCalculator {
     }
   }
 
+  static double getTrimpPerMinute(PlayerEntity player) {
+    final lastMinuteValues = player.measures
+        .where((m) => m.hr != null && m.time != null && DateTime.now().difference(m.time!).inSeconds <= 60)
+        .toList();
+
+    if (lastMinuteValues.isEmpty) return 0;
+
+    double avg = 0;
+    for (var m in lastMinuteValues) {
+      avg += m.hr!;
+    }
+    avg /= lastMinuteValues.length;
+
+    final reserve =
+        (avg - restingPulse()) / (calculatedPulseAtMaximum(player) - restingPulse());
+    //final b = person.gender == 0 ? 1.92 : 1.67;
+    final b =  1.92;
+
+    return (1 * reserve + math.exp(reserve * b));
+  }
 
   static List<double> getHrStats(List<int> hrList) {
     if (hrList.isEmpty) return <double>[1, 0, 0, 0, 0];
