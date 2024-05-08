@@ -4,7 +4,7 @@ import 'package:inmotion_mobile_test/core/colors.dart';
 ThemeData createLightTheme() {
   return ThemeData(
     textTheme: _baseTextTheme(false),
-    primaryColor: AppColors.lightGreen,
+    primaryColor: AppColors.green,
     scaffoldBackgroundColor: AppColors.gray239,
     colorScheme: ThemeData().colorScheme.copyWith(
           primaryContainer: Colors.white,
@@ -81,7 +81,7 @@ ThemeData createLightTheme() {
 
     dialogTheme: const DialogTheme(
       backgroundColor: Colors.white,
-    )
+    ),
   );
 }
 

@@ -107,7 +107,6 @@ class TrainModel extends ChangeNotifier {
 
     await _appBLEConnection.startScanning(
       (scanResults) async {
-        log('${scanResults.length} $scanResults', name: 'TrainModel');
         _foundedDevices = [];
         for (final scanResult in scanResults) {
           final device = scanResult.$1;
@@ -155,6 +154,9 @@ class TrainModel extends ChangeNotifier {
       },
       onStop: () async {
         await _saveTrainUseCase(TrainParams(train!));
+        for (final player in players) {
+          player.clearMeasures();
+        }
       },
     );
   }

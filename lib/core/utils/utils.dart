@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/settings.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 const minTabletSize = 1000;
 
@@ -66,4 +67,14 @@ Future<Directory> getWorkingDirectory() async {
   final docDir = await getApplicationDocumentsDirectory();
 
   return Directory('${docDir.path}/Movecross');
+}
+
+Future<void> shareFile(String path) async {
+  final xfile = XFile(path);
+  await Share.shareXFiles([xfile]);
+}
+
+extension SameDay on DateTime {
+  bool isSameDay(DateTime dateTime) =>
+      year == dateTime.year && month == dateTime.month && day == dateTime.day;
 }

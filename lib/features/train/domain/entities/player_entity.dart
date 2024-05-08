@@ -79,8 +79,7 @@ class PlayerEntity extends ChangeNotifier {
   double get speedKph => speedMps * 3600 / 1000;
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
-    log("measure received: lat: ${payload.latitude} lon: ${payload.longitude}",
-        name: "PlayerEntity");
+
     // TODO сравнивать по inc
     // if (lastMeasure == null || lastMeasure!.time != payload.time) {
     //   _measures.add(payload);
@@ -92,6 +91,8 @@ class PlayerEntity extends ChangeNotifier {
     _measures.add(payload);
     _sensor?.notify(meta);
     notifyListeners();
+    log("measure received: length: ${_measures.length}",
+        name: "PlayerEntity");
   }
 
   void notifySensor(MeasureEntity payload, [TagMeta? meta]) {
@@ -109,6 +110,10 @@ class PlayerEntity extends ChangeNotifier {
   void setMeasures(Iterable<MeasureEntity> measures) {
     _measures.clear();
     _measures.addAll(measures);
+  }
+
+  void clearMeasures() {
+    _measures.clear();
   }
 }
 

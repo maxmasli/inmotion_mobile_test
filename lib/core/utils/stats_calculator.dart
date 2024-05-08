@@ -114,10 +114,10 @@ abstract class StatsCalculator {
   }
 
   static double getTrimpPerMinute(PlayerEntity player) {
+    // TODO значение 0, потому что [m.time] в другой часовой зоне
     final lastMinuteValues = player.measures
         .where((m) => m.hr != null && m.time != null && DateTime.now().difference(m.time!).inSeconds <= 60)
         .toList();
-
     if (lastMinuteValues.isEmpty) return 0;
 
     double avg = 0;
