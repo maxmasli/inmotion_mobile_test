@@ -13,10 +13,10 @@ class PlayersRepositoryImpl implements PlayersRepository {
     required this.playersDataSource,
   });
 
-  @override
-  Future<void> deletePlayers(String key) async {
-    return await playersDataSource.deletePlayers(key);
-  }
+  // @override
+  // Future<void> deletePlayers(String key) async {
+  //   return await playersDataSource.deletePlayers(key);
+  // }
 
   @override
   Future<List<PlayerEntity>> getPlayers(String key) async {
@@ -28,8 +28,17 @@ class PlayersRepositoryImpl implements PlayersRepository {
 
   @override
   Future<void> savePlayers(String key, Iterable<PlayerEntity> players) async {
-    log('List<PlayerEntity> to PlayerListDTO, length: ${players.length}', name: 'PlayersRepositoryImpl');
+    log('List<PlayerEntity> to PlayerListDTO, length: ${players.length}',
+        name: 'PlayersRepositoryImpl');
     return await playersDataSource.savePlayers(
+        key,
+        PlayerListDTO(
+            list: players.map((p) => PlayerDTO.fromEntity(p)).toList()));
+  }
+
+  @override
+  Future<void> deletePlayers(String key, Iterable<PlayerEntity> players) async {
+    return await playersDataSource.deletePlayers(
         key,
         PlayerListDTO(
             list: players.map((p) => PlayerDTO.fromEntity(p)).toList()));

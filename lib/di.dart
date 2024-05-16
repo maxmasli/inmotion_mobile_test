@@ -11,7 +11,9 @@ import 'package:inmotion_mobile_test/features/train/domain/repositories/players_
 import 'package:inmotion_mobile_test/features/train/domain/repositories/sensor_players_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/train_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_players_from_train_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_by_key_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
@@ -61,6 +63,12 @@ void setup() {
 
   getIt.registerFactory(
       () => CreateExcelUseCase(playersRepository: getIt<PlayersRepository>()));
+
+  getIt.registerFactory(() =>
+      GetPlayersByKeyUseCase(playersRepository: getIt<PlayersRepository>()));
+
+  getIt.registerFactory(() =>
+      DeletePlayersFromTrainUseCase(playersRepository: getIt<PlayersRepository>()));
 
   getIt.registerSingleton<AppTimerController>(AppTimerController());
 }

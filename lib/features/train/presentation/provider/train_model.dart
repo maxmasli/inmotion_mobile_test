@@ -9,7 +9,9 @@ import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_players_from_train_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_by_key_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
@@ -61,6 +63,10 @@ class TrainModel extends ChangeNotifier {
   final _deleteTrainsUseCase = getIt<DeleteTrainsUseCase>();
 
   final _createExcelUseCase = getIt<CreateExcelUseCase>();
+
+  final _getPlayersByKeyUseCase = getIt<GetPlayersByKeyUseCase>();
+
+  final _deletePlayersFromTrainUseCase = getIt<DeletePlayersFromTrainUseCase>();
 
   // Permissions
   var _hasAllPermissions = true;
@@ -236,6 +242,13 @@ class TrainModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deletePlayersFromTrain(
+      TrainEntity train, List<PlayerEntity> players) async {
+    await _deletePlayersFromTrainUseCase(
+      TrainPlayerListParams(train, players),
+    );
+  }
+
   Future<void> updateSensorPlayer(PlayerEntity player, String name,
       String number, String deviceNumber) async {
     player.name = name;
@@ -247,6 +260,12 @@ class TrainModel extends ChangeNotifier {
 
   Future<String> createExcel(TrainEntity train) async {
     return await _createExcelUseCase(TrainParams(train));
+  }
+
+  Future<void> loadPlayersToTrain(TrainEntity train) async {
+    if (train.players.isNotEmpty) return; // Players already loaded
+    train.addAllPlayers(
+        await _getPlayersByKeyUseCase(StringParams(train.playersKey!)));
   }
 
   void startRecording() {

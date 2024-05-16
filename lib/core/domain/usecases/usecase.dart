@@ -37,6 +37,12 @@ class PlayersParams extends Params {
   PlayersParams(this.player);
 }
 
+class StringParams extends Params {
+  final String value;
+
+  StringParams(this.value);
+}
+
 class AuthInfoParams extends Params {
   final String login;
   final String password;
@@ -47,4 +53,11 @@ class AuthInfoParams extends Params {
     required this.password,
     required this.device,
   });
+}
+
+class TrainPlayerListParams extends Params {
+  final TrainEntity train;
+  final List<PlayerEntity> players;
+
+  TrainPlayerListParams(this.train, this.players);
 }

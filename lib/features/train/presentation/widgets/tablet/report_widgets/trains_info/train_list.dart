@@ -3,14 +3,19 @@ import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/train_edit_tile.dart';
-import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/train_tile.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/trains_info/train_edit_tile.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/trains_info/train_tile.dart';
 import 'package:provider/provider.dart';
 
 class TrainList extends StatefulWidget {
-  const TrainList({super.key, required this.range});
+  const TrainList({
+    super.key,
+    required this.range,
+    required this.onTrainSelect,
+  });
 
   final List<DateTime?> range;
+  final Function(TrainEntity) onTrainSelect;
 
   @override
   State<TrainList> createState() => _TrainListState();
@@ -41,6 +46,7 @@ class _TrainListState extends State<TrainList> {
                 });
               },
               range: widget.range,
+              onTrainSelect: widget.onTrainSelect,
             ),
     );
   }
@@ -78,8 +84,8 @@ class _TrainEditListState extends State<_TrainEditList> {
                   train.startTime.isAfter(widget.range[0]!) &&
                   train.startTime.isBefore(widget.range[1]!))
               .toList();
-        } else {
-          throw Exception('Unexpected behavior');
+        } else if (widget.range.isEmpty) {
+          rangesTrains = trains;
         }
         return Stack(
           children: [
@@ -194,9 +200,11 @@ class _TrainList extends StatelessWidget {
   const _TrainList({
     required this.onEditPressed,
     required this.range,
+    required this.onTrainSelect,
   });
 
   final VoidCallback onEditPressed;
+  final Function(TrainEntity) onTrainSelect;
   final List<DateTime?> range;
 
   Future<void> createAndShareFile(TrainModel model, TrainEntity train) async {
@@ -220,11 +228,12 @@ class _TrainList extends StatelessWidget {
         } else if (range.length == 2) {
           rangesTrains = trains
               .where((train) =>
-          train.startTime.isAfter(range[0]!) &&
-              train.startTime.isBefore(range[1]!.add(const Duration(days: 1))))
+                  train.startTime.isAfter(range[0]!) &&
+                  train.startTime
+                      .isBefore(range[1]!.add(const Duration(days: 1))))
               .toList();
-        } else {
-          throw Exception('Unexpected behavior');
+        } else if (range.isEmpty) {
+          rangesTrains = trains;
         }
         return CustomScrollView(
           slivers: [
@@ -255,8 +264,9 @@ class _TrainList extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 childCount: rangesTrains.length,
                 (context, index) {
+                  final train = rangesTrains.reversed.toList()[index];
                   return TrainTile(
-                    train: rangesTrains.reversed.toList()[index],
+                    train: train,
                     onButtonPressed: () async {
                       await createAndShareFile(
                         model,
@@ -264,7 +274,7 @@ class _TrainList extends StatelessWidget {
                       );
                     },
                     onPressed: () {
-                      print('tile');
+                      onTrainSelect(train);
                     },
                   );
                 },

@@ -78,3 +78,13 @@ extension SameDay on DateTime {
   bool isSameDay(DateTime dateTime) =>
       year == dateTime.year && month == dateTime.month && day == dateTime.day;
 }
+
+String formatDuration(Duration duration) {
+  int hours = duration.inHours;
+  int minutes = duration.inMinutes % 60;
+
+  String hoursString = '$hours часа';
+  String minutesString = '$minutes мин';
+
+  return '$hoursString $minutesString';
+}

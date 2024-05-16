@@ -7,6 +7,7 @@ void main() {
   test('app_icons assets test', () {
     expect(File(AppIcons.add).existsSync(), isTrue);
     expect(File(AppIcons.appIcon).existsSync(), isTrue);
+    expect(File(AppIcons.arrowLeft).existsSync(), isTrue);
     expect(File(AppIcons.arrowRight).existsSync(), isTrue);
     expect(File(AppIcons.arrowUp).existsSync(), isTrue);
     expect(File(AppIcons.battery100).existsSync(), isTrue);

@@ -6,17 +6,17 @@ import 'package:inmotion_mobile_test/features/train/data/DTOs/player_list_dto.da
 abstract interface class PlayersDataSource {
   Future<void> savePlayers(String key, PlayerListDTO players);
   Future<PlayerListDTO> getPlayers(String key);
-  Future<void> deletePlayers(String key);
+  Future<void> deletePlayers(String key, PlayerListDTO players);
 }
 
 class PlayersDataSourceImpl implements PlayersDataSource {
-  @override
-  Future<void> deletePlayers(String key) async {
-    log('Delete players with key: $key', name: 'PlayersDataSourceImpl');
-    final box = await _openBox();
-    await box.delete(key);
-    await box.close();
-  }
+  // @override
+  // Future<void> deletePlayers(String key) async {
+  //   log('Delete players with key: $key', name: 'PlayersDataSourceImpl');
+  //   final box = await _openBox();
+  //   await box.delete(key);
+  //   await box.close();
+  // }
 
   @override
   Future<PlayerListDTO> getPlayers(String key) async {
@@ -32,6 +32,26 @@ class PlayersDataSourceImpl implements PlayersDataSource {
     log('Save players with key: $key, length: ${playerList.list.length}', name: 'PlayersDataSourceImpl');
     final box = await _openBox();
     await box.put(key, playerList);
+    await box.close();
+  }
+
+  @override
+  Future<void> deletePlayers(String key, PlayerListDTO players) async {
+    log('Delete players with key: $key, length: ${players.list.length}', name: 'PlayersDataSourceImpl');
+    final box = await _openBox();
+    final playersList = box.get(key, defaultValue: const PlayerListDTO(list: []));
+    final formedList = PlayerListDTO(list: [...playersList!.list]);
+    for (final player in playersList.list) {
+      for (final delPlayer in players.list) {
+        if (player.uuid != delPlayer.uuid) {
+          continue;
+        }
+        formedList.list.remove(player);
+        break;
+      }
+    }
+    await box.delete(key);
+    await box.put(key, formedList);
     await box.close();
   }
 

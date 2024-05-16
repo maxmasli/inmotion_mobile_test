@@ -9,9 +9,10 @@ import 'package:provider/provider.dart';
 class TrainCalendar extends StatefulWidget {
   const TrainCalendar({
     super.key,
-    required this.onDateRangeSelected,
+    required this.onDateRangeSelected, required this.initRange,
   });
 
+  final List<DateTime?> initRange;
   final Function(List<DateTime?> range) onDateRangeSelected;
 
   @override
@@ -20,6 +21,12 @@ class TrainCalendar extends StatefulWidget {
 
 class _TrainCalendarState extends State<TrainCalendar> {
   List<DateTime?> _dates = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _dates = widget.initRange;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +99,7 @@ class _TrainCalendarState extends State<TrainCalendar> {
 }
 
 class _TrainMark extends StatelessWidget {
-  const _TrainMark({super.key});
+  const _TrainMark();
 
   @override
   Widget build(BuildContext context) {
