@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:inmotion_mobile_test/core/presentation/train_text_field.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
@@ -31,10 +32,12 @@ class PlayerEditTile extends StatelessWidget {
           SizedBox(
             width: 40,
             child: TrainTextField(
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              textInputType: TextInputType.number,
               controller: TextEditingController(text: player.number.toString()),
               hint: '№',
               onChanged: (value) async {
-
+                await model.updatePlayerNumber(train, player, value);
               },
             ),
           ),

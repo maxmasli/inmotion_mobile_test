@@ -238,6 +238,12 @@ class TrainModel extends ChangeNotifier {
     await _updatePlayerUseCase(TrainPlayerParams(train, player));
   }
 
+  Future<void> updatePlayerNumber(
+      TrainEntity train, PlayerEntity player, String value) async {
+    player.number = int.tryParse(value) ?? 0;
+    await _updatePlayerUseCase(TrainPlayerParams(train, player));
+  }
+
   Future<void> updateTrains() async {
     final updatesTrains = await _getTrainsUseCase();
     _trains = updatesTrains;

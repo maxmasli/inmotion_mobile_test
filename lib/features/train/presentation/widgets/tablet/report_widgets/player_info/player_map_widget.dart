@@ -131,13 +131,13 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
               ),
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 60),
             child: Row(
               children: [
                 Container(
-                  width: 20,
+                  width: 12,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -146,8 +146,7 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
                     )
                   ),
                 ),
-
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
