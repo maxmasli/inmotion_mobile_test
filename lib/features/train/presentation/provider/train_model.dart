@@ -16,6 +16,7 @@ import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/update_player_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/update_train_usecase.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -67,6 +68,8 @@ class TrainModel extends ChangeNotifier {
   final _getPlayersByKeyUseCase = getIt<GetPlayersByKeyUseCase>();
 
   final _deletePlayersFromTrainUseCase = getIt<DeletePlayersFromTrainUseCase>();
+
+  final _updatePlayerUseCase = getIt<UpdatePlayerUseCase>();
 
   // Permissions
   var _hasAllPermissions = true;
@@ -229,6 +232,12 @@ class TrainModel extends ChangeNotifier {
     await _updateTrainUseCase(TrainParams(train));
   }
 
+  Future<void> updatePlayerName(
+      TrainEntity train, PlayerEntity player, String name) async {
+    player.name = name;
+    await _updatePlayerUseCase(TrainPlayerParams(train, player));
+  }
+
   Future<void> updateTrains() async {
     final updatesTrains = await _getTrainsUseCase();
     _trains = updatesTrains;
@@ -244,9 +253,13 @@ class TrainModel extends ChangeNotifier {
 
   Future<void> deletePlayersFromTrain(
       TrainEntity train, List<PlayerEntity> players) async {
+    for (final delPlayer in players) {
+      train.players.remove(delPlayer);
+    }
     await _deletePlayersFromTrainUseCase(
       TrainPlayerListParams(train, players),
     );
+    notifyListeners();
   }
 
   Future<void> updateSensorPlayer(PlayerEntity player, String name,

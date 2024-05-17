@@ -43,4 +43,10 @@ class PlayersRepositoryImpl implements PlayersRepository {
         PlayerListDTO(
             list: players.map((p) => PlayerDTO.fromEntity(p)).toList()));
   }
+
+  @override
+  Future<void> updatePlayer(String key, PlayerEntity player) async {
+    return await playersDataSource.updatePlayer(
+        key, PlayerDTO.fromEntity(player));
+  }
 }

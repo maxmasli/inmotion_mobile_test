@@ -61,3 +61,10 @@ class TrainPlayerListParams extends Params {
 
   TrainPlayerListParams(this.train, this.players);
 }
+
+class TrainPlayerParams extends Params {
+  final TrainEntity train;
+  final PlayerEntity player;
+
+  TrainPlayerParams(this.train, this.player);
+}

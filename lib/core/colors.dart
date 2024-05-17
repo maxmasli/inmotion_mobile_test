@@ -22,4 +22,11 @@ abstract class AppColors {
     AppColors.orange,
     AppColors.red,
   ];
+
+  static const runColorRanges = [
+    AppColors.blue,
+    AppColors.green,
+    AppColors.orange,
+    AppColors.red,
+  ];
 }

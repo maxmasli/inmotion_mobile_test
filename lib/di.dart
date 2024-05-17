@@ -18,6 +18,7 @@ import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_sencor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/update_player_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/update_train_usecase.dart';
 
 final getIt = GetIt.instance;
@@ -67,8 +68,11 @@ void setup() {
   getIt.registerFactory(() =>
       GetPlayersByKeyUseCase(playersRepository: getIt<PlayersRepository>()));
 
-  getIt.registerFactory(() =>
-      DeletePlayersFromTrainUseCase(playersRepository: getIt<PlayersRepository>()));
+  getIt.registerFactory(() => DeletePlayersFromTrainUseCase(
+      playersRepository: getIt<PlayersRepository>()));
+
+  getIt.registerFactory(
+      () => UpdatePlayerUseCase(playerRepository: getIt<PlayersRepository>()));
 
   getIt.registerSingleton<AppTimerController>(AppTimerController());
 }

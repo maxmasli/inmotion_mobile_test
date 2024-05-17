@@ -4,5 +4,5 @@ abstract interface class PlayersRepository {
   Future<void> savePlayers(String key, Iterable<PlayerEntity> players);
   Future<List<PlayerEntity>> getPlayers(String key);
   Future<void> deletePlayers(String key, Iterable<PlayerEntity> players);
-
+  Future<void> updatePlayer(String key, PlayerEntity player);
 }

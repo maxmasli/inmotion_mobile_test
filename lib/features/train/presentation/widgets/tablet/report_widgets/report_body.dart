@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/player_info/player_info_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/players_info/players_info_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/train_calendar.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/trains_info/trains_info_widget.dart';
@@ -23,6 +24,17 @@ class _ReportBodyState extends State<ReportBody> {
   @override
   Widget build(BuildContext context) {
     final model = context.read<TrainModel>();
+    if (selectedTrain != null && selectedPlayer != null) {
+      return PlayerInfoWidget(
+        onBackPressed: () {
+          setState(() {
+            selectedPlayer = null;
+          });
+        },
+        train: selectedTrain!,
+        player: selectedPlayer!,
+      );
+    }
     if (selectedTrain != null) {
       return PlayersInfoWidget(
         range: range,

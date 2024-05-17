@@ -1,12 +1,14 @@
 import 'dart:developer';
 
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:inmotion_mobile_test/features/train/data/DTOs/player_dto.dart';
 import 'package:inmotion_mobile_test/features/train/data/DTOs/player_list_dto.dart';
 
 abstract interface class PlayersDataSource {
   Future<void> savePlayers(String key, PlayerListDTO players);
   Future<PlayerListDTO> getPlayers(String key);
   Future<void> deletePlayers(String key, PlayerListDTO players);
+  Future<void> updatePlayer(String key, PlayerDTO player);
 }
 
 class PlayersDataSourceImpl implements PlayersDataSource {
@@ -55,8 +57,29 @@ class PlayersDataSourceImpl implements PlayersDataSource {
     await box.close();
   }
 
+
+  @override
+  Future<void> updatePlayer(String key, PlayerDTO player) async {
+    log('Update player with key: $key, name: ${player.name}', name: 'PlayersDataSourceImpl');
+    final box = await _openBox();
+    final playersList = box.get(key, defaultValue: const PlayerListDTO(list: []));
+    final updatedList = <PlayerDTO>[];
+    for (var savedPlayer in playersList!.list) {
+      if (savedPlayer.uuid == player.uuid) {
+        savedPlayer = player;
+        updatedList.add(savedPlayer);
+      } else {
+        updatedList.add(savedPlayer);
+      }
+    }
+    await box.delete(key);
+    await box.put(key, PlayerListDTO(list: updatedList));
+    await box.close();
+  }
+
   Future<Box<PlayerListDTO>> _openBox() async {
     const boxName = 'players';
     return await Hive.openBox(boxName);
   }
+
 }
