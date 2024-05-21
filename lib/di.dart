@@ -59,8 +59,10 @@ void setup() {
   getIt.registerFactory(
       () => UpdateTrainUseCase(trainRepository: getIt<TrainRepository>()));
 
-  getIt.registerFactory(
-      () => DeleteTrainsUseCase(trainRepository: getIt<TrainRepository>()));
+  getIt.registerFactory(() => DeleteTrainsUseCase(
+        trainRepository: getIt<TrainRepository>(),
+        playersRepository: getIt<PlayersRepository>(),
+      ));
 
   getIt.registerFactory(
       () => CreateExcelUseCase(playersRepository: getIt<PlayersRepository>()));

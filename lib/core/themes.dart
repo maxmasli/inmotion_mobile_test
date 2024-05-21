@@ -167,7 +167,6 @@ TextTheme _baseTextTheme(bool isDark) {
         color: AppColors.gray134,
         fontWeight: FontWeight.w600,
       ),
-
     );
   }
 }

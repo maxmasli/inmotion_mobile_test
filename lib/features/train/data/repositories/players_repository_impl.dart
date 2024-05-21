@@ -49,4 +49,9 @@ class PlayersRepositoryImpl implements PlayersRepository {
     return await playersDataSource.updatePlayer(
         key, PlayerDTO.fromEntity(player));
   }
+
+  @override
+  Future<void> deleteAllPlayers(String key) async {
+    return await playersDataSource.deleteAllPlayers(key);
+  }
 }

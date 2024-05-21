@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_question_dialog.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
@@ -32,21 +33,22 @@ class _PlayerListState extends State<PlayerList> {
       padding: const EdgeInsets.all(12),
       child: _editMode
           ? _PlayerEditList(
-        onCancel: () {
-          setState(() {
-            _editMode = false;
-          });
-        }, train: widget.train,
-      )
+              onCancel: () {
+                setState(() {
+                  _editMode = false;
+                });
+              },
+              train: widget.train,
+            )
           : _PlayerList(
-        train: widget.train,
-        onEditPressed: () {
-          setState(() {
-            _editMode = true;
-          });
-        },
-        onPlayerSelected: widget.onPlayerSelected,
-      ),
+              train: widget.train,
+              onEditPressed: () {
+                setState(() {
+                  _editMode = true;
+                });
+              },
+              onPlayerSelected: widget.onPlayerSelected,
+            ),
     );
   }
 }
@@ -72,6 +74,29 @@ class _PlayerEditListState extends State<_PlayerEditList> {
   void initState() {
     super.initState();
     playersNotifier = ValueNotifier(widget.train.players);
+  }
+
+  Future<void> _deletePlayers() async {
+    final model = context.read<TrainModel>();
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => const AppQuestionDialog(
+        title: 'Удалить данные игрока?',
+        content:
+            'Удаление данных игрока приведет также к полному удалению его данных, включая данные в полном отчете тренировки команды',
+        yesText: 'Удалить',
+        noText: 'Отмена',
+      ),
+    );
+    if (result ?? false) {
+      await model.deletePlayersFromTrain(
+        widget.train,
+        selectedPlayers,
+      );
+      playersNotifier.value = widget.train.players;
+      setState(() {});
+      selectedPlayers.clear();
+    }
   }
 
   @override
@@ -103,9 +128,9 @@ class _PlayerEditListState extends State<_PlayerEditList> {
                         value: selectedPlayers.isEmpty
                             ? false // выбранных нет
                             : selectedPlayers.length !=
-                            widget.train.players.length
-                            ? null // выбранные есть, но не все
-                            : true, // все выбранные
+                                    widget.train.players.length
+                                ? null // выбранные есть, но не все
+                                : true, // все выбранные
                         onChanged: (value) {
                           setState(() {
                             if (selectedPlayers.length ==
@@ -125,7 +150,7 @@ class _PlayerEditListState extends State<_PlayerEditList> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     childCount: widget.train.players.length,
-                        (context, index) {
+                    (context, index) {
                       final player = widget.train.players[index];
                       return PlayerEditTile(
                         train: widget.train,
@@ -154,12 +179,7 @@ class _PlayerEditListState extends State<_PlayerEditList> {
                   AppContainer(
                     width: 100,
                     onTap: () async {
-                      await model.deletePlayersFromTrain(
-                        widget.train,
-                        selectedPlayers,
-                      );
-                      playersNotifier.value = widget.train.players;
-                      selectedPlayers.clear();
+                      await _deletePlayers();
                     },
                     padding: const EdgeInsets.all(8),
                     borderRadius: BorderRadius.circular(8),
@@ -208,8 +228,8 @@ class _PlayerList extends StatelessWidget {
   final VoidCallback onEditPressed;
   final Function(PlayerEntity) onPlayerSelected;
 
-  Future<void> createAndShareFile(TrainModel model, TrainEntity train,
-      PlayerEntity player) async {
+  Future<void> createAndShareFile(
+      TrainModel model, TrainEntity train, PlayerEntity player) async {
     //final path = await model.createExcel(train);
     //await shareFile(path);
   }
@@ -246,7 +266,7 @@ class _PlayerList extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             childCount: train.players.length,
-                (context, index) {
+            (context, index) {
               final player = train.players[index];
               return PlayerTile(
                 player: player,

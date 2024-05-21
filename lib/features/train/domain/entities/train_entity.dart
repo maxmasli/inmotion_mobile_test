@@ -8,18 +8,24 @@ class TrainEntity {
     this.playersKey,
     this.endTime,
     this.trainName = '',
+    this.trainDescription = '',
   }) {
     uuid ??= const Uuid().v4();
     playersKey ??= const Uuid().v4();
   }
 
   String? uuid;
+
   String? playersKey;
 
   final DateTime startTime;
+
   DateTime? endTime;
 
   String trainName;
+
+  String trainDescription;
+
   final List<PlayerEntity> players = [];
 
   void addPlayer(PlayerEntity player) {

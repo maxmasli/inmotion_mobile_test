@@ -4,6 +4,7 @@ import 'package:inmotion_mobile_test/features/train/domain/entities/player_entit
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/heart_rate_zones_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/player_info_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/players_list.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/train_edit_widget.dart';
 
 class RunningTrainWidget extends StatefulWidget {
   const RunningTrainWidget({super.key});
@@ -27,7 +28,7 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
             ),
             SizedBox(width: 8),
             Expanded(
-              child: Center(child: Text("train edit")),
+              child: TrainEditWidget(),
             ),
           ],
         ),

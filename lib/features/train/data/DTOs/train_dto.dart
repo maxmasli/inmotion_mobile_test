@@ -20,12 +20,16 @@ class TrainDTO {
   @HiveField(5)
   final DateTime endTime;
 
+  @HiveField(6)
+  final String trainDescription;
+
   TrainDTO({
     required this.uuid,
     required this.playersKey,
     required this.trainName,
     required this.startTime,
     required this.endTime,
+    required this.trainDescription,
   });
 
   TrainEntity toEntity() {
@@ -35,6 +39,7 @@ class TrainDTO {
       startTime: startTime,
       endTime: endTime,
       uuid: uuid,
+      trainDescription: trainDescription
     );
   }
 
@@ -45,6 +50,7 @@ class TrainDTO {
       trainName: entity.trainName,
       startTime: entity.startTime,
       endTime: entity.endTime!,
+      trainDescription: entity.trainDescription
     );
   }
 }

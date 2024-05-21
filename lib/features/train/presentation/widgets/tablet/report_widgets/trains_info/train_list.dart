@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_question_dialog.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
@@ -64,6 +65,23 @@ class _TrainEditList extends StatefulWidget {
 
 class _TrainEditListState extends State<_TrainEditList> {
   final selectedTrains = <TrainEntity>[];
+
+  Future<void> _deleteTrains() async {
+    final model = context.read<TrainModel>();
+    final result = await showDialog<bool>(
+        context: context,
+        builder: (context) => const AppQuestionDialog(
+              title: "Удалить  тренировку?",
+              content:
+                  "Удаление тренировки приведет также к полному удалению ее данных, включая отчет тренировки и данные в календаре",
+              yesText: 'Удалить',
+              noText: 'Отмена',
+            ));
+    if (result ?? false) {
+      await model.deleteTrains(selectedTrains);
+      selectedTrains.clear();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +175,7 @@ class _TrainEditListState extends State<_TrainEditList> {
                   AppContainer(
                     width: 100,
                     onTap: () async {
-                      await model.deleteTrains(selectedTrains);
-                      selectedTrains.clear();
+                      await _deleteTrains();
                     },
                     padding: const EdgeInsets.all(8),
                     borderRadius: BorderRadius.circular(8),

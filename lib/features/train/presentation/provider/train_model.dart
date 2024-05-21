@@ -8,6 +8,7 @@ import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
 import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/train_info_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_players_from_train_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
@@ -100,6 +101,8 @@ class TrainModel extends ChangeNotifier {
 
   TrainEntity? _train;
 
+  TrainInfoEntity _trainInfo = TrainInfoEntity();
+
   double get loadingPercent => _loadingPercent;
 
   List<PlayerEntity> get players => _players;
@@ -107,6 +110,8 @@ class TrainModel extends ChangeNotifier {
   List<PlayerEntity> get selectedPlayers => _selectedPlayers;
 
   TrainEntity? get train => _train;
+
+  TrainInfoEntity get trainInfo => _trainInfo;
 
   List<TrainEntity> get trains => _trains;
 
@@ -287,6 +292,13 @@ class TrainModel extends ChangeNotifier {
         await _getPlayersByKeyUseCase(StringParams(train.playersKey!)));
   }
 
+  void setTrainInfo((String name, String description) info) {
+    _trainInfo = TrainInfoEntity(name: info.$1, description: info.$2);
+    _train?.trainName = info.$1;
+    _train?.trainDescription = info.$2;
+    notifyListeners();
+  }
+
   void startRecording() {
     _isTrainStart = true;
     assert(_trainStage == TrainStage.prepare,
@@ -294,6 +306,8 @@ class TrainModel extends ChangeNotifier {
     _trainStage = TrainStage.running;
     _train = TrainEntity(
       startTime: DateTime.now(),
+      trainName: _trainInfo.name,
+      trainDescription: _trainInfo.description,
     );
     _appBLEConnection.devicesStartRecording(
         _selectedPlayers.map((e) => e.sensor?.device).nonNulls);
@@ -307,6 +321,7 @@ class TrainModel extends ChangeNotifier {
     assert(_train != null, 'TrainEntity == null');
     _trainStage = TrainStage.end;
     _train!.endTime = DateTime.now();
+    _trainInfo = TrainInfoEntity();
     await _downloadDataFromDevices();
     notifyListeners();
   }

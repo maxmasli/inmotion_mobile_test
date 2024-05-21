@@ -8,18 +8,11 @@ abstract interface class PlayersDataSource {
   Future<void> savePlayers(String key, PlayerListDTO players);
   Future<PlayerListDTO> getPlayers(String key);
   Future<void> deletePlayers(String key, PlayerListDTO players);
+  Future<void> deleteAllPlayers(String key);
   Future<void> updatePlayer(String key, PlayerDTO player);
 }
 
 class PlayersDataSourceImpl implements PlayersDataSource {
-  // @override
-  // Future<void> deletePlayers(String key) async {
-  //   log('Delete players with key: $key', name: 'PlayersDataSourceImpl');
-  //   final box = await _openBox();
-  //   await box.delete(key);
-  //   await box.close();
-  // }
-
   @override
   Future<PlayerListDTO> getPlayers(String key) async {
     log('Get players with key: $key', name: 'PlayersDataSourceImpl');
@@ -77,9 +70,16 @@ class PlayersDataSourceImpl implements PlayersDataSource {
     await box.close();
   }
 
+  @override
+  Future<void> deleteAllPlayers(String key) async {
+    log('Delete all players with key: $key', name: 'PlayersDataSourceImpl');
+    final box = await _openBox();
+    await box.delete(key);
+    await box.close();
+  }
+
   Future<Box<PlayerListDTO>> _openBox() async {
     const boxName = 'players';
     return await Hive.openBox(boxName);
   }
-
 }

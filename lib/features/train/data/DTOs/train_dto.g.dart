@@ -22,13 +22,14 @@ class TrainDTOAdapter extends TypeAdapter<TrainDTO> {
       trainName: fields[3] as String,
       startTime: fields[4] as DateTime,
       endTime: fields[5] as DateTime,
+      trainDescription: fields[6] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, TrainDTO obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(1)
       ..write(obj.uuid)
       ..writeByte(2)
@@ -38,7 +39,9 @@ class TrainDTOAdapter extends TypeAdapter<TrainDTO> {
       ..writeByte(4)
       ..write(obj.startTime)
       ..writeByte(5)
-      ..write(obj.endTime);
+      ..write(obj.endTime)
+      ..writeByte(6)
+      ..write(obj.trainDescription);
   }
 
   @override

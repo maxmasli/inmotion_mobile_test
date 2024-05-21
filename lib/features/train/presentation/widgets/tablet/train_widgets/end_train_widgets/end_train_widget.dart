@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
-import 'package:inmotion_mobile_test/core/presentation/train_text_field.dart';
+import 'package:inmotion_mobile_test/core/presentation/loading_button.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
-import 'package:inmotion_mobile_test/core/presentation/loading_button.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -20,13 +19,14 @@ class EndTrainWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = context.read<TrainModel>();
-    return Expanded(
+    return Center(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             AppContainer(
               padding: const EdgeInsets.all(16),
-              width: double.infinity,
+              width: 500,
               borderRadius: BorderRadius.circular(16),
               child: Selector<TrainModel, double>(
                 selector: (context, model) => model.loadingPercent,
@@ -45,7 +45,7 @@ class EndTrainWidget extends StatelessWidget {
                         padding: const EdgeInsets.all(8),
                         progressColor: theme.colorScheme.secondaryContainer,
                         backgroundColor:
-                            theme.colorScheme.secondaryContainer.withOpacity(0.5),
+                        theme.colorScheme.secondaryContainer.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(8),
                         loadingWidget: Text(
                           "Формирование отчета",
@@ -61,14 +61,6 @@ class EndTrainWidget extends StatelessWidget {
                         },
                       ),
                       if (percent >= 100) ...[
-                        const SizedBox(height: 10),
-                        TrainTextField(
-                          controller: TextEditingController(),
-                          hint: 'Введите название тренировки',
-                          onChanged: (value) async {
-                            await model.updateCurrentTrainName(value);
-                          },
-                        ),
                         const SizedBox(height: 10),
                         AppContainer(
                           borderRadius: BorderRadius.circular(8),

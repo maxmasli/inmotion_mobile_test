@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/end_train_widgets/end_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/prepare_train_widgets/prepare_train_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/train_widgets/running_train_widgets/running_train_widget.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +16,9 @@ class TrainBody extends StatelessWidget {
         return switch(stage) {
           TrainStage.prepare => const PrepareTrainWidget(),
 
-          // TODO: Handle this case.
           TrainStage.running =>  const RunningTrainWidget(),
-          // TODO: Handle this case.
-          TrainStage.end => throw UnimplementedError(),
+
+          TrainStage.end => const EndTrainWidget(),
         };
       },
     );

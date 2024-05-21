@@ -21,6 +21,7 @@ class PlayersList extends StatelessWidget {
       selector: (context, model) => model.players,
       builder: (context, players, child) {
         return GridView.builder(
+          shrinkWrap: true,
           itemCount: players.length,
           padding: EdgeInsets.zero,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

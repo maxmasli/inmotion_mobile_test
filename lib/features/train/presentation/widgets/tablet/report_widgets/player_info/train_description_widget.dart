@@ -33,46 +33,49 @@ class TrainDescriptionWidget extends StatelessWidget {
                 style: theme.textTheme.headlineMedium,
               ),
               Text(
-                "Тренировка 001",
+                train.trainName,
                 style: theme.textTheme.bodyMedium,
               )
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Время тренировки: ",
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    TextSpan(
-                      text: formatDuration(
-                          train.endTime!.difference(train.startTime)),
-                      style: theme.textTheme.headlineMedium,
-                    ),
-                  ],
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Время тренировки: ",
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      TextSpan(
+                        text: formatDuration(
+                            train.endTime!.difference(train.startTime)),
+                        style: theme.textTheme.headlineMedium,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Описание тренировки: ',
-                      style: theme.textTheme.headlineSmall,
-                    ),
-                    TextSpan(
-                      text:
-                          'Lorem ipsum dolor sit amet consectetur. Ac diam odio quam facilisis nec \nmagna. Id ipsum eu at sit sodales nisi vulputate. Viverra eu risus molestie nibhat sit sodales nisi',
-                      style: theme.textTheme.displaySmall,
-                    ),
-                  ],
-                ),
-              )
-            ],
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Описание тренировки: ',
+                        style: theme.textTheme.headlineSmall,
+                      ),
+                      TextSpan(
+                        text: train.trainDescription,
+                        style: theme.textTheme.displaySmall,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
+          const SizedBox(width: 20),
           ConstrainedBox(
             constraints: const BoxConstraints(
               maxWidth: 160,
