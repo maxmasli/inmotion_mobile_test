@@ -20,6 +20,7 @@ class TrainScreen extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => TrainModel()..init(),
       child: Scaffold(
+        //resizeToAvoidBottomInset: false,
         appBar: !isTablet
             ? AppBar(
                 title: SvgPicture.asset(AppIcons.logo, width: 120),

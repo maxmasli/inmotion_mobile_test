@@ -83,6 +83,10 @@ class PlayerEntity extends ChangeNotifier {
       .map((m) => m.speed! * 3600 / 1000)
       .average;
 
+  double get maxSpeedKph => _measures
+      .map((m) => m.speed! * 3600 / 1000)
+      .maxOrNull ?? 0;
+
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     // TODO сравнивать по inc
     // if (lastMeasure == null || lastMeasure!.time != payload.time) {

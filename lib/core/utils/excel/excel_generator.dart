@@ -28,14 +28,26 @@ class ExcelGenerator {
   }
 
   void _setSheetLayout(Worksheet sheet) {
+    // Фиксируем верхнюю часть
+    sheet.getRangeByName('A10:V10').freezePanes();
+    
     sheet.getRangeByName('A1').columnWidth = 4.43;
     sheet.getRangeByName('B1').columnWidth = 17.86;
     sheet.getRangeByName('C1').columnWidth = 17.86;
     sheet.getRangeByName('D1').columnWidth = 12.14;
-    sheet.getRangeByName('E1').columnWidth = 12.14;
-    sheet.getRangeByName('F1:H1').columnWidth = 14.29;
-    sheet.getRangeByName('I1:O1').columnWidth = 12.14;
-    sheet.getRangeByName('P1').columnWidth = 13.57;
+    sheet.getRangeByName('E1').columnWidth = 12.14; //
+    sheet.getRangeByName('F1').columnWidth = 12.14; //
+    sheet.getRangeByName('G1').columnWidth = 12.14;
+    sheet.getRangeByName('H1:I1').columnWidth = 14.29;
+    sheet.getRangeByName('J1').columnWidth = 11.14;
+    sheet.getRangeByName('K1').columnWidth = 14.29;
+    sheet.getRangeByName('L1:N1').columnWidth = 12.14;
+    sheet.getRangeByName('O1:Q1').columnWidth = 12.14;
+    sheet.getRangeByName('R1').columnWidth = 12.14;
+    sheet.getRangeByName('S1').columnWidth = 12.14;
+    sheet.getRangeByName('T1').columnWidth = 12.14;
+    sheet.getRangeByName('U1').columnWidth = 12.14;
+    sheet.getRangeByName('V1').columnWidth = 13.57;
 
     sheet.getRangeByIndex(1, 1).rowHeight = 30;
     sheet.getRangeByIndex(2, 1).rowHeight = 23.25;
@@ -47,13 +59,13 @@ class ExcelGenerator {
     sheet.getRangeByIndex(8, 1).rowHeight = 37.5;
     sheet.getRangeByIndex(9, 1).rowHeight = 37.5;
 
-    sheet.getRangeByName('A1:P1').merge();
-    sheet.getRangeByName('A2:P2').merge();
-    sheet.getRangeByName('A3:P3').merge();
-    sheet.getRangeByName('A4:P4').merge();
-    sheet.getRangeByName('A5:P5').merge();
-    sheet.getRangeByName('A6:P6').merge();
-    sheet.getRangeByName('A7:P7').merge();
+    sheet.getRangeByName('A1:V1').merge();
+    sheet.getRangeByName('A2:V2').merge();
+    sheet.getRangeByName('A3:V3').merge();
+    sheet.getRangeByName('A4:V4').merge();
+    sheet.getRangeByName('A5:V5').merge();
+    sheet.getRangeByName('A6:V6').merge();
+    sheet.getRangeByName('A7:V7').merge();
 
     //Merging table titles
     sheet.getRangeByName('A8:A9').merge();
@@ -61,12 +73,18 @@ class ExcelGenerator {
     sheet.getRangeByName('C8:C9').merge();
     sheet.getRangeByName('D8:D9').merge();
     sheet.getRangeByName('E8:E9').merge();
-    sheet.getRangeByName('F8:G8').merge();
-    sheet.getRangeByName('H8:H9').merge();
-    sheet.getRangeByName('I8:K8').merge();
+    sheet.getRangeByName('F8:F9').merge();
+    sheet.getRangeByName('G8:G9').merge();
+    sheet.getRangeByName('H8:I8').merge();
+    sheet.getRangeByName('J8:J9').merge();
+    sheet.getRangeByName('K8:K9').merge();
     sheet.getRangeByName('L8:N8').merge();
-    sheet.getRangeByName('O8:O9').merge();
-    sheet.getRangeByName('P8:P9').merge();
+    sheet.getRangeByName('O8:Q8').merge();
+    sheet.getRangeByName('R8:R9').merge();
+    sheet.getRangeByName('S8:S9').merge();
+    sheet.getRangeByName('T8:T9').merge();
+    sheet.getRangeByName('U8:U9').merge();
+    sheet.getRangeByName('V8:V9').merge();
   }
 
   void _setTrainInfo(Worksheet sheet, TrainEntity train) {
@@ -88,15 +106,15 @@ class ExcelGenerator {
     sheet.getRangeByName('A2').cellStyle.vAlign = VAlignType.center;
     sheet.getRangeByName('A2').cellStyle.fontName = 'Arial';
     sheet.getRangeByName('A2').cellStyle.bold = true;
-    sheet.getRangeByName('A2').cellStyle.fontColor = '#F59723';
+    sheet.getRangeByName('A2').cellStyle.fontColor = '#00B036';
 
-    // //Train description
-    // sheet.getRangeByName('A4').setText(train.trainDescription);
-    // sheet.getRangeByName('A4').cellStyle.fontSize = 11;
-    // sheet.getRangeByName('A4').cellStyle.hAlign = HAlignType.left;
-    // sheet.getRangeByName('A4').cellStyle.vAlign = VAlignType.center;
-    // sheet.getRangeByName('A4').cellStyle.fontName = 'Arial Narrow';
-    // sheet.getRangeByName('A4').cellStyle.bold = false;
+    //Train description
+    sheet.getRangeByName('A4').setText(train.trainDescription);
+    sheet.getRangeByName('A4').cellStyle.fontSize = 11;
+    sheet.getRangeByName('A4').cellStyle.hAlign = HAlignType.left;
+    sheet.getRangeByName('A4').cellStyle.vAlign = VAlignType.center;
+    sheet.getRangeByName('A4').cellStyle.fontName = 'Arial Narrow';
+    sheet.getRangeByName('A4').cellStyle.bold = false;
 
     //Train date
     final trainDuration = train.endTime!.difference(train.startTime);
@@ -113,200 +131,261 @@ class ExcelGenerator {
       Worksheet sheet,
       ) {
     //Styling table titles
-    sheet.getRangeByName('A8:P9').cellStyle.backColor = '#FED292';
+    sheet.getRangeByName('A8:V9').cellStyle.backColor = '#BFEBCC';
 
     var range = sheet.getRangeByName('A8:A9');
 
-    range.cellStyle.borders.top.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('B8:B9');
-    range.cellStyle.borders.top.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('C8:C9');
-    range.cellStyle.borders.top.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('D8:D9');
-    range.cellStyle.borders.top.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('E8:E9');
-    range.cellStyle.borders.top.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
-    range = sheet.getRangeByName('F8:G8');
-    range.cellStyle.borders.top.color = '#F59723';
+    range = sheet.getRangeByName('F8:F9');
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.right.color = '#F59723';
-    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
-    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
-
-    range = sheet.getRangeByName('F9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
-    range = sheet.getRangeByName('G9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
-    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
-    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
-
-    range = sheet.getRangeByName('H8:H9');
-    range.cellStyle.borders.top.color = '#F59723';
+    range = sheet.getRangeByName('G8:G9');
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
-    range = sheet.getRangeByName('I8:K8');
-    range.cellStyle.borders.top.color = '#F59723';
+    range = sheet.getRangeByName('H8:I8');
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('H9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('I9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
-    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
-    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
-
-    range = sheet.getRangeByName('J9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
-    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
-    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
-
-    range = sheet.getRangeByName('K9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
-    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
-    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
-
-    ///////
-    range = sheet.getRangeByName('L8:N8');
-    range.cellStyle.borders.top.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('J8:J9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('K8:K9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('L8:N8');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('L9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('M9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
     range = sheet.getRangeByName('N9');
-    range.cellStyle.borders.top.color = '#F59723';
-    range.cellStyle.borders.top.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.bottom.color = '#F59723';
-    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
-    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
-    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
-
-    range = sheet.getRangeByName('O8:O9');
-    range.cellStyle.borders.top.color = '#F59723';
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
     range.cellStyle.borders.right.lineStyle = LineStyle.thin;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
-    range = sheet.getRangeByName('P8:P9');
-    range.cellStyle.borders.top.color = '#F59723';
+    range = sheet.getRangeByName('O8:Q8');
+    range.cellStyle.borders.top.color = '#00B036';
     range.cellStyle.borders.top.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.bottom.color = '#F59723';
+    range.cellStyle.borders.bottom.color = '#00B036';
     range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.right.color = '#F59723';
-    range.cellStyle.borders.right.lineStyle = LineStyle.medium;
-    range.cellStyle.borders.left.color = '#F59723';
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
+    range = sheet.getRangeByName('O9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('P9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('Q9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('R8:R9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('S8:S9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('T8:T9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('U8:U9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+    range = sheet.getRangeByName('V8:V9');
+    range.cellStyle.borders.top.color = '#00B036';
+    range.cellStyle.borders.top.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.bottom.color = '#00B036';
+    range.cellStyle.borders.bottom.lineStyle = LineStyle.medium;
+    range.cellStyle.borders.right.color = '#00B036';
+    range.cellStyle.borders.right.lineStyle = LineStyle.thin;
+    range.cellStyle.borders.left.color = '#00B036';
+    range.cellStyle.borders.left.lineStyle = LineStyle.thin;
+
+
+///////
     range = sheet.getRangeByName('A8');
     range.setText('№');
     range.cellStyle.wrapText = true;
@@ -340,7 +419,7 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('E8');
-    range.setText('Предельный пульс (Статистика)');
+    range.setText('Дистанция, км');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -348,23 +427,15 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('F8');
-    range.setText('ЧСС во время тренировки');
+    range.setText('Средний темп, мин:сек');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
     range.cellStyle.hAlign = HAlignType.center;
     range.cellStyle.fontName = 'Arial Narrow';
 
-    range = sheet.getRangeByName('F9');
-    range.setText('Максимальный пульс');
-    range.cellStyle.wrapText = true;
-    range.cellStyle.fontSize = 11;
-    range.cellStyle.vAlign = VAlignType.center;
-    range.cellStyle.hAlign = HAlignType.center;
-    range.cellStyle.fontName = 'Arial Narrow';
-
-    range = sheet.getRangeByName('G9');
-    range.setText('Средний пульс');
+    range = sheet.getRangeByName('G8');
+    range.setText('Предельный пульс (статистика)');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -372,15 +443,15 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('H8');
-    range.setText('Интенсивность (%ЧССпредл)');
+    range.setText('ЧСС во время тренировки');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
     range.cellStyle.hAlign = HAlignType.center;
     range.cellStyle.fontName = 'Arial Narrow';
 
-    range = sheet.getRangeByName('I8');
-    range.setText('Зоны ЧСС');
+    range = sheet.getRangeByName('H9');
+    range.setText('Максимальный пульс');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -388,23 +459,23 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('I9');
-    range.setText('70-80%');
+    range.setText('Средний пульс');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
     range.cellStyle.hAlign = HAlignType.center;
     range.cellStyle.fontName = 'Arial Narrow';
 
-    range = sheet.getRangeByName('J9');
-    range.setText('80-90%');
+    range = sheet.getRangeByName('J8');
+    range.setText('VO2max');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
     range.cellStyle.hAlign = HAlignType.center;
     range.cellStyle.fontName = 'Arial Narrow';
 
-    range = sheet.getRangeByName('K9');
-    range.setText('90-100%');
+    range = sheet.getRangeByName('K8');
+    range.setText('Интенсивность (%ЧССпредл)');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -412,7 +483,7 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('L8');
-    range.setText('Калории');
+    range.setText('Зоны ЧСС');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -420,7 +491,7 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('L9');
-    range.setText('Всего');
+    range.setText('70-80%');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -428,7 +499,7 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('M9');
-    range.setText('Жиры');
+    range.setText('80-90%');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -436,7 +507,7 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('N9');
-    range.setText('Углеводы');
+    range.setText('90-100%');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -444,14 +515,70 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('O8');
-    range.setText('Оценка нагрузки (х/5)');
+    range.setText('Калории');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
     range.cellStyle.hAlign = HAlignType.center;
     range.cellStyle.fontName = 'Arial Narrow';
 
-    range = sheet.getRangeByName('P8');
+    range = sheet.getRangeByName('O9');
+    range.setText('Всего');
+    range.cellStyle.wrapText = true;
+    range.cellStyle.fontSize = 11;
+    range.cellStyle.vAlign = VAlignType.center;
+    range.cellStyle.hAlign = HAlignType.center;
+    range.cellStyle.fontName = 'Arial Narrow';
+
+    range = sheet.getRangeByName('P9');
+    range.setText('Жиры');
+    range.cellStyle.wrapText = true;
+    range.cellStyle.fontSize = 11;
+    range.cellStyle.vAlign = VAlignType.center;
+    range.cellStyle.hAlign = HAlignType.center;
+    range.cellStyle.fontName = 'Arial Narrow';
+
+    range = sheet.getRangeByName('Q9');
+    range.setText('Углеводы');
+    range.cellStyle.wrapText = true;
+    range.cellStyle.fontSize = 11;
+    range.cellStyle.vAlign = VAlignType.center;
+    range.cellStyle.hAlign = HAlignType.center;
+    range.cellStyle.fontName = 'Arial Narrow';
+
+    range = sheet.getRangeByName('R8');
+    range.setText('Средняя скорость, км/ч');
+    range.cellStyle.wrapText = true;
+    range.cellStyle.fontSize = 11;
+    range.cellStyle.vAlign = VAlignType.center;
+    range.cellStyle.hAlign = HAlignType.center;
+    range.cellStyle.fontName = 'Arial Narrow';
+
+    range = sheet.getRangeByName('S8');
+    range.setText('Макс. скорость, км/ч');
+    range.cellStyle.wrapText = true;
+    range.cellStyle.fontSize = 11;
+    range.cellStyle.vAlign = VAlignType.center;
+    range.cellStyle.hAlign = HAlignType.center;
+    range.cellStyle.fontName = 'Arial Narrow';
+
+    range = sheet.getRangeByName('T8');
+    range.setText('Ускорения');
+    range.cellStyle.wrapText = true;
+    range.cellStyle.fontSize = 11;
+    range.cellStyle.vAlign = VAlignType.center;
+    range.cellStyle.hAlign = HAlignType.center;
+    range.cellStyle.fontName = 'Arial Narrow';
+
+    range = sheet.getRangeByName('U8');
+    range.setText('Оценка нагрузки (x/5)');
+    range.cellStyle.wrapText = true;
+    range.cellStyle.fontSize = 11;
+    range.cellStyle.vAlign = VAlignType.center;
+    range.cellStyle.hAlign = HAlignType.center;
+    range.cellStyle.fontName = 'Arial Narrow';
+
+    range = sheet.getRangeByName('V8');
     range.setText('Тренировочная нагрузка (TRIMP)');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
@@ -470,13 +597,13 @@ class ExcelGenerator {
     defaultCellStyle.fontName = 'Arial Narrow';
     defaultCellStyle.hAlign = HAlignType.center;
     defaultCellStyle.vAlign = VAlignType.center;
-    defaultCellStyle.borders.top.color = '#F59723';
+    defaultCellStyle.borders.top.color = '#00B036';
     defaultCellStyle.borders.top.lineStyle = LineStyle.thin;
-    defaultCellStyle.borders.bottom.color = '#F59723';
+    defaultCellStyle.borders.bottom.color = '#00B036';
     defaultCellStyle.borders.bottom.lineStyle = LineStyle.thin;
-    defaultCellStyle.borders.left.color = '#F59723';
+    defaultCellStyle.borders.left.color = '#00B036';
     defaultCellStyle.borders.left.lineStyle = LineStyle.thin;
-    defaultCellStyle.borders.right.color = '#F59723';
+    defaultCellStyle.borders.right.color = '#00B036';
     defaultCellStyle.borders.right.lineStyle = LineStyle.thin;
     workbook.styles.addStyle(defaultCellStyle as CellStyle);
 
@@ -500,65 +627,97 @@ class ExcelGenerator {
       range.setText(
           '${trainDuration.inHours.remainder(60).toString().padLeft(2, '0')}:${trainDuration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${trainDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}');
 
-      // Предельный пульс
+      // Дистанция
       range = sheet.getRangeByIndex(i, 5);
+      range.setNumber(player.distance.toDouble());
+      range.cellStyle = defaultCellStyle;
+
+      // Средний темп
+      range = sheet.getRangeByIndex(i, 6);
+      range.setText("00:00");
+      range.cellStyle = defaultCellStyle;
+
+
+      // Предельный пульс
+      range = sheet.getRangeByIndex(i, 7);
       range.setNumber(StatsCalculator.calculatedPulseAtMaximum(player));
       range.cellStyle = defaultCellStyle;
 
       // Максимальный пульс
-      range = sheet.getRangeByIndex(i, 6);
+      range = sheet.getRangeByIndex(i, 8);
       range.setNumber(StatsCalculator.calculateMaxPulse(player).toDouble());
       range.cellStyle = defaultCellStyle;
 
       // Средний пульс
-      range = sheet.getRangeByIndex(i, 7);
+      range = sheet.getRangeByIndex(i, 9);
       range.setNumber(StatsCalculator.calculateAvgPulse(player).toDouble());
       range.cellStyle = defaultCellStyle;
 
+      // VO2max
+      range = sheet.getRangeByIndex(i, 10);
+      range.setNumber(StatsCalculator.calculatedVo2max(player).toDouble());
+      range.cellStyle = defaultCellStyle;
+
       // Интенсивность
-      range = sheet.getRangeByIndex(i, 8);
+      range = sheet.getRangeByIndex(i, 11);
       range.cellStyle = defaultCellStyle;
       range.setNumber(StatsCalculator.calculatedIntensity(player) / 100.0);
       range.numberFormat = '0%';
 
+      // Зоны ЧСС
       final hrStats = StatsCalculator.getHrStats(player.hrMeasures);
-      range = sheet.getRangeByIndex(i, 9);
+      range = sheet.getRangeByIndex(i, 12);
       range.cellStyle = defaultCellStyle;
       range.setNumber(hrStats[0]);
       range.numberFormat = '0%';
 
-      range = sheet.getRangeByIndex(i, 10);
+      range = sheet.getRangeByIndex(i, 13);
       range.cellStyle = defaultCellStyle;
       range.setNumber(hrStats[1]);
       range.numberFormat = '0%';
 
-      range = sheet.getRangeByIndex(i, 11);
+      range = sheet.getRangeByIndex(i, 14);
       range.cellStyle = defaultCellStyle;
       range.setNumber(hrStats[2]);
       range.numberFormat = '0%';
 
       // Всего
-      range = sheet.getRangeByIndex(i, 12);
+      range = sheet.getRangeByIndex(i, 15);
       range.setNumber(StatsCalculator.getCalories(player).toDouble());
       range.cellStyle = defaultCellStyle;
 
       // Жиры
-      range = sheet.getRangeByIndex(i, 13);
+      range = sheet.getRangeByIndex(i, 16);
       range.setNumber(StatsCalculator.getFats(player).toDouble());
       range.cellStyle = defaultCellStyle;
 
       // Углеводы
-      range = sheet.getRangeByIndex(i, 14);
+      range = sheet.getRangeByIndex(i, 17);
       range.setNumber(StatsCalculator.getProteins(player).toDouble());
       range.cellStyle = defaultCellStyle;
 
+      // Средняя скорость
+      range = sheet.getRangeByIndex(i, 18);
+      range.setText(player.avgSpeedKph.toStringAsFixed(1));
+      range.cellStyle = defaultCellStyle;
+
+      // Макс скорость
+      range = sheet.getRangeByIndex(i, 19);
+      range.setText(player.maxSpeedKph.toStringAsFixed(1));
+      range.cellStyle = defaultCellStyle;
+
+      // Ускорения
+      range = sheet.getRangeByIndex(i, 20);
+      range.setNumber(20);
+      range.cellStyle = defaultCellStyle;
+
       // Оценка нагрузки
-      range = sheet.getRangeByIndex(i, 15);
+      range = sheet.getRangeByIndex(i, 21);
       range.setNumber(0); // rating player.rating.toDouble()
       range.cellStyle = defaultCellStyle;
 
       // Trimp
-      range = sheet.getRangeByIndex(i, 16);
+      range = sheet.getRangeByIndex(i, 22);
       range.setNumber(StatsCalculator.getTrimp(player).toDouble());
       range.cellStyle = defaultCellStyle;
       range.cellStyle.borders.right.lineStyle = LineStyle.medium;
@@ -573,7 +732,7 @@ class ExcelGenerator {
 
     // Трехцветная шкала интенсивности
     var conditionalFormats =
-        sheet.getRangeByName('H$startIndex:H$offset').conditionalFormats;
+        sheet.getRangeByName('K$startIndex:K$offset').conditionalFormats;
     var condition = conditionalFormats.addCondition();
     condition.formatType = ExcelCFType.colorScale;
     var colorScale = condition.colorScale!;
@@ -593,7 +752,7 @@ class ExcelGenerator {
 
     // Трехцветная шкала 90 100
     conditionalFormats =
-        sheet.getRangeByName('K$startIndex:K$offset').conditionalFormats;
+        sheet.getRangeByName('N$startIndex:N$offset').conditionalFormats;
     condition = conditionalFormats.addCondition();
     condition.formatType = ExcelCFType.colorScale;
     colorScale = condition.colorScale!;
@@ -613,7 +772,7 @@ class ExcelGenerator {
 
     // Трехцветная шкала Trimp
     conditionalFormats =
-        sheet.getRangeByName('P$startIndex:P$offset').conditionalFormats;
+        sheet.getRangeByName('V$startIndex:V$offset').conditionalFormats;
     condition = conditionalFormats.addCondition();
     condition.formatType = ExcelCFType.colorScale;
     colorScale = condition.colorScale!;

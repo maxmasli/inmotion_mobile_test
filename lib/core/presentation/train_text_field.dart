@@ -26,7 +26,7 @@ class TrainTextField extends StatelessWidget {
       inputFormatters: inputFormatters,
       keyboardType: textInputType,
       controller: controller,
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.start,
       style: theme.textTheme.titleSmall,
       onChanged: onChanged,
       decoration: InputDecoration(
