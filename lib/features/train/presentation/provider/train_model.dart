@@ -6,6 +6,8 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/domain/usecases/usecase.dart';
 import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
 import 'package:inmotion_mobile_test/di.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/demo_player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_info_entity.dart';
@@ -154,35 +156,80 @@ class TrainModel extends ChangeNotifier {
     );
   }
 
+  ///DEMO
+  void _startDemoScanning() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      ///DEMO players
+      for (final player in _players) {
+        if (player is DemoPlayerEntity) {
+          if (!_isTrainStart) {
+            player.notifySensor(MeasureEntity());
+          } else {
+            player.addMeasure(MeasureEntity());
+          }
+        }
+      }
+
+      ///
+    });
+  }
+
   Future<void> _downloadDataFromDevices() async {
     log("Downloading data");
-    await _appBLEConnection.downloadDataFromPlayers(
-      selectedPlayers,
-      onPlayerDataDownload: (player, measures) {
-        player.setMeasures(measures);
+    try {
+      await _appBLEConnection.downloadDataFromPlayers(
+        selectedPlayers,
+        onPlayerDataDownload: (player, measures) {
+          player.setMeasures(measures);
+          train!.addPlayer(player);
+        },
+        onPercentUpdated: (percent) {
+          _loadingPercent = percent;
+          notifyListeners();
+        },
+        onStop: () async {
+          await _saveTrainUseCase(TrainParams(train!));
+        },
+      );
+    } catch (ex) {}
+
+    /// DEMO
+    for (final player in _selectedPlayers) {
+      if (player is DemoPlayerEntity) {
         train!.addPlayer(player);
-      },
-      onPercentUpdated: (percent) {
-        _loadingPercent = percent;
-        notifyListeners();
-      },
-      onStop: () async {
-        await _saveTrainUseCase(TrainParams(train!));
-        for (final player in players) {
-          player.clearMeasures();
-        }
-      },
-    );
+      }
+    }
+    _loadingPercent = 100;
+    await _saveTrainUseCase(TrainParams(train!));
+    notifyListeners();
+    ///
   }
 
   void init() async {
     /// Загрузка сохраненных игроков с датчиками
     _players = await _getPlayersSensorUseCase();
+
+    ///DEMO add demo players
+    final demoPlayer = DemoPlayerEntity(
+      name: "Иванов И.",
+      number: 1,
+      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 2),
+    );
+    final demoPlayer2 = DemoPlayerEntity(
+      name: "Сергеев Е.",
+      number: 10,
+      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 6),
+    );
+    final demoPlayer3 = DemoPlayerEntity(
+      name: "Петров В.",
+      number: 6,
+      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 0),
+    );
+    players.addAll([demoPlayer, demoPlayer2, demoPlayer3]);
+    ///
+
     for (final player in _players) {
       // устанавливаем слушатели на оновление статуса
-      // player.setOnSensorStatusUpdate(() {
-      //   notifyListeners();
-      // });
       player.addListener(() {
         notifyListeners();
       });
@@ -197,6 +244,9 @@ class TrainModel extends ChangeNotifier {
       }
     });
     await updateTrains();
+
+    ///DEMO
+    _startDemoScanning();
   }
 
   void toggleSelectedPlayers(PlayerEntity player) {
@@ -213,11 +263,9 @@ class TrainModel extends ChangeNotifier {
   Future<void> saveDevice(BluetoothDevice device) async {
     final player = PlayerEntity.fromDevice(
       device: device,
-    )..addListener(
-        () {
-          notifyListeners();
-        },
-      );
+    )..addListener(() {
+        notifyListeners();
+      });
 
     _foundedDevices.remove(device);
     _players.add(player);
@@ -300,9 +348,12 @@ class TrainModel extends ChangeNotifier {
   }
 
   void startRecording() {
-    _isTrainStart = true;
     assert(_trainStage == TrainStage.prepare,
         "TrainStage is not prepare. Can not start train");
+    _isTrainStart = true;
+    for (final player in _players) {
+      player.clearMeasures();
+    }
     _trainStage = TrainStage.running;
     _train = TrainEntity(
       startTime: DateTime.now(),

@@ -10,6 +10,7 @@ class ExcelGenerator {
   final workbook = Workbook();
 
   Future<String> createExcel(TrainEntity train) async {
+
     final Worksheet sheet = workbook.worksheets[0];
 
     _setSheetLayout(sheet);
@@ -791,7 +792,7 @@ class ExcelGenerator {
     colorScale.criteria[2].value = '0';
 
     // Закрашиваем низ таблицы
-    for (int i = 1; i < 17; i++) {
+    for (int i = 1; i < 23; i++) {
       sheet.getRangeByIndex(offset, i).cellStyle.borders.bottom.lineStyle =
           LineStyle.medium;
     }

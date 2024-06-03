@@ -106,7 +106,9 @@ class PlayerStatsWidget extends StatelessWidget {
             AppButton(
               borderRadius: BorderRadius.circular(16),
               padding: const EdgeInsets.all(8),
-              onTap: () {},
+              onTap: () {
+
+              },
               child: Center(
                 child: Text(
                   'Скачать Excel',

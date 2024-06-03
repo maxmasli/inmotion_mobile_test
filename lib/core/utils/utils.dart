@@ -61,7 +61,7 @@ String getPointPathBySpeed(int speed) {
 
 Future<Directory> getWorkingDirectory() async {
   if (Platform.isAndroid) {
-    return await Directory('/storage/emulated/0/Documents/Movecross').create();
+    return await Directory('/storage/emulated/0/Documents/inmotion').create();
   }
 
   final docDir = await getApplicationDocumentsDirectory();

@@ -35,14 +35,18 @@ class AppBLEConnection {
 
   //TODO rename
   void writeToDevices(Iterable<BluetoothDevice> devices, Guid guid, List<int> data) async {
-    for (final device in devices) {
-      await device.connect();
-      final service = (await device.discoverServices())
-          .firstWhere((service) => service.serviceUuid == _serviceGuid);
-      final char = service.characteristics
-          .firstWhere((char) => char.characteristicUuid == guid);
-      await char.write(data);
-      await device.disconnect();
+    try {
+      for (final device in devices) {
+        await device.connect();
+        final service = (await device.discoverServices())
+            .firstWhere((service) => service.serviceUuid == _serviceGuid);
+        final char = service.characteristics
+            .firstWhere((char) => char.characteristicUuid == guid);
+        await char.write(data);
+        await device.disconnect();
+      }
+    } catch (ex) {
+
     }
   }
 

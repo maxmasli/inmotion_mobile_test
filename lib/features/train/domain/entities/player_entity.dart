@@ -16,6 +16,7 @@ class PlayerEntity extends ChangeNotifier {
   int number;
 
   RunningType _runningType;
+
   SensorEntity? _sensor;
 
   MeasureEntity? lastMeasure;
@@ -54,11 +55,6 @@ class PlayerEntity extends ChangeNotifier {
   int get steps => _measures.lastOrNull?.steps ?? 0;
 
   int get pulse => _measures.lastOrNull?.hr ?? 0;
-
-  // List<(double x, double y, int speed)> get coordinates => _measures
-  //     .where((m) => m.latitude != null && m.longitude != null)
-  //     .map((m) => (m.latitude!, m.longitude!, m.speed?.toInt() ?? 0))
-  //     .toList();
 
   Iterable<(double x, double y, int speed)> get coordinates sync* {
     for (final m in _measures) {

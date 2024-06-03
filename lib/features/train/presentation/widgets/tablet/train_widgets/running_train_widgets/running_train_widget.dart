@@ -39,22 +39,23 @@ class _RunningTrainWidgetState extends State<RunningTrainWidget> {
               Expanded(
                 flex: 2,
                 child: PlayersList(
-                  selectedPlayer: _selectedPlayer,
-                  onPlayerSelected: (player) {
-                    setState(() {
-                      if (player == _selectedPlayer) {
-                        _selectedPlayer = null;
-                      } else {
-                        _selectedPlayer = player;
-                      }
-                    });
-                  }
-                ),
+                    selectedPlayer: _selectedPlayer,
+                    onPlayerSelected: (player) {
+                      setState(() {
+                        if (player == _selectedPlayer) {
+                          _selectedPlayer = null;
+                        } else {
+                          _selectedPlayer = player;
+                        }
+                      });
+                    }),
               ),
-              if (_selectedPlayer != null)
+              if (_selectedPlayer != null) ...[
+                const SizedBox(width: 8),
                 Expanded(
                   child: PlayerInfoWidget(player: _selectedPlayer!),
                 )
+              ],
             ],
           ),
         )
