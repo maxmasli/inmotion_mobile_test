@@ -7,6 +7,10 @@ import 'package:inmotion_mobile_test/features/train/domain/entities/player_entit
 class DemoPlayerEntity extends PlayerEntity {
   final _random = Random();
 
+  double lastLong = 82.890123;
+  double lastLat = 54.979763;
+  int lastHr = 80;
+
   DemoPlayerEntity({
     required super.name,
     required super.number,
@@ -22,12 +26,19 @@ class DemoPlayerEntity extends PlayerEntity {
 
   @override
   void addMeasure(p, [TagMeta? m]) {
+    lastLat += _random.nextDouble() / 7000;
+    lastLong += _random.nextDouble() / 7000;
+    lastHr += _random.nextInt(6) - 3;
+
+    if (lastHr < 60) lastHr = 60;
+    if (lastHr > 180) lastHr = 180;
+
     final payload = MeasureEntity(
       time: DateTime.now(),
-      hr: _random.nextInt(100) + 60,
-      latitude: _random.nextDouble() / 5000 + 54.979763,
-      longitude: _random.nextDouble() / 5000 + 82.890123,
-      speed: _random.nextInt(7) + 7,
+      hr: lastHr,
+      latitude: lastLat,
+      longitude: lastLong,
+      speed: _random.nextInt(5).toDouble(),
       steps: _random.nextInt(1000),
       distance: _random.nextInt(2000).toDouble(),
     );

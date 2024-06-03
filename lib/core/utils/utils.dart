@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
@@ -36,6 +37,7 @@ String getRunBySpeed(double speed, BuildContext context) {
 }
 
 Color getColorBySpeed(int speed) {
+  //speed in mph
   if (speed >= 8) {
     return AppColors.red;
   } else if (speed >= 5) {

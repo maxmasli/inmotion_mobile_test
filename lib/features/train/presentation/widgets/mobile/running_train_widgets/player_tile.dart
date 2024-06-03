@@ -2,6 +2,7 @@ import 'package:expansion_widget/expansion_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
+import 'package:inmotion_mobile_test/core/presentation/heartbeat_widget.dart';
 import 'package:inmotion_mobile_test/core/utils/stats_calculator.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
@@ -297,10 +298,13 @@ class _PlayerTileState extends State<PlayerTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SvgPicture.asset(
-                    AppIcons.heart,
-                    width: 14,
-                    height: 14,
+                  HeartbeatWidget(
+                    frequency: player.pulse,
+                    child: SvgPicture.asset(
+                      AppIcons.heart,
+                      width: 14,
+                      height: 14,
+                    ),
                   ),
                   Text(
                     "${player.pulse}",

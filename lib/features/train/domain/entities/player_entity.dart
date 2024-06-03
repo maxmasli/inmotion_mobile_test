@@ -58,8 +58,8 @@ class PlayerEntity extends ChangeNotifier {
 
   Iterable<(double x, double y, int speed)> get coordinates sync* {
     for (final m in _measures) {
-      if (m.latitude != null && m.longitude != null) {
-        yield (m.latitude!, m.longitude!, speedKph.toInt());
+      if (m.latitude != null && m.longitude != null && m.speed != null) {
+        yield (m.latitude!, m.longitude!, m.speed!.toInt());
       }
     }
   }

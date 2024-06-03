@@ -26,7 +26,6 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
   Iterable<MapObject> _getMapObjectsFromData(
       Iterable<(double x, double y, int speed)> data) sync* {
     Point? firstPoint;
-
     for (final d in data) {
       if (firstPoint == null) {
         firstPoint = Point(latitude: d.$1, longitude: d.$2);
@@ -41,31 +40,9 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
         strokeColor: getColorBySpeed(d.$3),
         strokeWidth: 8,
       );
-    }
 
-    // yield PolylineMapObject(
-    //     mapId: MapObjectId("asd"),
-    //     polyline: Polyline(
-    //       points: data
-    //           .map((data) => Point(latitude: data.$1, longitude: data.$2))
-    //           .toList(),
-    //     ),
-    //     strokeColor: Colors.orange,
-    //     strokeWidth: 8);
-    //
-    // final last = data.lastOrNull;
-    // if (last == null) return;
-    //
-    // yield PlacemarkMapObject(
-    //   mapId: const MapObjectId("123"),
-    //   point: Point(latitude: last.$1, longitude: last.$2),
-    //   icon: PlacemarkIcon.single(
-    //     PlacemarkIconStyle(
-    //       image: BitmapDescriptor.fromAssetImage('assets/icons/map_point.png'),
-    //       scale: 1,
-    //     ),
-    //   ),
-    // );
+      firstPoint = secondPoint;
+    }
   }
 
   // Future<void> moveToLastPoint() async {
@@ -139,22 +116,20 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
                 Container(
                   width: 12,
                   decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: AppColors.runColorRanges
-                    )
-                  ),
+                      gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: AppColors.runColorRanges)),
                 ),
                 const SizedBox(width: 8),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Ходьба', style: theme.textTheme.displaySmall),
-                    Text('Легкий бег', style: theme.textTheme.displaySmall),
-                    Text('Средний бег', style: theme.textTheme.displaySmall),
                     Text('Макс. скорость', style: theme.textTheme.displaySmall),
+                    Text('Средний бег', style: theme.textTheme.displaySmall),
+                    Text('Легкий бег', style: theme.textTheme.displaySmall),
+                    Text('Ходьба', style: theme.textTheme.displaySmall),
                   ],
                 )
               ],

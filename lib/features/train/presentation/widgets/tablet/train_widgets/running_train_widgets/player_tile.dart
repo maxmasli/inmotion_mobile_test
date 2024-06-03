@@ -5,6 +5,7 @@ import 'package:inmotion_mobile_test/core/utils/stats_calculator.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/running_train_widgets/ranges_widget.dart';
+import 'package:inmotion_mobile_test/core/presentation/heartbeat_widget.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 import 'package:provider/provider.dart';
 
@@ -207,10 +208,13 @@ class _PlayerTileState extends State<PlayerTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SvgPicture.asset(
-                    AppIcons.heart,
-                    width: 14,
-                    height: 14,
+                  HeartbeatWidget(
+                    frequency: player.pulse,
+                    child: SvgPicture.asset(
+                      AppIcons.heart,
+                      width: 14,
+                      height: 14,
+                    ),
                   ),
                   Text(
                     "${player.pulse}",
