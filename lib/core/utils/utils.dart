@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/settings.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -62,13 +63,22 @@ String getPointPathBySpeed(int speed) {
 }
 
 Future<Directory> getWorkingDirectory() async {
+  final now = DateTime.now();
   if (Platform.isAndroid) {
-    return await Directory('/storage/emulated/0/Documents/inmotion').create();
+    return await Directory(
+            '/storage/emulated/0/Documents/Inmotion/${now.year}${now.month}${now.day}')
+        .create();
   }
 
   final docDir = await getApplicationDocumentsDirectory();
 
   return Directory('${docDir.path}/Movecross');
+}
+
+Future<Directory> getWorkingDirectoryByTrain(TrainEntity train) async {
+  return await Directory(
+          '${(await getWorkingDirectory()).path}/${train.trainName.trim().replaceAll(" ", "_")}')
+      .create();
 }
 
 Future<void> shareFile(String path) async {

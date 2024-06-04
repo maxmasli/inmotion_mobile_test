@@ -10,7 +10,6 @@ class ExcelGenerator {
   final workbook = Workbook();
 
   Future<String> createExcel(TrainEntity train) async {
-
     final Worksheet sheet = workbook.worksheets[0];
 
     _setSheetLayout(sheet);
@@ -19,11 +18,12 @@ class ExcelGenerator {
     _addPlayers(sheet, train);
 
     // Save the workbook in file system as XLSX format.
-    final format = DateFormat("HHmmss_DDMMyy");
+    final format = DateFormat("DDMMyy_HHmmss");
     final List<int> bytes = await workbook.save();
-    final directory = await getWorkingDirectory();
-    final file = await File(
-        '${directory.path}/${format.format(train.startTime)}.xlsx')
+    final directory = await getWorkingDirectoryByTrain(train);
+
+    final file = await File('${directory.path}'
+            '/общая_тренировка_${format.format(train.startTime)}.xlsx')
         .writeAsBytes(bytes);
     return file.path;
   }
@@ -31,7 +31,7 @@ class ExcelGenerator {
   void _setSheetLayout(Worksheet sheet) {
     // Фиксируем верхнюю часть
     sheet.getRangeByName('A10:V10').freezePanes();
-    
+
     sheet.getRangeByName('A1').columnWidth = 4.43;
     sheet.getRangeByName('B1').columnWidth = 17.86;
     sheet.getRangeByName('C1').columnWidth = 17.86;
@@ -100,8 +100,8 @@ class ExcelGenerator {
     //Train info
     //sheet.getRangeByName('A2').setText('5 августа. Воскресенье. 12:03-13:45');
     sheet.getRangeByName('A2').setText(
-      DateFormat('dd MMMM, EEEE, HH:mm', 'ru').format(train.startTime),
-    );
+          DateFormat('dd MMMM, EEEE, HH:mm', 'ru').format(train.startTime),
+        );
     sheet.getRangeByName('A2').cellStyle.fontSize = 18;
     sheet.getRangeByName('A2').cellStyle.hAlign = HAlignType.left;
     sheet.getRangeByName('A2').cellStyle.vAlign = VAlignType.center;
@@ -129,8 +129,8 @@ class ExcelGenerator {
   }
 
   void _buildTableTitle(
-      Worksheet sheet,
-      ) {
+    Worksheet sheet,
+  ) {
     //Styling table titles
     sheet.getRangeByName('A8:V9').cellStyle.backColor = '#BFEBCC';
 
@@ -385,7 +385,6 @@ class ExcelGenerator {
     range.cellStyle.borders.left.color = '#00B036';
     range.cellStyle.borders.left.lineStyle = LineStyle.thin;
 
-
 ///////
     range = sheet.getRangeByName('A8');
     range.setText('№');
@@ -637,7 +636,6 @@ class ExcelGenerator {
       range = sheet.getRangeByIndex(i, 6);
       range.setText("00:00");
       range.cellStyle = defaultCellStyle;
-
 
       // Предельный пульс
       range = sheet.getRangeByIndex(i, 7);
