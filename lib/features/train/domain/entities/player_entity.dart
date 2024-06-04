@@ -54,7 +54,7 @@ class PlayerEntity extends ChangeNotifier {
 
   int get steps => _measures.lastOrNull?.steps ?? 0;
 
-  int get pulse => _measures.lastOrNull?.hr ?? 0;
+  int get pulse => _measures.lastOrNull?.hr ?? 60;
 
   Iterable<(double x, double y, int speed)> get coordinates sync* {
     for (final m in _measures) {

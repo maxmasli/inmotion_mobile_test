@@ -104,9 +104,9 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
                       color: theme.colorScheme.secondaryContainer,
                       onTap: () {
                         Navigator.pop(context, (
-                          _nameController.text,
-                          _numberController.text,
-                          _deviceNumberController.text,
+                          _nameController.text.trim(),
+                          _numberController.text.trim(),
+                          _deviceNumberController.text.trim(),
                         ));
                       },
                       borderRadius: BorderRadius.circular(8),

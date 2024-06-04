@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
+import 'package:inmotion_mobile_test/core/utils/settings.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 
@@ -10,6 +11,9 @@ class DemoPlayerEntity extends PlayerEntity {
   double lastLong = 82.890123;
   double lastLat = 54.979763;
   int lastHr = 80;
+  int lastSteps = 0;
+  int lastDistance = 0;
+  int time = 0;
 
   DemoPlayerEntity({
     required super.name,
@@ -19,7 +23,8 @@ class DemoPlayerEntity extends PlayerEntity {
 
   @override
   void notifySensor(MeasureEntity p, [TagMeta? m]) {
-    final meta = TagMeta(1, 10, 100, 1024, 1);
+    time = 0;
+    final meta = TagMeta(1, 10, 100, 1024, 0xFF);
     sensor?.notify(meta);
     notifyListeners();
   }
@@ -28,19 +33,31 @@ class DemoPlayerEntity extends PlayerEntity {
   void addMeasure(p, [TagMeta? m]) {
     lastLat += _random.nextDouble() / 7000;
     lastLong += _random.nextDouble() / 7000;
-    lastHr += _random.nextInt(6) - 3;
+    lastHr += _random.nextInt(7) - 3;
+    lastSteps += _random.nextInt(7);
+    lastDistance += _random.nextInt(5);
+    time++;
 
-    if (lastHr < 60) lastHr = 60;
-    if (lastHr > 180) lastHr = 180;
+    if (time < 30) {
+      if (lastHr < 60) lastHr = 60;
+      if (lastHr > Settings.lightLoad) lastHr = Settings.lightLoad;
+    } else if (time < 60) {
+      if (lastHr < Settings.lightLoad) lastHr = Settings.lightLoad;
+      if (lastHr > Settings.anaerobicMode) lastHr = Settings.anaerobicMode;
+    } else {
+      if (lastHr < Settings.anaerobicMode) lastHr = Settings.anaerobicMode;
+      if (lastHr > Settings.maximumIntensity) lastHr = Settings.maximumIntensity;
+    }
+
 
     final payload = MeasureEntity(
       time: DateTime.now(),
       hr: lastHr,
       latitude: lastLat,
       longitude: lastLong,
-      speed: _random.nextInt(5).toDouble(),
-      steps: _random.nextInt(1000),
-      distance: _random.nextInt(2000).toDouble(),
+      speed: _random.nextInt(10).toDouble(),
+      steps: lastSteps,
+      distance: lastDistance.toDouble(),
     );
 
     final meta = TagMeta(1, 10, 100, 1024, 0xFF);

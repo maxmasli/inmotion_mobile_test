@@ -77,8 +77,8 @@ class _TrainEditDialogState extends State<TrainEditDialog> {
                       color: theme.colorScheme.secondaryContainer,
                       onTap: () {
                         Navigator.pop(context, (
-                          _nameController.text,
-                          _descrController.text,
+                          _nameController.text.trim(),
+                          _descrController.text.trim(),
                         ));
                       },
                       borderRadius: BorderRadius.circular(8),
