@@ -23,7 +23,7 @@ class PlayersList extends StatelessWidget {
         maxCrossAxisExtent: 400,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
-        mainAxisExtent: 80,
+        mainAxisExtent: 76,
       ),
       itemBuilder: (context, index) {
         return PlayerTile(

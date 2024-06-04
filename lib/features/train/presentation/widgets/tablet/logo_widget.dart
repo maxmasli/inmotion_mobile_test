@@ -11,7 +11,7 @@ class LogoWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
-        vertical: 16,
+        vertical: 26,
       ),
       decoration: BoxDecoration(
         color: theme.colorScheme.secondaryContainer,

@@ -18,13 +18,14 @@ class PlayerTile extends StatelessWidget {
   Future<void> openEditDialog(BuildContext context, TrainModel model) async {
     final data = await showDialog<(String, String, String)>(
       context: context,
+      barrierColor: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.5),
       builder: (context) {
         return PlayerEditDialog(
           initFields: (
             name: player.name,
             number: player.number.toString(),
             deviceNumber: player.sensor!.number.toString(),
-            deviceName: player.sensor!.device.advName,
+            deviceName: player.sensor!.device.remoteId.str,
           ),
         );
       },
@@ -45,19 +46,24 @@ class PlayerTile extends StatelessWidget {
         child: Consumer<PlayerEntity>(
           builder: (context, player, child) {
             return AppContainer(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+              padding: const EdgeInsets.only(left: 4, right: 8),
               borderRadius: BorderRadius.circular(16),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Switch(
-                    value: selectedPlayers.contains(player),
-                    onChanged: (val) {
-                      model.toggleSelectedPlayers(player);
-                    },
+                  Transform.scale(
+                    scale: 0.8,
+                    child: Switch(
+                      value: selectedPlayers.contains(player),
+                      onChanged: (val) {
+                        model.toggleSelectedPlayers(player);
+                      },
+                    ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 2),
                   Expanded(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
@@ -78,10 +84,10 @@ class PlayerTile extends StatelessWidget {
                   AppIconButton(
                     icon: SvgPicture.asset(AppIcons.edit),
                     onPressed: () async => await openEditDialog(context, model),
-                    size: 30,
+                    size: 26,
                   ),
                   const SizedBox(width: 8),
-                  SvgPicture.asset(AppIcons.battery100, height: 30),
+                  SvgPicture.asset(AppIcons.battery100, height: 26),
                   const SizedBox(width: 8),
                   _IndicatorWidget(sensor: player.sensor!),
                 ],
@@ -106,7 +112,7 @@ class _HrInfoWidget extends StatelessWidget {
         builder: (context, sensor, child) {
           return SvgPicture.asset(
             AppIcons.heartSmall,
-            width: 20,
+            width: 16,
             colorFilter: ColorFilter.mode(
               sensor.isHrOk ? AppColors.gray186 : theme.colorScheme.error,
               BlendMode.srcIn,

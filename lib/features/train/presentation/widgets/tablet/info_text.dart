@@ -14,11 +14,11 @@ class InfoText extends StatelessWidget {
         children: [
           Text(
             "inmotion-sports.tech",
-            style: theme.textTheme.displaySmall,
+            style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           Text(
             "info@inmotion-sports.tech",
-            style: theme.textTheme.displaySmall,
+            style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(
@@ -28,7 +28,7 @@ class InfoText extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             "Подробнее",
-            style: theme.textTheme.displaySmall,
+            style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),

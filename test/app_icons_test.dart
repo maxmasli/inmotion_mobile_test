@@ -13,6 +13,7 @@ void main() {
     expect(File(AppIcons.battery100).existsSync(), isTrue);
     expect(File(AppIcons.bluePoint).existsSync(), isTrue);
     expect(File(AppIcons.edit).existsSync(), isTrue);
+    expect(File(AppIcons.editThin).existsSync(), isTrue);
     expect(File(AppIcons.error).existsSync(), isTrue);
     expect(File(AppIcons.exit).existsSync(), isTrue);
     expect(File(AppIcons.greenPoint).existsSync(), isTrue);

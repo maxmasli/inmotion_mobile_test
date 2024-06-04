@@ -9,6 +9,7 @@ class AppButton extends StatelessWidget {
     this.height,
     this.padding,
     this.borderRadius,
+    this.color,
   });
 
   final VoidCallback? onTap;
@@ -17,6 +18,7 @@ class AppButton extends StatelessWidget {
   final Widget child;
   final double? width;
   final double? height;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class AppButton extends StatelessWidget {
           child: Ink(
             decoration: BoxDecoration(
               borderRadius: borderRadius,
-              color: theme.colorScheme.tertiaryContainer,
+              color: color ?? theme.colorScheme.tertiaryContainer,
             ),
             padding: padding,
             width: width,

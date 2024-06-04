@@ -108,8 +108,8 @@ TextTheme _baseTextTheme(bool isDark) {
       //------------------------
       displaySmall: TextStyle(
         fontFamily: 'Roboto',
-        fontSize: 12,
-        color: AppColors.gray134,
+        fontSize: 11,
+        color: AppColors.gray158,
       ),
       displayMedium: TextStyle(
         fontFamily: 'Roboto',
@@ -124,12 +124,12 @@ TextTheme _baseTextTheme(bool isDark) {
       //------------------------
       labelSmall: TextStyle(
         fontFamily: 'Roboto',
-        fontSize: 14,
+        fontSize: 12,
         color: Colors.white,
       ),
       labelMedium: TextStyle(
         fontFamily: 'Roboto',
-        fontSize: 17,
+        fontSize: 17 - 0,
         color: Colors.black,
       ),
       labelLarge: TextStyle(
@@ -145,7 +145,7 @@ TextTheme _baseTextTheme(bool isDark) {
       ),
       headlineMedium: TextStyle(
         fontFamily: 'Roboto',
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: FontWeight.w600,
         color: Colors.black,
       ),
@@ -163,9 +163,9 @@ TextTheme _baseTextTheme(bool isDark) {
       ),
       bodyMedium: TextStyle(
         fontFamily: 'Roboto',
-        fontSize: 17,
+        fontSize: 16,
         color: AppColors.gray134,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.normal,
       ),
     );
   }

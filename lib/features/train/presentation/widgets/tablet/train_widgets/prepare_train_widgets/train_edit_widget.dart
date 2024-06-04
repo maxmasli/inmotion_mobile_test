@@ -32,6 +32,7 @@ class TrainEditWidget extends StatelessWidget {
     final model = context.read<TrainModel>();
     final result = await showDialog<(String name, String description)>(
       context: context,
+      barrierColor: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.5),
       builder: (context) => TrainEditDialog(
         initFields: (
           name: model.trainInfo.name,
@@ -52,7 +53,7 @@ class TrainEditWidget extends StatelessWidget {
       selector: (context, model) => model.trainInfo,
       builder: (context, trainInfo, child) {
         return AppContainer(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(16),
           width: double.infinity,
           borderRadius: BorderRadius.circular(16),
           child: Column(
@@ -64,9 +65,10 @@ class TrainEditWidget extends StatelessWidget {
                   Text(
                     'Подготовка к тренировке',
                     style:
-                        theme.textTheme.headlineMedium?.copyWith(fontSize: 16),
+                        theme.textTheme.headlineMedium?.copyWith(fontSize: 14),
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(trainInfo.name.isNotEmpty ? trainInfo.name : "Тренировка", style: theme.textTheme.bodySmall),
                       Text(formatCurrentDateTime(DateTime.now()),
@@ -76,11 +78,7 @@ class TrainEditWidget extends StatelessWidget {
                   AppIconButton(
                     size: 40,
                     icon: SvgPicture.asset(
-                      AppIcons.edit,
-                      colorFilter: ColorFilter.mode(
-                        theme.textTheme.displaySmall!.color!,
-                        BlendMode.srcIn,
-                      ),
+                      AppIcons.editThin,
                     ),
                     onPressed: () async {
                       await _editTrain(context);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_button.dart';
 
 class TrainEditDialog extends StatefulWidget {
   const TrainEditDialog({
@@ -29,7 +30,7 @@ class _TrainEditDialogState extends State<TrainEditDialog> {
     final theme = Theme.of(context);
     return AlertDialog(
       title: Text(
-        'Редактировать тренировку',
+        'Данные о тренировке',
         style: theme.textTheme.titleMedium,
       ),
       content: ConstrainedBox(
@@ -68,33 +69,51 @@ class _TrainEditDialogState extends State<TrainEditDialog> {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      color: theme.colorScheme.secondaryContainer,
+                      onTap: () {
+                        Navigator.pop(context, (
+                          _nameController.text,
+                          _descrController.text,
+                        ));
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      padding: const EdgeInsets.all(8),
+                      child: Center(
+                        child: Text(
+                          "Сохранить",
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: AppButton(
+                      color: theme.colorScheme.secondaryContainer,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      padding: const EdgeInsets.all(8),
+                      child: Center(
+                        child: Text(
+                          "Отмена",
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            "Отменить",
-            style: theme.textTheme.titleSmall,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context, (
-              _nameController.text,
-              _descrController.text,
-            ));
-          },
-          child: Text(
-            "Сохранить",
-            style: theme.textTheme.titleSmall,
-          ),
-        ),
-      ],
     );
   }
 }

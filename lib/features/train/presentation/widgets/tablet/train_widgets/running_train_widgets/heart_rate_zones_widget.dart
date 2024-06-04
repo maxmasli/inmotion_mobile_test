@@ -20,6 +20,7 @@ class HeartRateZonesWidget extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _ZoneLabel(
                 color: AppColors.red,
@@ -46,7 +47,8 @@ class HeartRateZonesWidget extends StatelessWidget {
                 text: 'Умеренная активность',
               ),
             ],
-          )
+          ),
+          const SizedBox(height: 4),
         ],
       ),
     );
@@ -65,8 +67,8 @@ class _ZoneLabel extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 12,
-          height: 12,
+          width: 10,
+          height: 10,
           child: ClipOval(
             child: ColoredBox(
               color: color,

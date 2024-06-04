@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/sheet_button.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
 
 class PlayerTile extends StatelessWidget {
@@ -37,7 +38,7 @@ class PlayerTile extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            _SheetButton(
+            SheetButton(
               padding: const EdgeInsets.all(4),
               onPressed: onButtonPressed,
               child: Center(
@@ -50,48 +51,6 @@ class PlayerTile extends StatelessWidget {
             const SizedBox(width: 10),
             SvgPicture.asset(AppIcons.arrowRight)
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SheetButton extends StatelessWidget {
-  const _SheetButton({
-    super.key,
-    required this.onPressed,
-    this.borderRadius,
-    required this.child,
-    this.padding,
-  });
-
-  final VoidCallback onPressed;
-  final BorderRadius? borderRadius;
-  final EdgeInsets? padding;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Material(
-      color: Colors.transparent,
-      borderRadius: borderRadius ?? BorderRadius.circular(16),
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: borderRadius ?? BorderRadius.circular(16),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            borderRadius: borderRadius ?? BorderRadius.circular(16),
-            border: Border.all(
-                color: theme.primaryColor.withOpacity(0.5), width: 3),
-          ),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              minWidth: 80,
-            ),
-            child: child,
-          ),
         ),
       ),
     );

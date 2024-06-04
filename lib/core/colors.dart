@@ -4,6 +4,7 @@ abstract class AppColors {
   static const Color gray19 = Color.fromARGB(255, 19, 19, 19);
   static const Color gray73 = Color.fromARGB(255, 73, 73, 73);
   static const Color gray134 = Color.fromARGB(255, 134, 134, 134);
+  static const Color gray158 = Color.fromARGB(255, 158, 158, 158);
   static const Color gray186 = Color.fromARGB(255, 186, 186, 186);
   static const Color gray239 = Color.fromARGB(255, 239, 239, 239);
   static const Color green = Color.fromARGB(255, 0, 176, 54);

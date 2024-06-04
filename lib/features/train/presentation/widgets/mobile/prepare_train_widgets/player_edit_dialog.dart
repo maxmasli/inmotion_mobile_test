@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_button.dart';
 
 class PlayerEditDialog extends StatefulWidget {
   const PlayerEditDialog({super.key, required this.initFields});
@@ -35,8 +36,10 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(widget.initFields.deviceName,
-          style: theme.textTheme.titleMedium),
+      title: Text(
+        "ID: ${widget.initFields.deviceName}",
+        style: theme.textTheme.titleMedium,
+      ),
       content: ConstrainedBox(
         constraints: const BoxConstraints(minWidth: 400),
         child: SingleChildScrollView(
@@ -93,34 +96,52 @@ class _PlayerEditDialogState extends State<PlayerEditDialog> {
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      color: theme.colorScheme.secondaryContainer,
+                      onTap: () {
+                        Navigator.pop(context, (
+                          _nameController.text,
+                          _numberController.text,
+                          _deviceNumberController.text,
+                        ));
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      padding: const EdgeInsets.all(8),
+                      child: Center(
+                        child: Text(
+                          "Сохранить",
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: AppButton(
+                      color: theme.colorScheme.secondaryContainer,
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      padding: const EdgeInsets.all(8),
+                      child: Center(
+                        child: Text(
+                          "Отмена",
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            "Отменить",
-            style: theme.textTheme.titleSmall,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context, (
-              _nameController.text,
-              _numberController.text,
-              _deviceNumberController.text,
-            ));
-          },
-          child: Text(
-            "Сохранить",
-            style: theme.textTheme.titleSmall,
-          ),
-        ),
-      ],
     );
   }
 }

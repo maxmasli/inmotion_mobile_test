@@ -19,84 +19,93 @@ class TrainDescriptionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return AppContainer(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      borderRadius: BorderRadius.circular(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                DateFormat('d MMMM HH:mm', 'ru').format(train.startTime),
-                style: theme.textTheme.headlineMedium,
-              ),
-              Text(
-                train.trainName,
-                style: theme.textTheme.bodyMedium,
-              )
-            ],
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: 105),
+      child: AppContainer(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        borderRadius: BorderRadius.circular(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Время тренировки: ",
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      TextSpan(
-                        text: formatDuration(
-                            train.endTime!.difference(train.startTime)),
-                        style: theme.textTheme.headlineMedium,
-                      ),
-                    ],
-                  ),
+                Text(
+                  DateFormat('d MMMM HH:mm', 'ru').format(train.startTime),
+                  style: theme.textTheme.headlineMedium,
                 ),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Описание тренировки: ',
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                      TextSpan(
-                        text: train.trainDescription,
-                        style: theme.textTheme.displaySmall,
-                      ),
-                    ],
-                  ),
+                Text(
+                  train.trainName,
+                  style: theme.textTheme.bodyMedium,
                 )
               ],
             ),
-          ),
-          const SizedBox(width: 20),
-          ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 160,
-            ),
-            child: TextButton(
-              onPressed: onBackPressed,
-              child: Row(
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SvgPicture.asset(AppIcons.arrowLeft),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: Text(
-                      'Назад к списку игроков',
-                      style: theme.textTheme.titleSmall,
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Время тренировки: ",
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        TextSpan(
+                          text: formatDuration(
+                              train.endTime!.difference(train.startTime)),
+                          style: theme.textTheme.headlineMedium,
+                        ),
+                      ],
                     ),
                   ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Описание тренировки: ',
+                              style: theme.textTheme.headlineSmall,
+                            ),
+                            TextSpan(
+                              text: train.trainDescription,
+                              style: theme.textTheme.displaySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
-          )
-        ],
+            const SizedBox(width: 20),
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 160,
+              ),
+              child: TextButton(
+                onPressed: onBackPressed,
+                child: Row(
+                  children: [
+                    SvgPicture.asset(AppIcons.arrowLeft),
+                    const SizedBox(width: 10),
+                    Flexible(
+                      child: Text(
+                        'Назад к списку игроков',
+                        style: theme.textTheme.titleSmall,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

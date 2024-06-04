@@ -11,6 +11,7 @@ class AppIcons {
   static const String battery100 = 'assets/icons/battery_100.svg';
   static const String bluePoint = 'assets/icons/blue_point.png';
   static const String edit = 'assets/icons/edit.svg';
+  static const String editThin = 'assets/icons/edit_thin.svg';
   static const String error = 'assets/icons/error.svg';
   static const String exit = 'assets/icons/exit.svg';
   static const String greenPoint = 'assets/icons/green_point.png';

@@ -56,7 +56,7 @@ class SideBarWidget extends StatelessWidget {
             isSelected: false,
           ),
         ),
-        InfoText(),
+        const InfoText(),
       ],
     );
   }

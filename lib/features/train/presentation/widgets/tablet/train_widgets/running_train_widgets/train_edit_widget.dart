@@ -53,11 +53,12 @@ class TrainEditWidget extends StatelessWidget {
       builder: (context, trainInfo, child) {
         return AppContainer(
           borderRadius: BorderRadius.circular(16),
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(trainInfo.name, style: theme.textTheme.bodySmall),
                   Text(
@@ -68,9 +69,7 @@ class TrainEditWidget extends StatelessWidget {
               ),
               AppIconButton(
                 icon: SvgPicture.asset(
-                  AppIcons.edit,
-                  colorFilter: ColorFilter.mode(
-                      theme.textTheme.displaySmall!.color!, BlendMode.srcIn),
+                  AppIcons.editThin,
                 ),
                 onPressed: () async {
                   await _editTrain(context);

@@ -26,7 +26,7 @@ class PlayersList extends StatelessWidget {
           padding: EdgeInsets.zero,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            childAspectRatio: 4.2,
+            childAspectRatio: 4.7,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),

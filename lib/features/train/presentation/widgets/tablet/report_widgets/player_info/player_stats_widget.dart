@@ -64,30 +64,35 @@ class PlayerStatsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
+                  flex: 2,
                   child: _InfoWidget(
                     value: "${StatsCalculator.calculateMaxPulse(player)}",
                     info: "Макс. HR",
                   ),
                 ),
                 Expanded(
+                  flex: 2,
                   child: _InfoWidget(
                     value: "${StatsCalculator.calculateMinPulse(player)}",
                     info: "Мин. HR",
                   ),
                 ),
                 Expanded(
+                  flex: 2,
                   child: _InfoWidget(
                     value: "${StatsCalculator.calculateAvgPulse(player)}",
                     info: "Средн. HR",
                   ),
                 ),
                 Expanded(
+                  flex: 3,
                   child: _InfoWidget(
                     value: "${player.distance}",
                     info: "Пройденное расстояние",
                   ),
                 ),
                 Expanded(
+                  flex: 3,
                   child: _InfoWidget(
                     value: "${player.avgSpeedKph.toInt()} км/ч",
                     info: "Средн. скорость",
@@ -106,9 +111,7 @@ class PlayerStatsWidget extends StatelessWidget {
             AppButton(
               borderRadius: BorderRadius.circular(16),
               padding: const EdgeInsets.all(8),
-              onTap: () {
-
-              },
+              onTap: () {},
               child: Center(
                 child: Text(
                   'Скачать Excel',
@@ -142,6 +145,7 @@ class _InfoWidget extends StatelessWidget {
           value,
           style: theme.textTheme.labelMedium?.copyWith(
             fontWeight: FontWeight.bold,
+            fontSize: 14,
           ),
           textAlign: TextAlign.center,
         ),
