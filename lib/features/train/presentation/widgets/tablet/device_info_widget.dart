@@ -34,7 +34,7 @@ class DeviceInfoWidget extends StatelessWidget {
           const SizedBox(width: 20),
           const RoundNumberWidget(
             number: 0,
-            color: AppColors.yellow,
+            color: AppColors.orange,
           ),
           const SizedBox(width: 10),
           Text(

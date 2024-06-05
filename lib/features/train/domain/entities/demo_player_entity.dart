@@ -14,6 +14,7 @@ class DemoPlayerEntity extends PlayerEntity {
   int lastSteps = 0;
   int lastDistance = 0;
   int time = 0;
+  int lastSpeed = 0;
 
   DemoPlayerEntity({
     required super.name,
@@ -36,6 +37,7 @@ class DemoPlayerEntity extends PlayerEntity {
     lastHr += _random.nextInt(7) - 3;
     lastSteps += _random.nextInt(7);
     lastDistance += _random.nextInt(5);
+    lastSpeed += _random.nextInt(6) - 3;
     time++;
 
     if (time < 30) {
@@ -46,8 +48,11 @@ class DemoPlayerEntity extends PlayerEntity {
       if (lastHr > Settings.anaerobicMode) lastHr = Settings.anaerobicMode;
     } else {
       if (lastHr < Settings.anaerobicMode) lastHr = Settings.anaerobicMode;
-      if (lastHr > Settings.maximumIntensity) lastHr = Settings.maximumIntensity;
+      if (lastHr > Settings.maximumIntensity + 10) lastHr = Settings.maximumIntensity + 10;
     }
+
+    if (lastSpeed < 0) lastSpeed = 0;
+    if (lastSpeed > 10) lastSpeed = 10;
 
 
     final payload = MeasureEntity(
@@ -55,7 +60,7 @@ class DemoPlayerEntity extends PlayerEntity {
       hr: lastHr,
       latitude: lastLat,
       longitude: lastLong,
-      speed: _random.nextInt(10).toDouble(),
+      speed: lastSpeed.toDouble(),
       steps: lastSteps,
       distance: lastDistance.toDouble(),
     );

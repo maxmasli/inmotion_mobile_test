@@ -14,15 +14,19 @@ class PlayerMapWidget extends StatefulWidget {
 class _PlayerMapWidgetState extends State<PlayerMapWidget> {
   late final YandexMapController _mapController;
 
+  Polyline _getPolyline(Iterable<(double x, double y, int speed)> data) {
+    return Polyline(
+      points: data
+          .map((data) => Point(latitude: data.$1, longitude: data.$2))
+          .toList(),
+    );
+  }
+
   Iterable<MapObject> _getMapObjectsFromData(
       Iterable<(double x, double y, int speed)> data) sync* {
     yield PolylineMapObject(
-        mapId: MapObjectId("asd"),
-        polyline: Polyline(
-          points: data
-              .map((data) => Point(latitude: data.$1, longitude: data.$2))
-              .toList(),
-        ),
+        mapId: const MapObjectId("asd"),
+        polyline: _getPolyline(data),
         strokeColor: Colors.orange,
         strokeWidth: 8);
 
@@ -47,9 +51,8 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
     final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: theme.primaryColor)
-      ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: theme.primaryColor)),
       height: height,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
@@ -72,7 +75,7 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
                             latitude: last?.$1 ?? 50,
                             longitude: last?.$2 ?? 20,
                           ),
-                          zoom: 30,
+                          zoom: 16,
                         ),
                       ),
                     );
@@ -82,25 +85,45 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
                 Positioned(
                   top: 0,
                   right: 0,
-                  child: IconButton(
-                    onPressed: () async {
-                      final last = cords.lastOrNull;
-                      if (last == null) return;
-                      await _mapController.moveCamera(
-                        CameraUpdate.newCameraPosition(
-                          CameraPosition(
-                            target: Point(
-                              latitude: last.$1,
-                              longitude: last.$2,
+                  child: Column(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          final last = cords.lastOrNull;
+                          if (last == null) return;
+                          await _mapController.moveCamera(
+                            CameraUpdate.newCameraPosition(
+                              CameraPosition(
+                                target: Point(
+                                  latitude: last.$1,
+                                  longitude: last.$2,
+                                ),
+                                zoom: 16,
+                              ),
                             ),
-                            zoom: 30,
-                          ),
-                        ),
-                        animation: const MapAnimation(
-                            duration: 0.5, type: MapAnimationType.smooth),
-                      );
-                    },
-                    icon: const Icon(Icons.navigation_outlined),
+                            animation: const MapAnimation(
+                                duration: 0.5, type: MapAnimationType.smooth),
+                          );
+                        },
+                        icon: const Icon(Icons.navigation_outlined),
+                      ),
+
+                      IconButton(
+                        onPressed: () async {
+                          _mapController.moveCamera(
+                            CameraUpdate.newGeometry(
+                              Geometry.fromPolyline(
+                                  _getPolyline(cords)
+                              ),
+                            ),
+                            // animation: const MapAnimation(
+                            //     duration: 0.5, type: MapAnimationType.linear),
+                          );
+                          _mapController.moveCamera(CameraUpdate.zoomOut());
+                        },
+                        icon: const Icon(Icons.map_outlined),
+                      ),
+                    ],
                   ),
                 ),
                 Positioned(

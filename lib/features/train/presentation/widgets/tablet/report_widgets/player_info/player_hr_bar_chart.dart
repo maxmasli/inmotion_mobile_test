@@ -13,11 +13,11 @@ class PlayerHrBarChart extends StatelessWidget {
     // TODO intl
     final hrStats = StatsCalculator.getHrStats(player.hrMeasures);
     return [
-      ChartData('Умеренная активность', (hrStats[0] * 100).toInt()),
-      ChartData('Легкая нагрузка', (hrStats[1] * 100).toInt()),
-      ChartData('Аэробный режим', (hrStats[2] * 100).toInt()),
-      ChartData('Анаэробный режим', (hrStats[3] * 100).toInt()),
-      ChartData('Макс. интенсивность', (hrStats[4] * 100).toInt()),
+      ChartData('Умеренная активность', (hrStats[0] * 100).round()),
+      ChartData('Легкая нагрузка', (hrStats[1] * 100).round()),
+      ChartData('Аэробный режим', (hrStats[2] * 100).round()),
+      ChartData('Анаэробный режим', (hrStats[3] * 100).round()),
+      ChartData('Макс. интенсивность', (hrStats[4] * 100).round()),
     ];
   }
 

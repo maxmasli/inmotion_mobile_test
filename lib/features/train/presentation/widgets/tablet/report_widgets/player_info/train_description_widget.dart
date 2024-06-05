@@ -92,7 +92,10 @@ class TrainDescriptionWidget extends StatelessWidget {
                 onPressed: onBackPressed,
                 child: Row(
                   children: [
-                    SvgPicture.asset(AppIcons.arrowLeft),
+                    Transform.rotate(
+                      angle: 3.14,
+                      child: SvgPicture.asset(AppIcons.arrowRight),
+                    ),
                     const SizedBox(width: 10),
                     Flexible(
                       child: Text(

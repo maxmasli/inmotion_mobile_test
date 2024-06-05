@@ -48,7 +48,7 @@ class _PlayerTileState extends State<PlayerTile> {
                   decoration: BoxDecoration(
                       color: theme.colorScheme.primaryContainer,
                       border: widget.isSelected
-                          ? Border.all(color: AppColors.blue, width: 2)
+                          ? Border.all(color: AppColors.darkBlue, width: 2)
                           : null,
                       borderRadius: BorderRadius.circular(16)),
                   child: Row(
@@ -195,40 +195,39 @@ class _PlayerTileState extends State<PlayerTile> {
     final theme = Theme.of(context);
     if (isHrOk) {
       return Container(
+        padding: EdgeInsets.zero,
         width: 80,
         decoration: BoxDecoration(
             color: getColorByPulse(player.pulse),
             borderRadius:
                 const BorderRadius.horizontal(left: Radius.circular(14))),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  HeartbeatWidget(
-                    frequency: player.pulse,
-                    child: SvgPicture.asset(
-                      AppIcons.heart,
-                      width: 14,
-                      height: 14,
-                    ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                HeartbeatWidget(
+                  frequency: player.pulse,
+                  child: SvgPicture.asset(
+                    AppIcons.heart,
+                    width: 14,
+                    height: 14,
                   ),
-                  Text(
-                    "${player.pulse}",
-                    style: theme.textTheme.labelLarge,
-                  )
-                ],
-              ),
-              Text(
-                getRunBySpeed(player.speedMps, context),
-                overflow: TextOverflow.ellipsis,
-                style: theme.textTheme.labelSmall,
-              )
-            ],
-          ),
+                ),
+                Text(
+                  "${player.pulse}",
+                  style: theme.textTheme.labelLarge,
+                )
+              ],
+            ),
+            Text(
+              getRunBySpeed(player.speedMps, context),
+              overflow: TextOverflow.visible,
+              maxLines: 1,
+              style: theme.textTheme.labelSmall,
+            )
+          ],
         ),
       );
     } else {

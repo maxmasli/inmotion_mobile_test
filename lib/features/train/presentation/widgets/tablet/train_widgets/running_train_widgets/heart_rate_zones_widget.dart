@@ -28,7 +28,7 @@ class HeartRateZonesWidget extends StatelessWidget {
               ),
               SizedBox(width: 4),
               _ZoneLabel(
-                color: AppColors.yellow,
+                color: AppColors.orange,
                 text: 'Анаэробный режим',
               ),
               SizedBox(width: 4),
