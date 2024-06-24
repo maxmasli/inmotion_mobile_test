@@ -4,4 +4,5 @@ abstract interface class SensorPlayersRepository {
   Future<void> savePlayer(PlayerEntity playerEntity);
   Future<void> updatePlayer(PlayerEntity playerEntity);
   Future<List<PlayerEntity>> getPlayers();
+  Future<void> deletePlayer(PlayerEntity player);
 }

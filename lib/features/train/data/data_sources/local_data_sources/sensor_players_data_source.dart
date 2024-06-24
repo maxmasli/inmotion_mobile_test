@@ -7,6 +7,7 @@ abstract interface class SensorPlayerDataSource {
   Future<void> savePlayer(PlayerDTO player);
   Future<List<PlayerDTO>> getPlayers();
   Future<void> updatePlayer(PlayerDTO player);
+  Future<void> deletePlayer(PlayerDTO playerDTO);
 }
 
 class SensorPlayerDataSourceImpl implements SensorPlayerDataSource {
@@ -27,6 +28,14 @@ class SensorPlayerDataSourceImpl implements SensorPlayerDataSource {
     await box.close();
   }
 
+  @override
+  Future<void> deletePlayer(PlayerDTO player) async {
+    log('Delete player with sensor: ${player.deviceId}', name: 'SensorPlayerDataSourceImpl');
+    final box = await _openBox();
+    await box.delete(player.uuid);
+    await box.close();
+  }
+
   Future<Box<PlayerDTO>> _openBox() async {
     const boxName = 'sensor_players';
     return await Hive.openBox(boxName);
@@ -39,4 +48,6 @@ class SensorPlayerDataSourceImpl implements SensorPlayerDataSource {
     await box.put(player.uuid, player);
     await box.close();
   }
+
+
 }

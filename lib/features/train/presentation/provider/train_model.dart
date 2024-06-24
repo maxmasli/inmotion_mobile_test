@@ -12,6 +12,7 @@ import 'package:inmotion_mobile_test/features/train/domain/entities/player_entit
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_info_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_player_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_players_from_train_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_by_key_usecase.dart';
@@ -73,6 +74,8 @@ class TrainModel extends ChangeNotifier {
   final _deletePlayersFromTrainUseCase = getIt<DeletePlayersFromTrainUseCase>();
 
   final _updatePlayerUseCase = getIt<UpdatePlayerUseCase>();
+
+  final _deletePlayerSensorUseCase = getIt<DeletePlayerSensorUseCase>();
 
   // Permissions
   var _hasAllPermissions = true;
@@ -210,22 +213,22 @@ class TrainModel extends ChangeNotifier {
     _players = await _getPlayersSensorUseCase();
 
     ///DEMO add demo players
-    final demoPlayer = DemoPlayerEntity(
-      name: "Иванов И.",
-      number: 1,
-      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 2),
-    );
-    final demoPlayer2 = DemoPlayerEntity(
-      name: "Сергеев Е.",
-      number: 10,
-      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 6),
-    );
-    final demoPlayer3 = DemoPlayerEntity(
-      name: "Петров В.",
-      number: 6,
-      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 0),
-    );
-    players.addAll([demoPlayer, demoPlayer2, demoPlayer3]);
+    // final demoPlayer = DemoPlayerEntity(
+    //   name: "Иванов И.",
+    //   number: 1,
+    //   sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 2),
+    // );
+    // final demoPlayer2 = DemoPlayerEntity(
+    //   name: "Сергеев Е.",
+    //   number: 10,
+    //   sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 6),
+    // );
+    // final demoPlayer3 = DemoPlayerEntity(
+    //   name: "Петров В.",
+    //   number: 6,
+    //   sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 0),
+    // );
+    // players.addAll([demoPlayer, demoPlayer2, demoPlayer3]);
     ///
 
     for (final player in _players) {
@@ -246,7 +249,7 @@ class TrainModel extends ChangeNotifier {
     await updateTrains();
 
     ///DEMO
-    _startDemoScanning();
+    //_startDemoScanning();
   }
 
   void toggleSelectedPlayers(PlayerEntity player) {
@@ -318,6 +321,13 @@ class TrainModel extends ChangeNotifier {
     await _deletePlayersFromTrainUseCase(
       TrainPlayerListParams(train, players),
     );
+    notifyListeners();
+  }
+
+  Future<void> deleteSensorPlayer(PlayerEntity player) async {
+    _players.remove(player);
+    _selectedPlayers.remove(player);
+    await _deletePlayerSensorUseCase(PlayersParams(player));
     notifyListeners();
   }
 

@@ -11,6 +11,7 @@ import 'package:inmotion_mobile_test/features/train/domain/repositories/players_
 import 'package:inmotion_mobile_test/features/train/domain/repositories/sensor_players_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/repositories/train_repository.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
+import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_player_sensor_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_players_from_train_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/delete_trains_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/get_players_by_key_usecase.dart';
@@ -75,6 +76,9 @@ void setup() {
 
   getIt.registerFactory(
       () => UpdatePlayerUseCase(playerRepository: getIt<PlayersRepository>()));
+
+  getIt.registerFactory(() => DeletePlayerSensorUseCase(
+      sensorPlayersRepository: getIt<SensorPlayersRepository>()));
 
   getIt.registerSingleton<AppTimerController>(AppTimerController());
 }

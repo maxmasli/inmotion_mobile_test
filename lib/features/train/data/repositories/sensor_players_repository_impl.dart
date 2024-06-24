@@ -28,4 +28,9 @@ class SensorPlayersRepositoryImpl implements SensorPlayersRepository {
     return await sensorPlayerDataSource
         .updatePlayer(PlayerDTO.fromEntity(playerEntity));
   }
+
+  @override
+  Future<void> deletePlayer(PlayerEntity playerEntity) async {
+    return await sensorPlayerDataSource.deletePlayer(PlayerDTO.fromEntity(playerEntity));
+  }
 }

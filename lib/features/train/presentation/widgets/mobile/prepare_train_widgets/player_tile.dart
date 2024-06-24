@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_icon_button.dart';
+import 'package:inmotion_mobile_test/core/presentation/app_question_dialog.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
@@ -18,14 +19,18 @@ class PlayerTile extends StatelessWidget {
   Future<void> openEditDialog(BuildContext context, TrainModel model) async {
     final data = await showDialog<(String, String, String)>(
       context: context,
-      barrierColor: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.5),
+      barrierColor: Theme
+          .of(context)
+          .colorScheme
+          .secondaryContainer
+          .withOpacity(0.5),
       builder: (context) {
         return PlayerEditDialog(
           initFields: (
-            name: player.name,
-            number: player.number.toString(),
-            deviceNumber: player.sensor!.number.toString(),
-            deviceName: player.sensor!.device.remoteId.str,
+          name: player.name,
+          number: player.number.toString(),
+          deviceNumber: player.sensor!.number.toString(),
+          deviceName: player.sensor!.device.remoteId.str,
           ),
         );
       },
@@ -35,62 +40,83 @@ class PlayerTile extends StatelessWidget {
     }
   }
 
+  Future<void> openDeleteDialog(BuildContext context, TrainModel model,
+      PlayerEntity player,) async {
+    final data = await showDialog<bool>(context: context, builder: (context) {
+      return AppQuestionDialog(title: 'Удалить игрока ${player.name}?',
+          content: 'Удаление игрока приведет к удалению данных о нем',
+          yesText: "Да",
+          noText: "Нет");
+    });
+
+    if (data != null && data) {
+      await model.deleteSensorPlayer(player);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final model = context.read<TrainModel>();
     final selectedPlayers = context.select<TrainModel, List<PlayerEntity>>(
-        (model) => model.selectedPlayers);
+            (model) => model.selectedPlayers);
     return ChangeNotifierProvider<PlayerEntity>.value(
         value: player,
         child: Consumer<PlayerEntity>(
           builder: (context, player, child) {
-            return AppContainer(
-              padding: const EdgeInsets.only(left: 4, right: 8),
-              borderRadius: BorderRadius.circular(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Transform.scale(
-                    scale: 0.8,
-                    child: Switch(
-                      value: selectedPlayers.contains(player),
-                      onChanged: (val) {
-                        model.toggleSelectedPlayers(player);
-                      },
+            return GestureDetector(
+              onLongPress: () async {
+                await openDeleteDialog(context, model, player);
+              },
+              child: AppContainer(
+                padding: const EdgeInsets.only(left: 4, right: 8),
+                borderRadius: BorderRadius.circular(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: selectedPlayers.contains(player),
+                        onChanged: (val) {
+                          model.toggleSelectedPlayers(player);
+                        },
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 2),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${player.number} ${player.name}",
-                          style: theme.textTheme.bodyMedium,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          "${player.sensor!.number} ${player.sensor!.device.remoteId.str}",
-                          style: theme.textTheme.displaySmall,
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      ],
+                    const SizedBox(width: 2),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${player.number} ${player.name}",
+                            style: theme.textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            "${player.sensor!.number} ${player.sensor!.device
+                                .remoteId.str}",
+                            style: theme.textTheme.displaySmall,
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  _HrInfoWidget(sensor: player.sensor!),
-                  const SizedBox(width: 8),
-                  AppIconButton(
-                    icon: SvgPicture.asset(AppIcons.edit),
-                    onPressed: () async => await openEditDialog(context, model),
-                    size: 26,
-                  ),
-                  const SizedBox(width: 8),
-                  SvgPicture.asset(AppIcons.battery100, height: 26),
-                  const SizedBox(width: 8),
-                  _IndicatorWidget(sensor: player.sensor!),
-                ],
+                    _HrInfoWidget(sensor: player.sensor!),
+                    const SizedBox(width: 8),
+                    AppIconButton(
+                      icon: SvgPicture.asset(AppIcons.edit),
+                      onPressed: () async =>
+                      await openEditDialog(context, model),
+                      size: 26,
+                    ),
+                    const SizedBox(width: 8),
+                    SvgPicture.asset(AppIcons.battery100, height: 26),
+                    const SizedBox(width: 8),
+                    _IndicatorWidget(sensor: player.sensor!),
+                  ],
+                ),
               ),
             );
           },
