@@ -22,7 +22,7 @@ class SheetButton extends StatelessWidget {
       borderRadius: borderRadius ?? BorderRadius.circular(16),
       child: InkWell(
         onTap: onPressed,
-        borderRadius: borderRadius ?? BorderRadius.circular(16),
+        borderRadius: borderRadius ?? BorderRadius.circular(8),
         child: Container(
           padding: padding,
           decoration: BoxDecoration(

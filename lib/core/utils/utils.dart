@@ -65,6 +65,9 @@ String getPointPathBySpeed(int speed) {
 Future<Directory> getWorkingDirectory() async {
   final now = DateTime.now();
   if (Platform.isAndroid) {
+    if (!(await Directory('/storage/emulated/0/Documents/Inmotion/').exists())) {
+      await Directory('storage/emulated/0/Documents/Inmotion/').create();
+    }
     return await Directory(
             '/storage/emulated/0/Documents/Inmotion/${now.year}${now.month}${now.day}')
         .create();
@@ -72,12 +75,13 @@ Future<Directory> getWorkingDirectory() async {
 
   final docDir = await getApplicationDocumentsDirectory();
 
-  return Directory('${docDir.path}/Movecross');
+  return Directory('${docDir.path}/Inmotion');
 }
 
 Future<Directory> getWorkingDirectoryByTrain(TrainEntity train) async {
+  final trainFolder = train.trainName.isNotEmpty ? train.trainName.trim().replaceAll(" ", "_") : "без_названия";
   return await Directory(
-          '${(await getWorkingDirectory()).path}/${train.trainName.trim().replaceAll(" ", "_")}')
+          '${(await getWorkingDirectory()).path}/$trainFolder')
       .create();
 }
 
