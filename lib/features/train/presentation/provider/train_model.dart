@@ -6,6 +6,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:inmotion_mobile_test/core/domain/usecases/usecase.dart';
 import 'package:inmotion_mobile_test/core/utils/ble/app_ble_connection.dart';
 import 'package:inmotion_mobile_test/di.dart';
+import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resources.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/demo_player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
@@ -120,6 +121,8 @@ class TrainModel extends ChangeNotifier {
 
   List<TrainEntity> get trains => _trains;
 
+  bool hasDemoPlayers = false;
+
   Future<void> _startScanning() async {
     await _checkPermissions();
     if (!_hasAllPermissions || !isBLEOn) return;
@@ -211,27 +214,8 @@ class TrainModel extends ChangeNotifier {
     /// Загрузка сохраненных игроков с датчиками
     _players = await _getPlayersSensorUseCase();
 
-    ///DEMO add demo players
-    final demoPlayer = DemoPlayerEntity(
-      name: "Иванов И.",
-      number: 1,
-      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 2),
-    );
-    final demoPlayer2 = DemoPlayerEntity(
-      name: "Сергеев Е.",
-      number: 10,
-      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 6),
-    );
-    final demoPlayer3 = DemoPlayerEntity(
-      name: "Петров В.",
-      number: 6,
-      sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 0),
-    );
-    players.addAll([demoPlayer, demoPlayer2, demoPlayer3]);
-    ///
-
     for (final player in _players) {
-      // устанавливаем слушатели на оновление статуса
+      // устанавливаем слушатели на обновление статуса
       player.addListener(() {
         notifyListeners();
       });
@@ -258,6 +242,19 @@ class TrainModel extends ChangeNotifier {
     } else {
       log("add player to selected players");
       _selectedPlayers.add(player);
+    }
+    notifyListeners();
+  }
+
+  void toggleDemoPlayers(bool value) {
+    hasDemoPlayers = value;
+    if (value) {
+      players.addAll(demoPlayersList);
+    } else {
+      for (final p in demoPlayersList) {
+        players.remove(p);
+        selectedPlayers.remove(p);
+      }
     }
     notifyListeners();
   }

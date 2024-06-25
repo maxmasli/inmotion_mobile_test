@@ -1,9 +1,22 @@
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/demo_player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 
-final demoPlayersList = <PlayerEntity>[
-  // PlayerEntity(name: "name 1", number: 10),
-  // PlayerEntity(name: "name 2", number: 10),
-  // PlayerEntity(name: "name 3", number: 10),
-  // PlayerEntity(name: "name 4", number: 10),
-  // PlayerEntity(name: "name 5", number: 10),
+final demoPlayersList = <DemoPlayerEntity>[
+  DemoPlayerEntity(
+    name: "Петров В.",
+    number: 6,
+    sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 0),
+  ),
+  DemoPlayerEntity(
+    name: "Сергеев Е.",
+    number: 10,
+    sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 6),
+  ),
+  DemoPlayerEntity(
+    name: "Иванов И.",
+    number: 1,
+    sensor: SensorEntity(device: BluetoothDevice.fromId("FF:FF"), number: 2),
+  )
 ];
