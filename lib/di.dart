@@ -21,12 +21,19 @@ import 'package:inmotion_mobile_test/features/train/domain/usecases/save_player_
 import 'package:inmotion_mobile_test/features/train/domain/usecases/save_train_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/update_player_usecase.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/update_train_usecase.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 final getIt = GetIt.instance;
 
 void setup() {
   final logController = AppLogsController();
+  final talker = TalkerFlutter.init(
+    logger: TalkerLogger()
+  );
+
   getIt.registerSingleton(logController);
+  getIt.registerSingleton(talker);
+
 
   // Data sources
   getIt.registerLazySingleton<TrainDataSource>(() => TrainDataSourceImpl());

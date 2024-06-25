@@ -83,7 +83,7 @@ class _PlayerStats extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  player.measures.lastOrNull?.hr.toString() ?? "0",
+                  player.measures.lastOrNull?.hr?.toString() ?? "-",
                   style: textTheme.copyWith(fontSize: 34),
                 )
               ],

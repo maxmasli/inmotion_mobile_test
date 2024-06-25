@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:inmotion_mobile_test/di.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/info_text.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/logo_widget.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/navigate_button.dart';
 import 'package:inmotion_mobile_test/resources/resources.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class SideBarWidget extends StatelessWidget {
   const SideBarWidget({
@@ -44,6 +46,22 @@ class SideBarWidget extends StatelessWidget {
             icon: SvgPicture.asset(AppIcons.report),
             onTap: onReportsTap,
             isSelected: 1 == currentScreenIndex,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.only(right: 16),
+          child: NavigateButton(
+            text: "Debug",
+            icon: SvgPicture.asset(AppIcons.report),
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => TalkerScreen(talker: getIt<Talker>()),
+                  )
+              );
+            },
+            isSelected: 2 == currentScreenIndex,
           ),
         ),
         const Spacer(),

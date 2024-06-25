@@ -39,7 +39,7 @@ class _PlayerTileState extends State<PlayerTile> {
             final isHrOk = player.sensor!.isHrOk;
             return PhysicalModel(
               color: theme.colorScheme.primaryContainer,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(18),
               elevation: 2,
               child: GestureDetector(
                 onTap: widget.onTap,
@@ -50,7 +50,7 @@ class _PlayerTileState extends State<PlayerTile> {
                       border: widget.isSelected
                           ? Border.all(color: AppColors.darkBlue, width: 2)
                           : null,
-                      borderRadius: BorderRadius.circular(16)),
+                      borderRadius: BorderRadius.circular(18)),
                   child: Row(
                     children: [
                       hrInfo(player),

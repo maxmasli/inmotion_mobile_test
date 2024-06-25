@@ -667,17 +667,17 @@ class ExcelGenerator {
       final hrStats = StatsCalculator.getHrStats(player.hrMeasures);
       range = sheet.getRangeByIndex(i, 12);
       range.cellStyle = defaultCellStyle;
-      range.setNumber(hrStats[0]);
+      range.setNumber(hrStats[2]);
       range.numberFormat = '0%';
 
       range = sheet.getRangeByIndex(i, 13);
       range.cellStyle = defaultCellStyle;
-      range.setNumber(hrStats[1]);
+      range.setNumber(hrStats[3]);
       range.numberFormat = '0%';
 
       range = sheet.getRangeByIndex(i, 14);
       range.cellStyle = defaultCellStyle;
-      range.setNumber(hrStats[2]);
+      range.setNumber(hrStats[4]);
       range.numberFormat = '0%';
 
       // Всего

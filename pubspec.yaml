@@ -32,7 +32,7 @@ dependencies:
   uuid: ^4.3.3
   syncfusion_flutter_xlsio: ^24.2.3+1
   path_provider: ^2.1.2
-  share_plus: ^8.0.2
+  share_plus: ^9.0.0
   flutter_blue_plus: ^1.31.15
   flutter_blue: ^0.8.0
   cbor: ^6.2.0
@@ -43,7 +43,7 @@ dependencies:
   yandex_mapkit: ^4.0.2
   calendar_date_picker2: ^1.0.2
   hive_flutter: ^1.1.0
-
+  talker_flutter: ^4.2.4
 
 
 dev_dependencies:

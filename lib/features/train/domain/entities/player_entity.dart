@@ -74,13 +74,16 @@ class PlayerEntity extends ChangeNotifier {
   /* Скорость в км/ч */
   double get speedKph => speedMps * 3600 / 1000;
 
-  double get avgSpeedKph => _measures
-      .where((m) => m.speed != null)
-      .map((m) => m.speed! * 3600 / 1000)
-      .average;
+  double get avgSpeedKph {
+    final list = _measures
+        .where((m) => m.speed != null)
+        .map((m) => m.speed! * 3600 / 1000);
+    if (list.isEmpty) return 0;
+    return list.average;
+  }
 
   double get maxSpeedKph => _measures
-      .map((m) => m.speed! * 3600 / 1000)
+      .map((m) => m.speed ?? 0 * 3600 / 1000)
       .maxOrNull ?? 0;
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
