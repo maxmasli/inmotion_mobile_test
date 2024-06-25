@@ -419,7 +419,7 @@ class ExcelGenerator {
     range.cellStyle.fontName = 'Arial Narrow';
 
     range = sheet.getRangeByName('E8');
-    range.setText('Дистанция, км');
+    range.setText('Дистанция, м');
     range.cellStyle.wrapText = true;
     range.cellStyle.fontSize = 11;
     range.cellStyle.vAlign = VAlignType.center;
@@ -707,12 +707,12 @@ class ExcelGenerator {
 
       // Ускорения
       range = sheet.getRangeByIndex(i, 20);
-      range.setNumber(20);
+      range.setText("-"); // TODO setNumber
       range.cellStyle = defaultCellStyle;
 
       // Оценка нагрузки
       range = sheet.getRangeByIndex(i, 21);
-      range.setNumber(0); // rating player.rating.toDouble()
+      range.setText("-"); // TODO setNumber rating player.rating.toDouble()
       range.cellStyle = defaultCellStyle;
 
       // Trimp

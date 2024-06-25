@@ -11,7 +11,7 @@ abstract class StatsCalculator {
   static double restingPulse() => 60;
 
   static int calculatedVo2max(PlayerEntity player) =>
-      ((calculatedPulseAtMaximum(player) / restingPulse()) * 15.3).round();
+      ((calculateMaxPulse(player) / restingPulse()) * 15.3).round();
 
   static int calculatedIntensity(PlayerEntity player) {
     int result = (100 *
