@@ -49,7 +49,8 @@ final class TrainDataSourceImpl implements TrainDataSource {
 
   @override
   Future<void> updateTrain(TrainDTO train) async {
-    log('Update train: ${train.uuid} ${train.trainName}', name: 'TrainDataSourceImpl');
+    log('Update train: ${train.uuid} ${train.trainName} length ${train.splits}', name: 'TrainDataSourceImpl');
+
     final box = await _openBox();
     await box.put(train.uuid, train);
     await box.close();

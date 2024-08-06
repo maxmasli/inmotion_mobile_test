@@ -30,6 +30,7 @@ class _SplitListWidgetState extends State<SplitListWidget> {
   @override
   void initState() {
     super.initState();
+    print("init splits ${widget.initSplits.length}");
     currentSplits.addAll(widget.initSplits);
     widget.onSplitsChanged(currentSplits);
   }
@@ -57,130 +58,128 @@ class _SplitListWidgetState extends State<SplitListWidget> {
     return AppContainer(
       borderRadius: BorderRadius.circular(16),
       padding: const EdgeInsets.all(16),
-      child: Stack(
+      child: Column(
         children: [
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                toolbarHeight: 50,
-                titleSpacing: 0,
-                pinned: true,
-                backgroundColor: theme.colorScheme.primaryContainer,
-                surfaceTintColor: theme.colorScheme.primaryContainer,
-                title: Column(
+          SizedBox(
+            height: 55,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Выделить все",
-                          style: theme.textTheme.titleSmall,
-                        ),
-                        Checkbox(
-                          tristate: true,
-                          value: selectedSplits.isEmpty
-                              ? false // выбранных нет
-                              : selectedSplits.length != currentSplits.length
-                                  ? null // выбранные есть, но не все
-                                  : true, // все выбранные
-                          onChanged: (value) {
-                            setState(() {
-                              if (selectedSplits.length == currentSplits.length) {
-                                // Если все выбранные
-                                selectedSplits.clear();
-                              } else {
-                                selectedSplits.clear();
-                                selectedSplits.addAll(currentSplits);
-                              }
-                            });
-                          },
-                        )
-                      ],
+                    Text(
+                      "Выделить все",
+                      style: theme.textTheme.titleSmall,
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text("Название фрагмента", style: theme.textTheme.displaySmall),
-                        ),
-                        const SizedBox(width: 10),
-                        SizedBox(width: 100, child: Text("Начало фрагмента", style: theme.textTheme.displaySmall)),
-                        const SizedBox(width: 10),
-                        SizedBox(width: 100, child: Text('Конец фрагмента', style: theme.textTheme.displaySmall)),
-                        const SizedBox(width: 10),
-                        SizedBox(width: 100, child: Text('Общее время', style: theme.textTheme.displaySmall)),
-                        const SizedBox(width: 40)
-                      ],
-                    ),
-                    const SizedBox(height: 10)
+                    Checkbox(
+                      tristate: true,
+                      value: selectedSplits.isEmpty
+                          ? false // выбранных нет
+                          : selectedSplits.length != currentSplits.length
+                              ? null // выбранные есть, но не все
+                              : true, // все выбранные
+                      onChanged: (value) {
+                        setState(() {
+                          if (selectedSplits.length ==
+                              currentSplits.length) {
+                            // Если все выбранные
+                            selectedSplits.clear();
+                          } else {
+                            selectedSplits.clear();
+                            selectedSplits.addAll(currentSplits);
+                          }
+                        });
+                      },
+                    )
                   ],
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  childCount: currentSplits.length + 1,
-                  (context, index) {
-                    if (index >= currentSplits.length) {
-                      return SheetButton(
-                        padding: const EdgeInsets.all(8),
-                        onPressed: () {
-                          _addSplit();
-                        },
-                        child: Center(
-                          child: Text(
-                            "Добавить упражнение",
-                            style: theme.textTheme.titleSmall,
-                          ),
-                        ),
-                      );
-                    }
-                    final split = currentSplits[index];
-                    return SplitTile(
-                      onCheckboxTap: () {
-                        setState(
-                          () {
-                            if (selectedSplits.contains(split)) {
-                              selectedSplits.remove(split);
-                            } else {
-                              selectedSplits.add(split);
-                            }
-                          },
-                        );
-                      },
-                      isSelected: selectedSplits.contains(split),
-                      split: split,
-                      onSplitUpdated: (SplitEntity split) {
-                        widget.onSplitsChanged(currentSplits);
-                      },
-                      trainDuration: widget.train.endTime!
-                          .difference(widget.train.startTime),
-                    );
-                  },
-                ),
-              )
-            ],
-          ),
-          Positioned(
-            right: 10,
-            bottom: 10,
-            child: Row(
-              children: [
-                AppContainer(
-                  width: 100,
-                  onTap: () {
-                    _deleteSplits();
-                  },
-                  padding: const EdgeInsets.all(8),
-                  borderRadius: BorderRadius.circular(8),
-                  color: theme.colorScheme.secondaryContainer,
-                  elevation: 0,
-                  child: Center(
-                    child: Text(
-                      "Удалить",
-                      style: theme.textTheme.labelSmall,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text("Название фрагмента",
+                          style: theme.textTheme.displaySmall),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                        width: 100,
+                        child: Text("Начало фрагмента",
+                            style: theme.textTheme.displaySmall)),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                        width: 100,
+                        child: Text('Конец фрагмента',
+                            style: theme.textTheme.displaySmall)),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                        width: 100,
+                        child: Text('Общее время',
+                            style: theme.textTheme.displaySmall)),
+                    const SizedBox(width: 40)
+                  ],
                 ),
               ],
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: currentSplits.length + 1,
+            itemBuilder: (context, index) {
+              if (index >= currentSplits.length) {
+                return SheetButton(
+                  padding: const EdgeInsets.all(8),
+                  onPressed: () {
+                    _addSplit();
+                  },
+                  child: Center(
+                    child: Text(
+                      "Добавить упражнение",
+                      style: theme.textTheme.titleSmall,
+                    ),
+                  ),
+                );
+              }
+              final split = currentSplits[index];
+              return SplitTile(
+                onCheckboxTap: () {
+                  setState(
+                        () {
+                      if (selectedSplits.contains(split)) {
+                        selectedSplits.remove(split);
+                      } else {
+                        selectedSplits.add(split);
+                      }
+                    },
+                  );
+                },
+                isSelected: selectedSplits.contains(split),
+                split: split,
+                onSplitUpdated: (SplitEntity split) {
+                  widget.onSplitsChanged(currentSplits);
+                },
+                trainDuration: widget.train.endTime!
+                    .difference(widget.train.startTime),
+              );
+            },
+          ),
+          const SizedBox(height: 10),
+          Align(
+            alignment: Alignment.centerRight,
+            child: AppContainer(
+              width: 100,
+              onTap: () {
+                _deleteSplits();
+              },
+              padding: const EdgeInsets.all(8),
+              borderRadius: BorderRadius.circular(8),
+              color: theme.colorScheme.secondaryContainer,
+              elevation: 0,
+              child: Center(
+                child: Text(
+                  "Удалить",
+                  style: theme.textTheme.labelSmall,
+                ),
+              ),
             ),
           )
         ],

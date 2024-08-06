@@ -60,51 +60,51 @@ class _ExerciseSplitWidgetState extends State<ExerciseSplitWidget> {
               const SizedBox(width: 10),
               Expanded(
                 flex: 2,
-                child: Column(
-                  children: [
-                    AppContainer(
-                      padding: const EdgeInsets.all(16),
-                      borderRadius: BorderRadius.circular(16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: SheetButton(
-                              padding: const EdgeInsets.all(8),
-                              onPressed: widget.onCancel,
-                              child: Center(
-                                child: Text(
-                                  "Отменить",
-                                  style: theme.textTheme.titleSmall,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      AppContainer(
+                        padding: const EdgeInsets.all(16),
+                        borderRadius: BorderRadius.circular(16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: SheetButton(
+                                padding: const EdgeInsets.all(8),
+                                onPressed: widget.onCancel,
+                                child: Center(
+                                  child: Text(
+                                    "Отменить",
+                                    style: theme.textTheme.titleSmall,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: SheetButton(
-                              padding: const EdgeInsets.all(8),
-                              onPressed: splits
-                                      .where((e) => !e.correctFragments(widget.train.endTime!.difference(widget.train.startTime)))
-                                      .isEmpty
-                                  ? () {
-                                      widget.onSplitsUpdated(splits);
-                                      widget.onCancel();
-                                    }
-                                  : null,
-                              child: Center(
-                                child: Text(
-                                  "Сохранить деление",
-                                  style: theme.textTheme.titleSmall,
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: SheetButton(
+                                padding: const EdgeInsets.all(8),
+                                onPressed: splits
+                                        .where((e) => !e.correctFragments(widget.train.endTime!.difference(widget.train.startTime)))
+                                        .isEmpty
+                                    ? () {
+                                        widget.onSplitsUpdated(splits);
+                                        widget.onCancel();
+                                      }
+                                    : null,
+                                child: Center(
+                                  child: Text(
+                                    "Сохранить деление",
+                                    style: theme.textTheme.titleSmall,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Expanded(
-                      child: SplitListWidget(
+                      const SizedBox(height: 10),
+                      SplitListWidget(
                         onSplitsChanged: (List<SplitEntity> splits) {
                           this.splits = splits;
                           WidgetsBinding.instance.addPostFrameCallback((d) {
@@ -117,8 +117,8 @@ class _ExerciseSplitWidgetState extends State<ExerciseSplitWidget> {
                           setState(() {});
                         },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               )
             ],

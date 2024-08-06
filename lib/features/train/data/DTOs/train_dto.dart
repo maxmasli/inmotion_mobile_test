@@ -44,8 +44,8 @@ class TrainDTO {
       startTime: startTime,
       endTime: endTime,
       uuid: uuid,
-      trainDescription: trainDescription
-    );
+      trainDescription: trainDescription,
+    )..addSplits(splits.map((d) => d.toEntity()));
   }
 
   factory TrainDTO.fromEntity(TrainEntity entity) {
