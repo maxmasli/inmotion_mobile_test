@@ -13,6 +13,7 @@ class PlayersInfoWidget extends StatelessWidget {
     required this.onBackPressed,
     required this.onPlayerSelected,
     required this.range,
+    required this.onSplitSelect,
   });
 
   final List<DateTime?> range;
@@ -20,6 +21,7 @@ class PlayersInfoWidget extends StatelessWidget {
   final Function(List<DateTime?>) onRangeChanged;
   final VoidCallback onBackPressed;
   final Function(PlayerEntity) onPlayerSelected;
+  final Function() onSplitSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class PlayersInfoWidget extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: PlayerList(
+                  onSplitSelect: onSplitSelect,
                   train: train,
                   onPlayerSelected: onPlayerSelected,
                 ),

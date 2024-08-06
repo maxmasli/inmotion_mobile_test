@@ -110,6 +110,7 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
 
                       IconButton(
                         onPressed: () async {
+                          if (cords.isEmpty) return;
                           _mapController.moveCamera(
                             CameraUpdate.newGeometry(
                               Geometry.fromPolyline(

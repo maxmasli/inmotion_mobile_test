@@ -1,4 +1,5 @@
 import 'package:hive_flutter/adapters.dart';
+import 'package:inmotion_mobile_test/features/train/data/DTOs/split_dto.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 
 part 'train_dto.g.dart';
@@ -23,6 +24,9 @@ class TrainDTO {
   @HiveField(6)
   final String trainDescription;
 
+  @HiveField(7)
+  final List<SplitDTO> splits;
+
   TrainDTO({
     required this.uuid,
     required this.playersKey,
@@ -30,6 +34,7 @@ class TrainDTO {
     required this.startTime,
     required this.endTime,
     required this.trainDescription,
+    required this.splits
   });
 
   TrainEntity toEntity() {
@@ -50,7 +55,8 @@ class TrainDTO {
       trainName: entity.trainName,
       startTime: entity.startTime,
       endTime: entity.endTime!,
-      trainDescription: entity.trainDescription
+      trainDescription: entity.trainDescription,
+      splits: entity.exerciseSplits.map((e) => SplitDTO.fromEntity(e)).toList(),
     );
   }
 }

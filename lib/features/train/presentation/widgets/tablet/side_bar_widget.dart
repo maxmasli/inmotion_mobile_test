@@ -75,9 +75,10 @@ class SideBarWidget extends StatelessWidget {
               child: Row(
                 children: [
                   Text("Демо игроки", style: theme.textTheme.displaySmall),
+                  const SizedBox(width: 6),
                   SizedBox(
-                    width: 50,
-                    height: 10,
+                    width: 42,
+                    height: 30,
                     child: Transform.scale(
                       scale: 0.8,
                       child: Switch(

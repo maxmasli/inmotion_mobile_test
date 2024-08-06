@@ -6,6 +6,7 @@ import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity
 import 'package:inmotion_mobile_test/features/train/presentation/provider/train_model.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/players_info/player_edit_tile.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/players_info/player_tile.dart';
+import 'package:inmotion_mobile_test/features/train/presentation/widgets/tablet/report_widgets/sheet_button.dart';
 import 'package:provider/provider.dart';
 
 class PlayerList extends StatefulWidget {
@@ -13,10 +14,12 @@ class PlayerList extends StatefulWidget {
     super.key,
     required this.train,
     required this.onPlayerSelected,
+    required this.onSplitSelect,
   });
 
   final TrainEntity train;
   final Function(PlayerEntity) onPlayerSelected;
+  final Function() onSplitSelect;
 
   @override
   State<PlayerList> createState() => _PlayerListState();
@@ -40,14 +43,30 @@ class _PlayerListState extends State<PlayerList> {
               },
               train: widget.train,
             )
-          : _PlayerList(
-              train: widget.train,
-              onEditPressed: () {
-                setState(() {
-                  _editMode = true;
-                });
-              },
-              onPlayerSelected: widget.onPlayerSelected,
+          : Column(
+              children: [
+                SheetButton(
+                  padding: const EdgeInsets.all(8),
+                  onPressed: widget.onSplitSelect,
+                  child: Center(
+                    child: Text(
+                      "Разделить на упражнения",
+                      style: theme.textTheme.titleSmall,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: _PlayerList(
+                    train: widget.train,
+                    onEditPressed: () {
+                      setState(() {
+                        _editMode = true;
+                      });
+                    },
+                    onPlayerSelected: widget.onPlayerSelected,
+                  ),
+                ),
+              ],
             ),
     );
   }

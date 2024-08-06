@@ -10,6 +10,7 @@ import 'package:inmotion_mobile_test/features/train/data/data_sources/demo_resou
 import 'package:inmotion_mobile_test/features/train/domain/entities/demo_player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:inmotion_mobile_test/features/train/domain/entities/split_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/train_info_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/usecases/create_excel_usecase.dart';
@@ -175,6 +176,7 @@ class TrainModel extends ChangeNotifier {
           }
         }
       }
+
       ///
     });
   }
@@ -207,6 +209,7 @@ class TrainModel extends ChangeNotifier {
     _loadingPercent = 100;
     await _saveTrainUseCase(TrainParams(train!));
     notifyListeners();
+
     ///
   }
 
@@ -411,6 +414,13 @@ class TrainModel extends ChangeNotifier {
       log("location no!!!");
       return;
     }
+    notifyListeners();
+  }
+
+  Future<void> updateTrainSplits(
+      TrainEntity train, List<SplitEntity> splits) async {
+    train.addSplits(splits);
+    await _updateTrainUseCase(TrainParams(train));
     notifyListeners();
   }
 
