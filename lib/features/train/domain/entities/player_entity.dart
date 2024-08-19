@@ -50,8 +50,6 @@ class PlayerEntity extends ChangeNotifier {
 
   SensorEntity? get sensor => _sensor;
 
-  int get distance => _measures.lastOrNull?.distance?.toInt() ?? 0;
-
   int get steps => _measures.lastOrNull?.steps ?? 0;
 
   int get pulse => _measures.lastOrNull?.hr ?? 60;
@@ -64,7 +62,7 @@ class PlayerEntity extends ChangeNotifier {
     }
   }
 
-  List<int> get hrMeasures => _measures.map((m) => m.hr ?? 0).toList();
+  //List<int> get hrMeasures => _measures.map((m) => m.hr ?? 0).toList();
 
   List<MeasureEntity> get measures => _measures;
 
@@ -73,18 +71,6 @@ class PlayerEntity extends ChangeNotifier {
 
   /* Скорость в км/ч */
   double get speedKph => speedMps * 3600 / 1000;
-
-  double get avgSpeedKph {
-    final list = _measures
-        .where((m) => m.speed != null)
-        .map((m) => m.speed! * 3600 / 1000);
-    if (list.isEmpty) return 0;
-    return list.average;
-  }
-
-  double get maxSpeedKph => _measures
-      .map((m) => m.speed ?? 0 * 3600 / 1000)
-      .maxOrNull ?? 0;
 
   void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
     // TODO сравнивать по inc

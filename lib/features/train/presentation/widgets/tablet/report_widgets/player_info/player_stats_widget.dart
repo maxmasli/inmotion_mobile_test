@@ -87,14 +87,14 @@ class PlayerStatsWidget extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: _InfoWidget(
-                    value: "${player.distance}",
+                    value: "${StatsCalculator.getDistance(player)}",
                     info: "Пройденное расстояние",
                   ),
                 ),
                 Expanded(
                   flex: 3,
                   child: _InfoWidget(
-                    value: "${player.avgSpeedKph.toInt()} км/ч",
+                    value: "${StatsCalculator.calculateAvgPulse(player).toInt()} км/ч",
                     info: "Средн. скорость",
                   ),
                 ),

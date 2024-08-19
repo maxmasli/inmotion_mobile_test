@@ -138,7 +138,7 @@ class _PlayerTileState extends State<PlayerTile> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "${player.distance} м",
+                                                    "${StatsCalculator.getDistance(player)} м",
                                                     style: theme
                                                         .textTheme.displaySmall,
                                                   ),
@@ -262,7 +262,7 @@ class _PlayerTileState extends State<PlayerTile> {
             width: constraints.maxWidth,
             height: 30,
             values: StatsCalculator.getHrStats(
-              player.hrMeasures,
+              player,
             ),
             builder: (value, i) {
               return Center(

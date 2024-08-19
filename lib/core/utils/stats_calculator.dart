@@ -10,12 +10,20 @@ abstract class StatsCalculator {
 
   static double restingPulse() => 60;
 
-  static int calculatedVo2max(PlayerEntity player) =>
-      ((calculateMaxPulse(player) / restingPulse()) * 15.3).round();
+  static int calculatedVo2max(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) =>
+      ((calculateMaxPulse(player, start, end) / restingPulse()) * 15.3).round();
 
-  static int calculatedIntensity(PlayerEntity player) {
+  static int calculatedIntensity(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
     int result = (100 *
-            (calculateAvgPulse(player) - restingPulse()) /
+            (calculateAvgPulse(player, start, end) - restingPulse()) /
             (calculatedPulseAtMaximum(player) - restingPulse()))
         .clamp(0, 100)
         .ceil();
@@ -23,32 +31,84 @@ abstract class StatsCalculator {
     return result;
   }
 
-  static int calculateAvgPulse(PlayerEntity player) {
-    final meas = player.measures;
+  static int calculateAvgPulse(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    if (player.measures.isEmpty) return 0;
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
+
     final list =
         meas.where((e) => e.hr != null && e.hr != 0).map((e) => e.hr ?? 0);
 
     return list.isEmpty ? 0 : list.average.ceil();
   }
 
-  static int calculateMaxPulse(PlayerEntity player) {
-    final meas = player.measures;
+  static int calculateMaxPulse(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    if (player.measures.isEmpty) return 0;
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
     return meas.map((e) => e.hr ?? 0).maxOrNull ?? 0;
   }
 
-  static int calculateMinPulse(PlayerEntity player) {
-    final meas = player.measures;
+  static int calculateMinPulse(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    if (player.measures.isEmpty) return 0;
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
     return meas.map((e) => e.hr ?? 0).minOrNull ?? 0;
   }
 
-  static int getCalories(PlayerEntity player) {
-    final meas = player.measures;
-    if (meas.isEmpty) return 0;
+  static int getCalories(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    if (player.measures.isEmpty) return 0;
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
     if (meas.last.time == null || meas.first.time == null) return 0;
     try {
       return (meas.last.time!.difference(meas.first.time!).inMinutes *
-              (0.634 * calculateAvgPulse(player) +
-                  0.404 * calculatedVo2max(player) +
+              (0.634 * calculateAvgPulse(player, start, end) +
+                  0.404 * calculatedVo2max(player, start, end) +
                   0.394 * 75 + // person.weight = 75
                   0.271 * 25 - // person.age = 25
                   95.7735) /
@@ -60,11 +120,16 @@ abstract class StatsCalculator {
     }
   }
 
-  static int getFats(PlayerEntity player) {
-    final vo2maxtr =
-        (calculateMaxPulse(player) / calculateMinPulse(player).toDouble()) *
-            15.3;
-    final vo2maxPercent = (vo2maxtr / calculatedVo2max(player)) * 100;
+  static int getFats(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    final vo2maxtr = (calculateMaxPulse(player, start, end) /
+            calculateMinPulse(player, start, end).toDouble()) *
+        15.3;
+    final vo2maxPercent =
+        (vo2maxtr / calculatedVo2max(player, start, end)) * 100;
     if (vo2maxPercent >= 41 && vo2maxPercent < 48) {
       return (-0.0497 * (vo2maxPercent * vo2maxPercent) +
               3.8528 * vo2maxPercent -
@@ -77,11 +142,16 @@ abstract class StatsCalculator {
     }
   }
 
-  static int getProteins(PlayerEntity player) {
-    final vo2maxtr =
-        (calculateMaxPulse(player) / calculateMinPulse(player).toDouble()) *
-            15.3;
-    final vo2maxPercent = (vo2maxtr / calculatedVo2max(player)) * 100;
+  static int getProteins(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    final vo2maxtr = (calculateMaxPulse(player, start, end) /
+            calculateMinPulse(player, start, end).toDouble()) *
+        15.3;
+    final vo2maxPercent =
+        (vo2maxtr / calculatedVo2max(player, start, end)) * 100;
     if (vo2maxPercent >= 41 && vo2maxPercent < 48) {
       return (0.0497 * (vo2maxPercent * vo2maxPercent) -
               3.8528 * vo2maxPercent +
@@ -94,9 +164,21 @@ abstract class StatsCalculator {
     }
   }
 
-  static int getTrimp(PlayerEntity player) {
-    final meas = player.measures;
-    if (meas.isEmpty) return 0;
+  static int getTrimp(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    if (player.measures.isEmpty) return 0;
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
     if (meas.last.time == null || meas.first.time == null) return 0;
 
     final reserve = (calculateAvgPulse(player) - restingPulse()) /
@@ -137,13 +219,28 @@ abstract class StatsCalculator {
     return (1 * reserve + math.exp(reserve * b));
   }
 
-  static List<double> getHrStats(List<int> hrList) {
+  static List<double> getHrStats(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    if (player.measures.isEmpty) return [0, 0, 0, 0, 0];
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
+    final hrList = meas.map((m) => m.hr).where((hr) => hr != null).toList();
     if (hrList.isEmpty) return <double>[1, 0, 0, 0, 0];
 
     final result = <double>[0, 0, 0, 0, 0];
 
     for (final hr in hrList) {
-      if (hr > Settings.maximumIntensity) {
+      if (hr! > Settings.maximumIntensity) {
         result[4] += 1;
       } else if (hr > Settings.anaerobicMode) {
         result[3] += 1;
@@ -157,5 +254,62 @@ abstract class StatsCalculator {
     }
 
     return result.map((e) => e / hrList.length).toList();
+  }
+
+  static double avgSpeedKph(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
+    final list =
+        meas.where((m) => m.speed != null).map((m) => m.speed! * 3600 / 1000);
+    if (list.isEmpty) return 0;
+    return list.average;
+  }
+
+  static double maxSpeedKph(
+    PlayerEntity player, [
+    Duration? start,
+    Duration? end,
+  ]) {
+    var meas = player.measures;
+    if (start != null && end != null) {
+      final startDateTime = player.measures.first.time!.add(start);
+      final endDateTime = player.measures.first.time!.add(end);
+      meas = player.measures
+          .where((m) =>
+              m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+          .toList();
+    }
+    return meas.map((m) => m.speed ?? 0 * 3600 / 1000).maxOrNull ?? 0;
+  }
+
+  static double getDistance(PlayerEntity player, [Duration? start, Duration? end]) {
+    if (start == null || end == null) {
+      return player.measures.lastOrNull?.distance ?? 0;
+    }
+
+    final startDateTime = player.measures.first.time!.add(start);
+    final endDateTime = player.measures.first.time!.add(end);
+    final meas = player.measures
+        .where((m) =>
+            m.time!.isAfter(startDateTime) && m.time!.isBefore(endDateTime))
+        .toList();
+
+    if (meas.isEmpty) return 0;
+
+    final startDistance = meas.first.distance!;
+    final endDistance = meas.last.distance!;
+
+    return endDistance - startDistance;
   }
 }

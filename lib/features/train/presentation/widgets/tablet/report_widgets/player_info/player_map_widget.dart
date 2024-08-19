@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:isolate';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:provider/provider.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class PlayerMapWidget extends StatefulWidget {
@@ -23,8 +23,9 @@ class PlayerMapWidget extends StatefulWidget {
 class _PlayerMapWidgetState extends State<PlayerMapWidget> {
   late final YandexMapController _mapController;
 
-  Iterable<MapObject> _getMapObjectsFromData(
-      Iterable<(double x, double y, int speed)> data) sync* {
+  static List<MapObject> _getMapObjectsFromData(
+      List<(double x, double y, int speed)> data) {
+    final result = <MapObject>[];
     Point? firstPoint;
     for (final d in data) {
       if (firstPoint == null) {
@@ -32,37 +33,20 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
         continue;
       }
       final secondPoint = Point(latitude: d.$1, longitude: d.$2);
-      yield PolylineMapObject(
+      result.add(PolylineMapObject(
         mapId: MapObjectId("id_$d"),
         polyline: Polyline(
           points: [firstPoint, secondPoint],
         ),
         strokeColor: getColorBySpeed(d.$3),
         strokeWidth: 8,
-      );
+      ));
 
       firstPoint = secondPoint;
     }
-  }
 
-  // Future<void> moveToLastPoint() async {
-  //   if (last == null) return;
-  //   await _mapController.moveCamera(
-  //     CameraUpdate.newCameraPosition(
-  //       CameraPosition(
-  //         target: Point(
-  //           latitude: last.$1,
-  //           longitude: last.$2,
-  //         ),
-  //         zoom: 30,
-  //       ),
-  //     ),
-  //     animation: const MapAnimation(
-  //       duration: 0.5,
-  //       type: MapAnimationType.smooth,
-  //     ),
-  //   );
-  // }
+    return result;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,30 +64,28 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
                   border: Border.all(color: theme.primaryColor)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Stack(
-                  children: [
-                    YandexMap(
-                      logoAlignment: const MapAlignment(
-                          horizontal: HorizontalAlignment.left,
-                          vertical: VerticalAlignment.bottom),
-                      onMapCreated: (controller) async {
-                        _mapController = controller;
-                        final last = cords.lastOrNull;
-                        await _mapController.moveCamera(
-                          CameraUpdate.newCameraPosition(
-                            CameraPosition(
-                              target: Point(
-                                latitude: last?.$1 ?? 50,
-                                longitude: last?.$2 ?? 20,
-                              ),
-                              zoom: 30,
-                            ),
+                child: YandexMap(
+                  logoAlignment: const MapAlignment(
+                    horizontal: HorizontalAlignment.left,
+                    vertical: VerticalAlignment.bottom,
+                  ),
+                  onMapCreated: (controller) async {
+                    print("map created");
+                    _mapController = controller;
+                    final last = cords.lastOrNull;
+                    await _mapController.moveCamera(
+                      CameraUpdate.newCameraPosition(
+                        CameraPosition(
+                          target: Point(
+                            latitude: last?.$1 ?? 50,
+                            longitude: last?.$2 ?? 20,
                           ),
-                        );
-                      },
-                      mapObjects: _getMapObjectsFromData(cords).toList(),
-                    ),
-                  ],
+                          zoom: 30,
+                        ),
+                      ),
+                    );
+                  },
+                  mapObjects: _getMapObjectsFromData(cords.toList()),
                 ),
               ),
             ),

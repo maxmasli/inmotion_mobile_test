@@ -11,7 +11,7 @@ class PlayerHrBarChart extends StatelessWidget {
 
   List<ChartData> _toChartData(PlayerEntity player) {
     // TODO intl
-    final hrStats = StatsCalculator.getHrStats(player.hrMeasures);
+    final hrStats = StatsCalculator.getHrStats(player);
     return [
       ChartData('Умеренная активность', (hrStats[0] * 100).round()),
       ChartData('Легкая нагрузка', (hrStats[1] * 100).round()),
