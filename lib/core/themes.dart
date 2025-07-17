@@ -79,9 +79,9 @@ ThemeData createLightTheme() {
       side: const BorderSide(color: AppColors.lightGreen, width: 2)
     ),
 
-    dialogTheme: const DialogTheme(
-      backgroundColor: Colors.white,
-    ),
+    // dialogTheme: const DialogTheme(
+    //   backgroundColor: Colors.white,
+    // ),
   );
 }
 
