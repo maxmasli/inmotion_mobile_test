@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_blue_plus_windows/flutter_blue_plus_windows.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_payload.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AppBLEConnection {
   // guid для конкретного поиска сервисов и хараетеристик
@@ -61,7 +63,7 @@ class AppBLEConnection {
     Future<void> Function(List<(BluetoothDevice, InmotionTagMeta, MeasureEntity)>)
         onReceivedScanResults,
   ) async {
-    _scanResultStream = FlutterBluePlus.onScanResults.listen(
+    _scanResultStream = FlutterBluePlus.scanResults.listen(
       (results) async {
         final mapped = results.map(
               (r) {
@@ -138,7 +140,7 @@ class AppBLEConnection {
           }
 
         },
-        onDone: () {
+        onDone: () async {
           if (expectedPayloadLength == payload.length) {
             final decodedPayload = InmotionTagPayload.fromRaw(payload.toBytes());
 
@@ -158,6 +160,20 @@ class AppBLEConnection {
             }
 
             onPlayerDataDownload(player, measureList);
+
+            try {
+              final uuid = decodedPayload.uuid;
+              final bytes = payload.toBytes();
+
+              final dir = await getApplicationDocumentsDirectory();
+              final filePath = '${dir.path}/$uuid.bin';
+              final file = File(filePath);
+
+              await file.writeAsBytes(bytes);
+              log('Файл сохранён: $filePath');
+            } catch (e) {
+              log('Ошибка при сохранении файла: $e');
+            }
             
           } else {
             log('Sizes not equal');

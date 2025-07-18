@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart' as fbp;
+import 'package:flutter_blue_plus_windows/flutter_blue_plus_windows.dart' as fbp;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:inmotion_mobile_test/app.dart';
 import 'package:inmotion_mobile_test/di.dart' as di;

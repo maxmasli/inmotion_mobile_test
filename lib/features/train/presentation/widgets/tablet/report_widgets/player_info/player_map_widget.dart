@@ -121,4 +121,10 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
 }

@@ -52,7 +52,15 @@ class PlayerEntity extends ChangeNotifier {
 
   int get steps => _measures.lastOrNull?.steps ?? 0;
 
-  int get pulse => _measures.lastOrNull?.hr ?? 60;
+  //int get pulse => _measures.lastOrNull?.hr ?? 60;
+
+  int get pulse {
+    for (int i = _measures.length - 1; i > 0; i--) {
+      if (_measures[i].hr == null) continue;
+      return _measures[i].hr!;
+    }
+    return 60;
+  }
 
   Iterable<(double x, double y, int speed)> get coordinates sync* {
     for (final m in _measures) {
@@ -107,6 +115,7 @@ class PlayerEntity extends ChangeNotifier {
   void clearMeasures() {
     _measures.clear();
   }
+
 }
 
 enum PlayerError { hrError, stationError, gpsError, otherError }

@@ -95,8 +95,7 @@ class PlayerTile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            "${player.sensor!.number} ${player.sensor!.device
-                                .remoteId.str}",
+                            player.sensor!.device.advName,
                             style: theme.textTheme.displaySmall,
                             overflow: TextOverflow.ellipsis,
                           )
