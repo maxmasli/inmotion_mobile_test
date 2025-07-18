@@ -11,7 +11,8 @@ import 'package:inmotion_mobile_test/features/train/domain/entities/player_entit
 class AppBLEConnection {
   // guid для конкретного поиска сервисов и хараетеристик
   final _serviceGuid = Guid("243a0000-1234-2374-5673-a8a1593ef645");
-  final _charGuid = Guid("243a0003-1234-2374-5673-a8a1593ef645");
+  final _cmdGuid = Guid("243a0002-1234-2374-5673-a8a1593ef645");
+  final _payloadGuid = Guid("243a0003-1234-2374-5673-a8a1593ef645");
 
   StreamSubscription<BluetoothAdapterState>? _bleStatusStream;
 
@@ -46,7 +47,8 @@ class AppBLEConnection {
   }
 
   void devicesStartRecording(Iterable<BluetoothDevice> devices) {
-    writeToDevices(devices, _charGuid, [0x01]);
+    log(devices.toString());
+    writeToDevices(devices, _cmdGuid, [0x01]);
   }
 
   // void devicesStopRecording(Iterable<BluetoothDevice> devices) {
@@ -105,10 +107,12 @@ class AppBLEConnection {
 
       final service = (await device.discoverServices())
           .firstWhere((service) => service.serviceUuid == _serviceGuid);
+      final cmdChar = service.characteristics
+          .firstWhere((char) => char.characteristicUuid == _cmdGuid);
       final payloadChar = service.characteristics
-          .firstWhere((char) => char.characteristicUuid == _charGuid);
-
-      await payloadChar.write([0x00]);
+          .firstWhere((char) => char.characteristicUuid == _payloadGuid);
+      
+      await cmdChar.write([0x00]);
 
       List<int> value = await payloadChar.read();
       final byteData = ByteData.sublistView(Uint8List.fromList(value));
@@ -120,7 +124,7 @@ class AppBLEConnection {
       late final StreamSubscription<List<int>> charSubscription;
       charSubscription = payloadChar.onValueReceived.listen(
         (data) async {
-          if (payload.isEmpty) {
+          if (data.isEmpty) {
             log("Expected[$expectedPayloadLength], donwload[${payload.length}]");
             await payloadChar.setNotifyValue(false);
             await charSubscription.cancel();
