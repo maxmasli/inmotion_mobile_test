@@ -129,13 +129,14 @@ class AppBLEConnection {
             await payloadChar.setNotifyValue(false);
             await charSubscription.cancel();
             device.disconnect(queue: false);
-            return;
-          }
-          payload.add(data);
+          } else {
+            payload.add(data);
 
-          totalDownloaded += data.length;
-          final percent = totalDownloaded / totalLength * 100;
-          onPercentUpdated?.call(percent);
+            totalDownloaded += data.length;
+            final percent = totalDownloaded / totalLength * 100;
+            onPercentUpdated?.call(percent);
+          }
+
         },
         onDone: () {
           if (expectedPayloadLength == payload.length) {
@@ -165,8 +166,6 @@ class AppBLEConnection {
       );
       await payloadChar.setNotifyValue(true);
     }
-
-    onPercentUpdated?.call(100);
   }
 
   Future<void> dispose() async {
