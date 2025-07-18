@@ -123,31 +123,14 @@ class AppBLEConnection {
 
       BytesBuilder payload = BytesBuilder();
 
-      late final StreamSubscription<List<int>> charSubscription;
-      charSubscription = payloadChar.onValueReceived.listen(
-        (data) async {
-          if (data.isEmpty) {
-            log("Expected[$expectedPayloadLength], donwload[${payload.length}]");
-            await payloadChar.setNotifyValue(false);
-            await charSubscription.cancel();
-            device.disconnect(queue: false);
-          } else {
-            payload.add(data);
+      Future<void> finishDownload() async {
+        if (expectedPayloadLength == payload.length) {
+          final decodedPayload = InmotionTagPayload.fromRaw(payload.toBytes());
 
-            totalDownloaded += data.length;
-            final percent = totalDownloaded / totalLength * 100;
-            onPercentUpdated?.call(percent);
-          }
+          final measureList = <MeasureEntity>[];
 
-        },
-        onDone: () async {
-          if (expectedPayloadLength == payload.length) {
-            final decodedPayload = InmotionTagPayload.fromRaw(payload.toBytes());
-
-            final measureList = <MeasureEntity>[];
-
-            for (final tagData in decodedPayload.data) {
-              measureList.add(
+          for (final tagData in decodedPayload.data) {
+            measureList.add(
                 MeasureEntity(
                   time: tagData.time,
                   hr: tagData.hr,
@@ -156,33 +139,56 @@ class AppBLEConnection {
                   speed: tagData.speed,
                   distance: tagData.distance?.toDouble(),
                 )
-              );
-            }
-
-            onPlayerDataDownload(player, measureList);
-
-            try {
-              final uuid = decodedPayload.uuid;
-              final bytes = payload.toBytes();
-
-              final dir = await getApplicationDocumentsDirectory();
-              final filePath = '${dir.path}/$uuid.bin';
-              final file = File(filePath);
-
-              await file.writeAsBytes(bytes);
-              log('Файл сохранён: $filePath');
-            } catch (e) {
-              log('Ошибка при сохранении файла: $e');
-            }
-            
-          } else {
-            log('Sizes not equal');
+            );
           }
+
+          onPlayerDataDownload(player, measureList);
+
+          try {
+            final uuid = decodedPayload.uuid;
+            final bytes = payload.toBytes();
+
+            final dir = await getApplicationDocumentsDirectory();
+            final filePath = '${dir.path}/$uuid.bin';
+            final file = File(filePath);
+
+            await file.writeAsBytes(bytes);
+            log('Файл сохранён: $filePath');
+          } catch (e) {
+            log('Ошибка при сохранении файла: $e');
+          }
+
+        } else {
+          log('Sizes not equal');
+        }
+      }
+
+      late final StreamSubscription<List<int>> charSubscription;
+      charSubscription = payloadChar.onValueReceived.listen(
+        (data) async {
+          if (data.isEmpty) {
+            log("Expected[$expectedPayloadLength], donwload[${payload.length}]");
+            await payloadChar.setNotifyValue(false);
+            await charSubscription.cancel();
+            device.disconnect(queue: false);
+            await finishDownload();
+          } else {
+            payload.add(data);
+
+            totalDownloaded += data.length;
+            final percent = totalDownloaded / totalLength * 100;
+            onPercentUpdated?.call(percent);
+          }
+        },
+        onDone: () async {
+          await finishDownload();
         },
       );
       await payloadChar.setNotifyValue(true);
     }
   }
+
+
 
   Future<void> dispose() async {
     await _bleStatusStream?.cancel();
