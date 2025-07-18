@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data.dart';
 import 'package:inmotion_mobile_test/core/utils/settings.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
@@ -23,15 +23,15 @@ class DemoPlayerEntity extends PlayerEntity {
   });
 
   @override
-  void notifySensor(MeasureEntity p, [TagMeta? m]) {
+  void notifySensor(MeasureEntity p, [InmotionTagMeta? m]) {
     time = 0;
-    final meta = TagMeta(1, 10, 100, 1024, 0xFF);
+    final meta = InmotionTagMeta(1, 10, 100, 1024, 0xFF);
     sensor?.notify(meta);
     notifyListeners();
   }
 
   @override
-  void addMeasure(p, [TagMeta? m]) {
+  void addMeasure(p, [InmotionTagMeta? m]) {
     lastLat += _random.nextDouble() / 7000;
     lastLong += _random.nextDouble() / 7000;
     lastHr += _random.nextInt(7) - 3;
@@ -65,7 +65,7 @@ class DemoPlayerEntity extends PlayerEntity {
       distance: lastDistance.toDouble(),
     );
 
-    final meta = TagMeta(1, 10, 100, 1024, 0xFF);
+    final meta = InmotionTagMeta(1, 10, 100, 1024, 0xFF);
 
     measures.add(payload);
     sensor?.notify(meta);

@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data.dart';
 
 const timeoutTime = 5;
 const disconnectedTime = 10;
@@ -38,13 +38,13 @@ class SensorEntity extends ChangeNotifier {
 
   /// Метод который вызывается как только пришло измерение, чтобы понять
   /// что данные приходят и с девайсом все хорошо
-  void notify([TagMeta? meta]) {
+  void notify([InmotionTagMeta? meta]) {
     _timeoutCounter = 0;
     _updateMetaStatus(meta);
     _updateStatus();
   }
 
-  void _updateMetaStatus(TagMeta? meta) {
+  void _updateMetaStatus(InmotionTagMeta? meta) {
     if (meta != null && meta.hrOk != _isHrOk) {
       _isHrOk = meta.hrOk;
       notifyListeners();

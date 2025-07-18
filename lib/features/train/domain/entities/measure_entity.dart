@@ -1,4 +1,4 @@
-import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data.dart';
 
 class MeasureEntity {
   // TODO create UUID maybe

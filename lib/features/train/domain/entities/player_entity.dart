@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 import 'package:uuid/uuid.dart';
@@ -72,7 +72,7 @@ class PlayerEntity extends ChangeNotifier {
   /* Скорость в км/ч */
   double get speedKph => speedMps * 3600 / 1000;
 
-  void addMeasure(MeasureEntity payload, [TagMeta? meta]) {
+  void addMeasure(MeasureEntity payload, [InmotionTagMeta? meta]) {
     // TODO сравнивать по inc
     // if (lastMeasure == null || lastMeasure!.time != payload.time) {
     //   _measures.add(payload);
@@ -87,7 +87,7 @@ class PlayerEntity extends ChangeNotifier {
     log("measure received: length: ${_measures.length}", name: "PlayerEntity");
   }
 
-  void notifySensor(MeasureEntity payload, [TagMeta? meta]) {
+  void notifySensor(MeasureEntity payload, [InmotionTagMeta? meta]) {
     // TODO сравнивать по inc
     // if (lastMeasure == null || lastMeasure!.time != payload.time) {
     //   _sensor?.notify(meta);

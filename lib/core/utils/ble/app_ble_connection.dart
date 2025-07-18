@@ -2,21 +2,16 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:cbor/cbor.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data_decoder.dart';
-import 'package:inmotion_mobile_test/core/utils/decoder/tag_data.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_payload.dart';
+import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
-import 'package:typed_data/typed_buffers.dart';
 
 class AppBLEConnection {
   // guid для конкретного поиска сервисов и хараетеристик
   final _serviceGuid = Guid("243a0000-1234-2374-5673-a8a1593ef645");
   final _charGuid = Guid("243a0003-1234-2374-5673-a8a1593ef645");
-
-  final _decoder = InmotionTagDataDecoder();
 
   StreamSubscription<BluetoothAdapterState>? _bleStatusStream;
 
@@ -61,7 +56,7 @@ class AppBLEConnection {
   /// Метод возвращает список [ScanResult] - адвертаиз пакеты уже с нужными сервисами [_serviceGuid]
   /// То есть конкретные нужные метки
   Future<void> startScanning(
-    Future<void> Function(List<(BluetoothDevice, TagMeta, MeasureEntity)>)
+    Future<void> Function(List<(BluetoothDevice, InmotionTagMeta, MeasureEntity)>)
         onReceivedScanResults,
   ) async {
     _scanResultStream = FlutterBluePlus.onScanResults.listen(
@@ -69,8 +64,16 @@ class AppBLEConnection {
         final mapped = results.map(
               (r) {
             final frame = r.advertisementData.serviceData[_serviceGuid]!;
-            final (meta, payload) = _decoder.decodeFrame(frame);
-            return (r.device, meta, payload);
+            final (meta, payload) = InmotionTagPayload.decodeFrame(frame);
+            final measureEntity = MeasureEntity(
+              time: payload.time,
+              hr: payload.hr,
+              latitude: payload.lat,
+              longitude: payload.lon,
+              speed: payload.speed,
+              distance: payload.distance?.toDouble(),
+            );
+            return (r.device, meta, measureEntity);
           },
         ).toList();
 
@@ -90,75 +93,76 @@ class AppBLEConnection {
     required Future<void> Function() onStop,
   }) async {
     var totalLength = 0;
-    var downloaded = 0;
-    final devices = players.length;
-    var finishedDevices = 0;
-    if (onPercentUpdated != null) onPercentUpdated(0);
+    var totalDownloaded = 0;
+
+    onPercentUpdated?.call(0);
 
     for (final player in players) {
       assert(player.hasSensor, 'Sensor is null');
+
       final device = player.sensor!.device;
       await device.connect();
+
       final service = (await device.discoverServices())
           .firstWhere((service) => service.serviceUuid == _serviceGuid);
       final payloadChar = service.characteristics
           .firstWhere((char) => char.characteristicUuid == _charGuid);
+
+      await payloadChar.write([0x00]);
 
       List<int> value = await payloadChar.read();
       final byteData = ByteData.sublistView(Uint8List.fromList(value));
-      final length = byteData.getInt32(0, Endian.little);
-      totalLength += length;
-    }
+      final expectedPayloadLength = byteData.getInt32(0, Endian.little);
+      totalLength += expectedPayloadLength;
 
-    for (final player in players) {
-      final device = player.sensor!.device;
-      //already connected
-      //await device.connect();
-      final service = (await device.discoverServices())
-          .firstWhere((service) => service.serviceUuid == _serviceGuid);
-      final payloadChar = service.characteristics
-          .firstWhere((char) => char.characteristicUuid == _charGuid);
-      await payloadChar.write([0x00]);
+      BytesBuilder payload = BytesBuilder();
 
-      final measureList = <MeasureEntity>[];
-      StreamSubscription<List<int>>? charSubscription;
-      final savedDataStreamController = StreamController<List<int>>();
-
-      const CborDecoder().bind(savedDataStreamController.stream).listen(
-        (value) async {
-            Uint8Buffer object = value.toObject() as Uint8Buffer;
-            final dataPayload = _decoder.decodePayload(object);
-            measureList.add(dataPayload);
-        },
-        onDone: () async {
-          await payloadChar.setNotifyValue(false);
-          await charSubscription?.cancel();
-          device.disconnect(queue: false);
-          onPlayerDataDownload(player, measureList);
-
-          finishedDevices++;
-          if (finishedDevices == devices) {
-            await onStop();
-          }
-        },
-      );
-
+      late final StreamSubscription<List<int>> charSubscription;
       charSubscription = payloadChar.onValueReceived.listen(
-        (payload) async {
+        (data) async {
           if (payload.isEmpty) {
-            savedDataStreamController.close();
+            log("Expected[$expectedPayloadLength], donwload[${payload.length}]");
+            await payloadChar.setNotifyValue(false);
+            await charSubscription.cancel();
+            device.disconnect(queue: false);
             return;
           }
-          savedDataStreamController.sink.add(payload);
-          downloaded += payload.length;
-          final percent = downloaded / totalLength * 100;
-          if (onPercentUpdated != null) {
-            onPercentUpdated(percent);
+          payload.add(data);
+
+          totalDownloaded += data.length;
+          final percent = totalDownloaded / totalLength * 100;
+          onPercentUpdated?.call(percent);
+        },
+        onDone: () {
+          if (expectedPayloadLength == payload.length) {
+            final decodedPayload = InmotionTagPayload.fromRaw(payload.toBytes());
+
+            final measureList = <MeasureEntity>[];
+
+            for (final tagData in decodedPayload.data) {
+              measureList.add(
+                MeasureEntity(
+                  time: tagData.time,
+                  hr: tagData.hr,
+                  latitude: tagData.lat,
+                  longitude: tagData.lon,
+                  speed: tagData.speed,
+                  distance: tagData.distance?.toDouble(),
+                )
+              );
+            }
+
+            onPlayerDataDownload(player, measureList);
+            
+          } else {
+            log('Sizes not equal');
           }
         },
       );
       await payloadChar.setNotifyValue(true);
     }
+
+    onPercentUpdated?.call(100);
   }
 
   Future<void> dispose() async {
