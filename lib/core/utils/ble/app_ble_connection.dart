@@ -101,6 +101,7 @@ class AppBLEConnection {
 
     onPercentUpdated?.call(0);
 
+    //Stop record and calculate expected size
     for (final player in players) {
       assert(player.hasSensor, 'Sensor is null');
 
@@ -120,6 +121,22 @@ class AppBLEConnection {
       final byteData = ByteData.sublistView(Uint8List.fromList(value));
       final expectedPayloadLength = byteData.getInt32(0, Endian.little);
       totalLength += expectedPayloadLength;
+    }
+
+    for (final player in players) {
+      assert(player.hasSensor, 'Sensor is null');
+
+      final device = player.sensor!.device;
+      await device.connect();
+
+      final service = (await device.discoverServices())
+          .firstWhere((service) => service.serviceUuid == _serviceGuid);
+      final payloadChar = service.characteristics
+          .firstWhere((char) => char.characteristicUuid == _payloadGuid);
+
+      List<int> value = await payloadChar.read();
+      final byteData = ByteData.sublistView(Uint8List.fromList(value));
+      final expectedPayloadLength = byteData.getInt32(0, Endian.little);
 
       BytesBuilder payload = BytesBuilder();
 
@@ -148,12 +165,15 @@ class AppBLEConnection {
             final uuid = decodedPayload.uuid;
             final bytes = payload.toBytes();
 
-            final dir = await getApplicationDocumentsDirectory();
-            final filePath = '${dir.path}/$uuid.bin';
-            final file = File(filePath);
-
-            await file.writeAsBytes(bytes);
-            log('Файл сохранён: $filePath');
+            final dir = await getExternalStorageDirectory();
+            if (dir != null){
+              final filePath = '${dir.path}/$uuid.bin';
+              final file = File(filePath);
+              await file.writeAsBytes(bytes);
+              log('Файл сохранён: $filePath');
+            } else {
+              log('Невозможно сохранить файл');
+            }
           } catch (e) {
             log('Ошибка при сохранении файла: $e');
           }
@@ -162,6 +182,8 @@ class AppBLEConnection {
           log('Sizes not equal');
         }
       }
+
+      final Completer<void> completer = Completer<void>();
 
       late final StreamSubscription<List<int>> charSubscription;
       charSubscription = payloadChar.onValueReceived.listen(
@@ -172,6 +194,7 @@ class AppBLEConnection {
             await charSubscription.cancel();
             device.disconnect(queue: false);
             await finishDownload();
+            completer.complete();
           } else {
             payload.add(data);
 
@@ -180,11 +203,15 @@ class AppBLEConnection {
             onPercentUpdated?.call(percent);
           }
         },
-        onDone: () async {
-          await finishDownload();
-        },
+        onError: (error) {
+          if (!completer.isCompleted) {
+            completer.completeError(error);
+          }
+        }
       );
+
       await payloadChar.setNotifyValue(true);
+      await completer.future;
     }
   }
 
