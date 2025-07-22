@@ -2,7 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class DurationAdapter extends TypeAdapter<Duration> {
   @override
-  int typeId = 6; // or whatever free id you have
+  final int typeId = 6; // or whatever free id you have
 
   @override
   Duration read(BinaryReader reader) {

@@ -77,7 +77,7 @@ class _SheetButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: borderRadius ?? BorderRadius.circular(16),
             border: Border.all(
-                color: theme.primaryColor.withOpacity(0.5), width: 3),
+                color: theme.primaryColor.withValues(alpha: 0.5), width: 3),
           ),
           child: ConstrainedBox(
             constraints: const BoxConstraints(

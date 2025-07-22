@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_blue_plus_windows/flutter_blue_plus_windows.dart';
 import 'package:inmotion_mobile_test/core/utils/decoder/inmotion_tag_data.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/measure_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/train_text_field.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/split_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/train_entity.dart';
 
 class SplitTile extends StatefulWidget {
   const SplitTile({

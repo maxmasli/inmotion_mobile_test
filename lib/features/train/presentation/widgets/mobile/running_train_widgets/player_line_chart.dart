@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
-import 'package:inmotion_mobile_test/core/utils/utils.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:yandex_mapkit/yandex_mapkit.dart';
 
 class PlayerLineChart extends StatefulWidget {
@@ -56,7 +54,7 @@ class _PlayerLineChartState extends State<PlayerLineChart> {
     // }
 
     yield PolylineMapObject(
-        mapId: MapObjectId("asd"),
+        mapId: const MapObjectId("asd"),
         polyline: Polyline(
           points: widget.data
               .map((data) => Point(latitude: data.$1, longitude: data.$2))

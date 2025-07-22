@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
@@ -93,7 +91,7 @@ class AppTimerWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: switch (controller.state) {
                         TimerState.stopped => AppColors.green,
-                        TimerState.running => AppColors.blue.withOpacity(0.3),
+                        TimerState.running => AppColors.blue.withValues(alpha: 0.3),
                       },
                       borderRadius: const BorderRadius.vertical(
                         bottom: Radius.circular(16),

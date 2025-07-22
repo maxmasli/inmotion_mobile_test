@@ -1,6 +1,5 @@
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_blue_plus_windows/flutter_blue_plus_windows.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/demo_player_entity.dart';
-import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/sensor_entity.dart';
 
 final demoPlayersList = <DemoPlayerEntity>[

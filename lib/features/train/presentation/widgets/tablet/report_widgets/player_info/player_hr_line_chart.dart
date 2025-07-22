@@ -4,7 +4,6 @@ import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/utils/settings.dart';
 import 'package:inmotion_mobile_test/features/train/domain/entities/player_entity.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class PlayerHrLineChart extends StatelessWidget {

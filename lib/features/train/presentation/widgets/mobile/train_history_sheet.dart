@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
 import 'package:inmotion_mobile_test/core/utils/utils.dart';
@@ -6,7 +8,6 @@ import 'package:inmotion_mobile_test/features/train/presentation/provider/train_
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/train_edit_tile.dart';
 import 'package:inmotion_mobile_test/features/train/presentation/widgets/mobile/train_tile.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 const bottomSheetMinHeight = 0.15;
 
@@ -89,7 +90,7 @@ class _TrainEditSliverListState extends State<_TrainEditSliverList> {
       selector: (context, model) => model.trains,
       shouldRebuild: (prev, curr) => prev != curr,
       builder: (context, trains, child) {
-        print(trains);
+        log(trains.toString());
         return CustomScrollView(
           controller: widget.controller,
           slivers: [

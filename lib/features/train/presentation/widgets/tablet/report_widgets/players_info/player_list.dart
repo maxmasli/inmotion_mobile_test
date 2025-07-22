@@ -121,7 +121,6 @@ class _PlayerEditListState extends State<_PlayerEditList> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final model = context.read<TrainModel>();
     return ValueListenableBuilder(
       valueListenable: playersNotifier,
       builder: (BuildContext context, value, Widget? child) {

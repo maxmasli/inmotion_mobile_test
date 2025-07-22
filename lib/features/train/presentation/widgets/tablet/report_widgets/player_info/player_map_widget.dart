@@ -1,6 +1,5 @@
-import 'dart:isolate';
+import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:inmotion_mobile_test/core/colors.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
@@ -70,7 +69,7 @@ class _PlayerMapWidgetState extends State<PlayerMapWidget> {
                     vertical: VerticalAlignment.bottom,
                   ),
                   onMapCreated: (controller) async {
-                    print("map created");
+                    log("map created");
                     _mapController = controller;
                     final last = cords.lastOrNull;
                     await _mapController.moveCamera(

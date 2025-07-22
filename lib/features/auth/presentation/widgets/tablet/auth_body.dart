@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_button.dart';
 import 'package:inmotion_mobile_test/core/presentation/app_container.dart';
@@ -17,8 +15,6 @@ class AuthBody extends StatefulWidget {
 }
 
 class _AuthBodyState extends State<AuthBody> {
-  var _showWelcome = true;
-
   final _loginController = TextEditingController();
   final _passwordController = TextEditingController();
 

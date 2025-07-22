@@ -27,7 +27,6 @@ class _TrainListState extends State<TrainList> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return AppContainer(
       borderRadius: BorderRadius.circular(16),
       padding: const EdgeInsets.all(12),
@@ -86,7 +85,6 @@ class _TrainEditListState extends State<_TrainEditList> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final model = context.read<TrainModel>();
     return Selector<TrainModel, List<TrainEntity>>(
       selector: (context, model) => model.trains,
       shouldRebuild: (prev, curr) => prev != curr,

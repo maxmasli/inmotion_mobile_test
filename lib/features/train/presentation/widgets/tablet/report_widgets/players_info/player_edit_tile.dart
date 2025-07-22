@@ -22,7 +22,6 @@ class PlayerEditTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final model = context.read<TrainModel>();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),

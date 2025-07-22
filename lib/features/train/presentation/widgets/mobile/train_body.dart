@@ -23,14 +23,11 @@ class _TrainBodyState extends State<TrainBody> {
   final _appTimerController = getIt<AppTimerController>();
 
   final _keyboardListener = kl.KeyboardListener();
-  var _isShowKeyboard = false;
 
   @override
   void initState() {
     _keyboardListener.addListener(onChange: (isVisible) {
-      setState(() {
-        _isShowKeyboard = isVisible;
-      });
+      setState(() {});
     });
     super.initState();
   }
